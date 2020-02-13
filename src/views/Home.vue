@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="full-height">
     <button v-on:click="saveGraph()">Save</button>
-    <div class="home" ref="vis">
+    <div class="full-height" ref="vis">
       <!--<img src="../assets/logo.png">-->
       <!--<HelloWorld msg="Welcome to Your Vue.js App"/>-->
     </div>
@@ -71,10 +71,12 @@ export default {
         return {
           label: node.data.name,
           id: node.data.id,
-          x: 1.6 * node.position.x,
-          y: 0.5 * node.position.y,
+          x: 1.9 * node.position.x,
+          y: 0.6 * node.position.y,
           physics: false,
-          shape: "box"
+          shape: "box",
+          widthConstraint: 190,
+          heightConstraint: 50
         }
       });
 
@@ -112,8 +114,7 @@ export default {
 
 
 <style scoped lang="less">
-  .home {
-    width: 100%;
-    height: 600px;
-  }
+.full-height {
+  height: 100%;
+}
 </style>
