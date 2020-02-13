@@ -258,7 +258,8 @@ export default {
   ],
   "vertices": [
     {
-      "name": "Level 1 Solar Power"
+      "name": "Level 1 Solar Power",
+      level: 4
     },
     {
       "name": "Level 3 Security"
@@ -267,10 +268,12 @@ export default {
       "name": "Level 1 Heating"
     },
     {
-      "name": "Level 3 Water Collector"
+      "name": "Level 3 Water Collector",
+      level: 4
     },
     {
-      "name": "Level 3 Lavatory"
+      "name": "Level 3 Lavatory",
+      level: 3
     },
     {
       "name": "Level 3 Intelligence Center"
@@ -309,7 +312,8 @@ export default {
       "name": "Level 1 Water Collector"
     },
     {
-      "name": "Level 1 Booze Generator"
+      "name": "Level 1 Booze Generator",
+      level: 1
     },
     {
       "name": "Level 3 Generator"
@@ -327,22 +331,26 @@ export default {
       "name": "Level 1 Stash"
     },
     {
-      "name": "Level 1 Intelligence Center"
+      "name": "Level 1 Intelligence Center",
+      level: 1
     },
     {
       "name": "Level 3 Stash"
     },
     {
-      "name": "Level 3 Nutrition Unit"
+      "name": "Level 3 Nutrition Unit",
+      level: 2
     },
     {
-      "name": "Level 1 Scav Case"
+      "name": "Level 1 Scav Case",
+      level: 0
     },
     {
       "name": "Level 1 Rest Space"
     },
     {
-      "name": "Level 3 Bitcoin Farm"
+      "name": "Level 3 Bitcoin Farm",
+      level: 0
     },
     {
       "name": "Level 1 Generator"
@@ -351,22 +359,26 @@ export default {
       "name": "Level 2 Lavatory"
     },
     {
-      "name": "Level 3 Medstation"
+      "name": "Level 3 Medstation",
+      level: 2
     },
     {
       "name": "Level 1 Bitcoin Farm"
     },
     {
-      "name": "Level 1 Library"
+      "name": "Level 1 Library",
+      level: 3
     },
     {
-      "name": "Level 3 Workbench"
+      "name": "Level 3 Workbench",
+      level: 5
     },
     {
       "name": "Level 2 Heating"
     },
     {
-      "name": "Level 1 Air Filtering Unit"
+      "name": "Level 1 Air Filtering Unit",
+      level: 4
     },
     {
       "name": "Level 2 Security"
@@ -375,7 +387,8 @@ export default {
       "name": "Level 1 Nutrition Unit"
     },
     {
-      "name": "Level 3 Rest Space"
+      "name": "Level 3 Rest Space",
+      level: 4
     },
     {
       "name": "Level 2 Water Collector"
@@ -393,7 +406,8 @@ export default {
       "name": "Level 1 Security"
     },
     {
-      "name": "Level 2 Nutrition Unit"
+      "name": "Level 2 Nutrition Unit",
+      level: 4
     },
     {
       "name": "Level 3 Illumination"
