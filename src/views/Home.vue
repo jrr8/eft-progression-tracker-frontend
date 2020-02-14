@@ -14,6 +14,7 @@
 import * as vis from "vis-network";
 import mockGraph from "../assets/graph";
 import mockCytoGraph from "../assets/graph.cytoscape";
+import positions from "../assets/final_graph_nodes_positions";
 
 export default {
   name: 'Home',
@@ -40,8 +41,8 @@ export default {
       )
     },
     download(content, fileName, contentType) {
-      var a = document.createElement("a");
-      var file = new Blob([content], {type: contentType});
+      let a = document.createElement("a");
+      let file = new Blob([content], {type: contentType});
       a.href = URL.createObjectURL(file);
       a.download = fileName;
       a.click();
@@ -65,18 +66,28 @@ export default {
       };
 
       this.network = new vis.Network(container, data, options);
+      this.network.moveTo({
+        scale: 0.3,
+        position: {
+          x: 650,
+          y: 300
+        }
+      })
     },
     getVisData() {
       const nodes = mockCytoGraph.elements.nodes.map(node => {
         return {
           label: node.data.name,
           id: node.data.id,
-          x: 1.9 * node.position.x,
-          y: 0.6 * node.position.y,
+          x: 1.1 * positions[node.data.id].x,
+          y: positions[node.data.id].y,
           physics: false,
           shape: "box",
-          widthConstraint: 190,
-          heightConstraint: 50
+          widthConstraint: 300,
+          heightConstraint: 50,
+          font: {
+            size: 30
+          }
         }
       });
 
