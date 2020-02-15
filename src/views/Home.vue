@@ -12,8 +12,7 @@
 // @ is an alias to /src
 //import HelloWorld from '@/components/HelloWorld.vue';
 import * as vis from "vis-network";
-import mockGraph from "../assets/graph";
-import mockCytoGraph from "../assets/graph.cytoscape";
+import graph from "../assets/graph";
 import positions from "../assets/final_graph_nodes_positions";
 
 export default {
@@ -24,6 +23,39 @@ export default {
   data() {
     return {
       network: null
+    }
+  },
+  computed: {
+    nodeColor() {
+      return {
+        background: "#bbe1fa",
+        border: "#3282b8",
+        hover: {
+          background: "#a5d2eb",
+          border: "#305e92"
+        },
+        highlight: {
+          background: "#bff3fa",
+          border: "#4099b8"
+        }
+      }
+    },
+    nodeOptions() {
+      return {
+        physics: false,
+        shape: "box",
+        widthConstraint: 300,
+        heightConstraint: 50,
+        color: this.nodeColor,
+        font: {
+          size: 30
+        }
+      }
+    },
+    edgeOptions() {
+      return {
+        arrows: "to"
+      }
     }
   },
   created() {
@@ -47,6 +79,10 @@ export default {
       a.download = fileName;
       a.click();
     },
+    getScale() {
+      // TODO: Set dynmaically based on screen size
+      return 0.3
+    },
     initVis() {
       const container = this.$refs.vis;
       const data = this.getVisData();
@@ -58,16 +94,14 @@ export default {
             roundness: 1
           }
         },
-//        layout: {
-//          hierarchical: {
-//            direction: "RL"
-//          }
-//        }
+        interaction: {
+          hover: true
+        }
       };
 
       this.network = new vis.Network(container, data, options);
       this.network.moveTo({
-        scale: 0.3,
+        scale: this.getScale(),
         position: {
           x: 650,
           y: 300
@@ -75,48 +109,19 @@ export default {
       })
     },
     getVisData() {
-      const nodes = mockCytoGraph.elements.nodes.map(node => {
-        return {
-          label: node.data.name,
-          id: node.data.id,
-          x: 1.1 * positions[node.data.id].x,
-          y: positions[node.data.id].y,
-          physics: false,
-          shape: "box",
-          widthConstraint: 300,
-          heightConstraint: 50,
-          font: {
-            size: 30
-          }
-        }
-      });
+      const nodes = graph.data.nodes.map(node => ({
+        ...node,
+        ...this.nodeOptions
+      }));
 
-      const edges = mockCytoGraph.elements.edges.map(edge => {
-        return {
-          from: edge.data.source,
-          to: edge.data.target,
-          arrows: "to"
-        }
-      });
+      const edges = graph.data.edges.map(edge => ({
+        ...edge,
+        ...this.edgeOptions
+      }))
 
       return {
         nodes: new vis.DataSet(nodes),
-//          new vis.DataSet(
-//          mockGraph.vertices.map(vertex => {
-//            if (vertex.level === undefined) {
-//              vertex.level = 5;
-//            }
-//
-//            return {
-//              label: vertex.name,
-//              id: vertex.name,
-//              level: vertex.level
-//            }
-//          })
         edges: new vis.DataSet(edges)
-//        new vis.DataSet(
-//          mockGraph.edges.map(edge => ({ from: edge.source, to: edge.target }))
-//        )
       }
     }
   }

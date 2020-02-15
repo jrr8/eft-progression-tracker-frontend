@@ -11,7 +11,7 @@
 <style lang="less">
 html, body {
   height: 100%;
-  background: #383838;
+  background: #1b262c;
 }
 
 #app {
