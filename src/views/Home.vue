@@ -15,6 +15,8 @@ import * as vis from "vis-network";
 import graph from "../assets/graph";
 import positions from "../assets/final_graph_nodes_positions";
 
+let prevModulesForCurrentModule = [];
+
 export default {
   name: 'Home',
   components: {
@@ -63,8 +65,56 @@ export default {
   },
   mounted() {
     this.initVis();
+    // console.log(this.network);
+    // console.log(prevModulesForCurrentModule);
+    // this.getPrevModule("108");
+    // console.log(prevModulesForCurrentModule);
+    // this.network.selectNodes(prevModulesForCurrentModule);
+    // this.changeColorsOfSelectedNodes();
+
+    this.network.on("click", params => {
+      if (params.nodes.length > 0) {
+        console.log(params.nodes[0]);
+        this.getAllPrevModules(params.nodes[0]);
+      }
+    });
   },
   methods: {
+    changeColorsOfSelectedNodes(){
+      for (let index = 0; index < prevModulesForCurrentModule.length; index++){
+        var clickedNode = this.network.get(prevModulesForCurrentModule[index]);
+        clickedNode.color = {
+          border: '#000000',
+          background: '#000000',
+          highlight: {
+            border: '#2B7CE9',
+            background: '#D2E5FF'
+          }
+        }
+        this.network.update(clickedNode);
+      }
+    },
+    getAllPrevModules(id){
+        prevModulesForCurrentModule = [];
+        this.getPrevModule(id);
+        this.network.selectNodes(prevModulesForCurrentModule);
+
+    },
+    getPrevModule(id){
+      prevModulesForCurrentModule.push(id);
+      // console.log('id: ' + id);
+      let prevModules = this.network.getConnectedNodes(id, 'from');
+      // console.log(prevModules);
+
+      if(prevModules.length){
+        for (let index = 0; index < prevModules.length; index++) { 
+          this.getPrevModule(prevModules[index]); 
+        }
+      }
+      else{
+        return;
+      }
+    },
     saveGraph() {
       this.download(
         JSON.stringify(this.network.getPositions()),
@@ -100,6 +150,12 @@ export default {
       };
 
       this.network = new vis.Network(container, data, options);
+      // this.network.on("click", function(params) {
+      //   if (params.edges.length > 0) {
+      //     console.log(params.nodes[0]);
+      //     this.getPrevModule("103");
+      //   }
+      // });
       this.network.moveTo({
         scale: this.getScale(),
         position: {
