@@ -13,7 +13,6 @@
 //import HelloWorld from '@/components/HelloWorld.vue';
 import * as vis from "vis-network";
 import graph from "../assets/graph";
-import positions from "../assets/final_graph_nodes_positions";
 
 export default {
   name: 'Home',
@@ -35,8 +34,8 @@ export default {
           border: "#305e92"
         },
         highlight: {
-          background: "#bff3fa",
-          border: "#4099b8"
+          background: "#fa322f",
+          border: "#2eb81e"
         }
       }
     },
@@ -63,8 +62,31 @@ export default {
   },
   mounted() {
     this.initVis();
+    this.setSelectOnClickHandler();
   },
   methods: {
+    setSelectOnClickHandler() {
+      this.network.on('click', (params) => {
+        if (params.nodes.length) {
+          this.selectAllChildren(params.nodes[0]);
+        }
+      });
+    },
+    selectAllChildren(node) {
+      const visited = new Set();
+      const stack = [node];
+
+      while (stack.length) {
+        const current = stack.pop();
+        visited.add(current);
+
+        this.network.getConnectedNodes(current, 'from').forEach((child) => {
+          stack.push(child);
+        });
+      }
+
+      this.network.selectNodes(Array.from(visited));
+    },
     saveGraph() {
       this.download(
         JSON.stringify(this.network.getPositions()),
