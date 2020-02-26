@@ -10,52 +10,52 @@
 
 <script>
 // @ is an alias to /src
-//import HelloWorld from '@/components/HelloWorld.vue';
-import * as vis from "vis-network";
-import graph from "../assets/graph";
+// import HelloWorld from '@/components/HelloWorld.vue';
+import * as vis from 'vis-network';
+import graph from '../assets/graph';
 
 export default {
   name: 'Home',
   components: {
-//    HelloWorld,
+    //    HelloWorld,
   },
   data() {
     return {
-      network: null
-    }
+      network: null,
+    };
   },
   computed: {
     nodeColor() {
       return {
-        background: "#bbe1fa",
-        border: "#3282b8",
+        background: '#bbe1fa',
+        border: '#3282b8',
         hover: {
-          background: "#a5d2eb",
-          border: "#305e92"
+          background: '#a5d2eb',
+          border: '#305e92',
         },
         highlight: {
-          background: "#fa322f",
-          border: "#2eb81e"
-        }
-      }
+          background: '#fa322f',
+          border: '#2eb81e',
+        },
+      };
     },
     nodeOptions() {
       return {
         physics: false,
-        shape: "box",
+        shape: 'box',
         widthConstraint: 300,
         heightConstraint: 50,
         color: this.nodeColor,
         font: {
-          size: 30
-        }
-      }
+          size: 30,
+        },
+      };
     },
     edgeOptions() {
       return {
-        arrows: "to"
-      }
-    }
+        arrows: 'to',
+      };
+    },
   },
   created() {
 
@@ -90,20 +90,20 @@ export default {
     saveGraph() {
       this.download(
         JSON.stringify(this.network.getPositions()),
-        "graph.json",
-        "application/json"
-      )
+        'graph.json',
+        'application/json',
+      );
     },
     download(content, fileName, contentType) {
-      let a = document.createElement("a");
-      let file = new Blob([content], {type: contentType});
+      const a = document.createElement('a');
+      const file = new Blob([content], { type: contentType });
       a.href = URL.createObjectURL(file);
       a.download = fileName;
       a.click();
     },
     getScale() {
       // TODO: Set dynmaically based on screen size
-      return 0.3
+      return 0.3;
     },
     initVis() {
       const container = this.$refs.vis;
@@ -111,14 +111,14 @@ export default {
       const options = {
         edges: {
           smooth: {
-            type: "cubicBezier",
-            forceDirection: "horizontal",
-            roundness: 1
-          }
+            type: 'cubicBezier',
+            forceDirection: 'horizontal',
+            roundness: 1,
+          },
         },
         interaction: {
-          hover: true
-        }
+          hover: true,
+        },
       };
 
       this.network = new vis.Network(container, data, options);
@@ -126,27 +126,27 @@ export default {
         scale: this.getScale(),
         position: {
           x: 650,
-          y: 300
-        }
-      })
+          y: 300,
+        },
+      });
     },
     getVisData() {
-      const nodes = graph.data.nodes.map(node => ({
+      const nodes = graph.data.nodes.map((node) => ({
         ...node,
-        ...this.nodeOptions
+        ...this.nodeOptions,
       }));
 
-      const edges = graph.data.edges.map(edge => ({
+      const edges = graph.data.edges.map((edge) => ({
         ...edge,
-        ...this.edgeOptions
-      }))
+        ...this.edgeOptions,
+      }));
 
       return {
         nodes: new vis.DataSet(nodes),
-        edges: new vis.DataSet(edges)
-      }
-    }
-  }
+        edges: new vis.DataSet(edges),
+      };
+    },
+  },
 };
 </script>
 
