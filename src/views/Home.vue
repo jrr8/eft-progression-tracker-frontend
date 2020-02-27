@@ -22,6 +22,7 @@ export default {
   data() {
     return {
       network: null,
+      edges: new Map(),
     };
   },
   computed: {
@@ -54,6 +55,10 @@ export default {
     edgeOptions() {
       return {
         arrows: 'to',
+        color: {
+          color: this.nodeColor.hover.background,
+          highlight: this.nodeColor.highlight.border,
+        },
       };
     },
   },
@@ -73,19 +78,32 @@ export default {
       });
     },
     selectAllChildren(node) {
-      const visited = new Set();
+      const visited = {
+        nodes: new Set(),
+        edges: new Set(),
+      };
       const stack = [node];
 
       while (stack.length) {
         const current = stack.pop();
-        visited.add(current);
+        visited.nodes.add(current);
 
         this.network.getConnectedNodes(current, 'from').forEach((child) => {
           stack.push(child);
         });
+
+        this.network.getConnectedEdges(current).forEach((edgeId) => {
+          const edge = this.edges.get(edgeId);
+          if (edge.to === current) {
+            visited.edges.add(edgeId);
+          }
+        });
       }
 
-      this.network.selectNodes(Array.from(visited));
+      this.network.setSelection({
+        nodes: Array.from(visited.nodes),
+        edges: Array.from(visited.edges),
+      });
     },
     saveGraph() {
       this.download(
@@ -118,6 +136,7 @@ export default {
         },
         interaction: {
           hover: true,
+          selectConnectedEdges: false,
         },
       };
 
@@ -136,10 +155,18 @@ export default {
         ...this.nodeOptions,
       }));
 
-      const edges = graph.data.edges.map((edge) => ({
-        ...edge,
-        ...this.edgeOptions,
-      }));
+      const edges = [];
+      graph.data.edges.forEach((edge_, i) => {
+        const id = `e_${String(i + 1).padStart(3, '0')}`;
+        const edge = {
+          id,
+          ...edge_,
+          ...this.edgeOptions,
+        };
+
+        edges.push(edge);
+        this.edges.set(id, edge);
+      });
 
       return {
         nodes: new vis.DataSet(nodes),
