@@ -1,5 +1,6 @@
 <template>
   <div class="full-height">
+    <input style="color: white; border: 2px solid white;" type="text" v-model="question">
     <button v-on:click="saveGraph()">Save</button>
     <div class="full-height" ref="vis">
       <!--<img src="../assets/logo.png">-->
@@ -14,7 +15,7 @@
 import * as vis from 'vis-network';
 import graph from '../assets/graph';
 
-let prevModulesForCurrentModule = [];
+const prevModulesForCurrentModule = [];
 
 export default {
   name: 'Home',
@@ -22,10 +23,18 @@ export default {
     //    HelloWorld,
   },
   data() {
+    
     return {
       network: null,
       edges: new Map(),
+      question: ''
     };
+  },
+  watch: {
+    // whenever question changes, this function will run
+    question: function (searchText) {
+      this.searchModulesForMatch(searchText);
+    }
   },
   computed: {
     nodeColor() {
@@ -180,6 +189,15 @@ export default {
         nodes: new vis.DataSet(nodes),
         edges: new vis.DataSet(edges),
       };
+    },
+    searchModulesForMatch(searchText){
+      let matchingModules = [];
+      graph.data.nodes.forEach(item => {
+        if(searchText && item.label.toLowerCase().includes(searchText.toLowerCase())){
+          matchingModules.push(item.id);
+        }
+      });
+      this.network.selectNodes(matchingModules, false);
     },
   },
 };
