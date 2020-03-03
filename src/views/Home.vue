@@ -1,11 +1,60 @@
 <template>
-  <div class="full-height">
-    <input style="color: white; border: 2px solid white;" type="text" v-model="question">
+  <div style="display:flex" class="full-height">
+     <v-navigation-drawer
+          permanent
+          expand-on-hover
+          style="position: absolute;"
+        >
+          <v-list>
+            <v-list-item class="px-2">
+              <v-list-item-avatar>
+                <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
+              </v-list-item-avatar>
+            </v-list-item>
+
+            <v-list-item link>
+              <v-list-item-content>
+                <v-list-item-title class="title">Sandra Adams</v-list-item-title>
+                <v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+
+          <v-divider></v-divider>
+
+          <v-list
+            nav
+            dense
+          >
+            <v-list-item link>
+              <v-list-item-icon>
+                <v-icon>mdi-folder</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>My Files</v-list-item-title>
+            </v-list-item>
+            <v-list-item link>
+              <v-list-item-icon>
+                <v-icon>mdi-account-multiple</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Shared with me</v-list-item-title>
+            </v-list-item>
+            <v-list-item link>
+              <v-list-item-icon>
+                <v-icon>mdi-star</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Starred</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-navigation-drawer>
+  <div>
+    <input style="color: white; border: 2px solid white;" type="text" v-model="question" @input="searchModulesForMatch()" @focus="onInputFocused()" @blur="onInputBlurred()">
+        <!-- <input style="color: white; border: 2px solid white;"  type="text" v-model="question" @change="searchModulesForMatch()"> -->
     <button v-on:click="saveGraph()">Save</button>
-    <div class="full-height" ref="vis">
+    <span class="full-height" ref="vis">
       <!--<img src="../assets/logo.png">-->
       <!--<HelloWorld msg="Welcome to Your Vue.js App"/>-->
-    </div>
+    </span>
+  </div>
   </div>
 </template>
 
@@ -27,15 +76,16 @@ export default {
     return {
       network: null,
       edges: new Map(),
-      question: ''
+      question: '',
+      inputFocused: false
     };
   },
-  watch: {
-    // whenever question changes, this function will run
-    question: function (searchText) {
-      this.searchModulesForMatch(searchText);
-    }
-  },
+  // watch: {
+  //   // whenever question changes, this function will run
+    // question: function (searchText) {
+    //   this.searchModulesForMatch(searchText);
+    // }
+  // },
   computed: {
     nodeColor() {
       return {
@@ -82,11 +132,27 @@ export default {
   },
   methods: {
     setSelectOnClickHandler() {
+      this.network.on('deselectNode', (params) => {
+        if(this.inputFocused){
+          this.network.setSelection(params.previousSelection);
+        }else{
+          console.log('skipping');
+        }
+      });
       this.network.on('click', (params) => {
         if (params.nodes.length) {
           this.selectAllChildren(params.nodes[0]);
         }
       });
+    },
+    onInputFocused(){
+      this.inputFocused = true;
+      this.setSelectOnClickHandler();
+    },
+    onInputBlurred(){
+      setTimeout(()=>{
+        this.inputFocused = false;
+      },200);
     },
     selectAllChildren(node) {
       const visited = {
@@ -190,14 +256,15 @@ export default {
         edges: new vis.DataSet(edges),
       };
     },
-    searchModulesForMatch(searchText){
+    searchModulesForMatch(){
+      const vm = this;
       let matchingModules = [];
       graph.data.nodes.forEach(item => {
-        if(searchText && item.label.toLowerCase().includes(searchText.toLowerCase())){
+        if(vm.question && item.label.toLowerCase().includes(vm.question.toLowerCase())){
           matchingModules.push(item.id);
         }
       });
-      this.network.selectNodes(matchingModules, false);
+      vm.network.selectNodes(matchingModules, false);
     },
   },
 };
@@ -207,5 +274,15 @@ export default {
 <style scoped lang="less">
 .full-height {
   height: 100%;
+  position: relative;
+}
+
+.items{
+  display: flex;
+
+}
+
+.myitem{
+  display: flex;
 }
 </style>
