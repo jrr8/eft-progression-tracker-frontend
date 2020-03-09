@@ -1,60 +1,14 @@
 <template>
-  <div style="display:flex" class="full-height">
-     <v-navigation-drawer
-          permanent
-          expand-on-hover
-          style="position: absolute;"
-        >
-          <v-list>
-            <v-list-item class="px-2">
-              <v-list-item-avatar>
-                <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
-              </v-list-item-avatar>
-            </v-list-item>
-
-            <v-list-item link>
-              <v-list-item-content>
-                <v-list-item-title class="title">Sandra Adams</v-list-item-title>
-                <v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-
-          <v-divider></v-divider>
-
-          <v-list
-            nav
-            dense
-          >
-            <v-list-item link>
-              <v-list-item-icon>
-                <v-icon>mdi-folder</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>My Files</v-list-item-title>
-            </v-list-item>
-            <v-list-item link>
-              <v-list-item-icon>
-                <v-icon>mdi-account-multiple</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Shared with me</v-list-item-title>
-            </v-list-item>
-            <v-list-item link>
-              <v-list-item-icon>
-                <v-icon>mdi-star</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Starred</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-navigation-drawer>
-  <div>
+  <div class="full-height">
     <input style="color: white; border: 2px solid white;" type="text" v-model="question" @input="searchModulesForMatch()" @focus="onInputFocused()" @blur="onInputBlurred()">
         <!-- <input style="color: white; border: 2px solid white;"  type="text" v-model="question" @change="searchModulesForMatch()"> -->
     <button v-on:click="saveGraph()">Save</button>
+    <v-btn class="ma-2 butn" outlined color="indigo" @click="$router.push('hideoutItemList')" >Item List</v-btn>
+    <v-btn class="ma-2 butn" outlined color="indigo" @click="addModuleToTrackedMap()" >Track Selected Module</v-btn>
     <span class="full-height" ref="vis">
       <!--<img src="../assets/logo.png">-->
       <!--<HelloWorld msg="Welcome to Your Vue.js App"/>-->
     </span>
-  </div>
   </div>
 </template>
 
@@ -64,12 +18,11 @@
 import * as vis from 'vis-network';
 import graph from '../assets/graph';
 
-const prevModulesForCurrentModule = [];
+// let prevModulesForCurrentModule = [];
 
 export default {
   name: 'Home',
   components: {
-    //    HelloWorld,
   },
   data() {
     
@@ -77,7 +30,10 @@ export default {
       network: null,
       edges: new Map(),
       question: '',
-      inputFocused: false
+      inputFocused: false,
+      selectedModule: '',
+      trackedModuels: new Map(),
+      prevModulesForCurrentModule: []
     };
   },
   // watch: {
@@ -87,6 +43,9 @@ export default {
     // }
   // },
   computed: {
+    trackedModules(){
+      return this.$store.state.trackedModuels;
+    },
     nodeColor() {
       return {
         background: '#bbe1fa',
@@ -141,18 +100,36 @@ export default {
       });
       this.network.on('click', (params) => {
         if (params.nodes.length) {
+          this.selectedModule = this.getModuleNameById(params.nodes[0]);
           this.selectAllChildren(params.nodes[0]);
+        }else{
+          this.selectedModule = '';
         }
       });
     },
     onInputFocused(){
       this.inputFocused = true;
-      this.setSelectOnClickHandler();
+      this.searchModulesForMatch();
     },
     onInputBlurred(){
       setTimeout(()=>{
         this.inputFocused = false;
       },200);
+    },
+    getModuleNameById(id){
+      let moduleName = '';
+      graph.data.nodes.forEach((module, index, array) => {
+        if(module.id == id){
+          moduleName = module.label;
+        }
+      });
+      return moduleName;
+    },
+    addModuleToTrackedMap(){
+      if(this.selectedModule != ''){
+        // TODO: needed to put into object first, not individual. Investigate this
+        this.$store.commit('addTrackedModule', {name: this.selectedModule, modules: this.prevModulesForCurrentModule.map((id) => this.getModuleNameById(id))});
+      }
     },
     selectAllChildren(node) {
       const visited = {
@@ -176,6 +153,8 @@ export default {
           }
         });
       }
+
+      this.prevModulesForCurrentModule = Array.from(visited.nodes);
 
       this.network.setSelection({
         nodes: Array.from(visited.nodes),
@@ -284,5 +263,10 @@ export default {
 
 .myitem{
   display: flex;
+}
+
+.butn{
+  background-color: white;
+  margin: 10px;
 }
 </style>
