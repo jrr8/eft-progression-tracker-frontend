@@ -30,10 +30,16 @@ export default new Vuex.Store({
     },
     actions: {
         // put asynchronous functions that can call one or more mutation functions
-      fetchUser({ commit }) {
-        UserService.fetchUser().then(user => {
-          commit("setUser", { user })
-        });
+        fetchUser({ commit }) {
+            UserService.fetchUser().then(user => {
+            commit("setUser", { user })
+            });
+        },
+        updateUserTrackedModules({ commit }, payload) {
+            debugger;
+            UserService.updateUserTrackedModules(payload).then(user => {
+              commit("setUser", { user })
+            })
       },
     }
 })

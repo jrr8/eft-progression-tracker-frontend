@@ -128,7 +128,7 @@ export default {
     addModuleToTrackedMap(){
       if(this.selectedModule != ''){
         // TODO: needed to put into object first, not individual. Investigate this
-        this.$store.commit('addTrackedModule', {name: this.selectedModule, modules: this.prevModulesForCurrentModule.map((id) => this.getModuleNameById(id))});
+        this.$store.dispatch('updateUserTrackedModules', {name: this.selectedModule, modules: this.prevModulesForCurrentModule.map((id) => this.getModuleNameById(id))});
       }
     },
     selectAllChildren(node) {
