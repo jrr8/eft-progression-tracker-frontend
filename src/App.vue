@@ -10,7 +10,7 @@
                   <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
                 </v-list-item-avatar>
               </v-list-item>
-  
+
               <v-list-item link>
                 <v-list-item-content>
                   <v-list-item-title class="title">Sandra Adams</v-list-item-title>
@@ -18,9 +18,9 @@
                 </v-list-item-content>
               </v-list-item>
             </v-list>
-  
+
             <v-divider></v-divider>
-  
+
             <v-list
               nav
               dense
@@ -60,8 +60,19 @@ export default {
   },
 
   data: () => ({
-    //
   }),
+
+  computed: {
+    user() {
+      return this.$store.state.user;
+    }
+  },
+
+  created() {
+    this.$store.dispatch("fetchUser").then(() => {
+      console.log(this.user);
+    });
+  },
 };
 </script>
 

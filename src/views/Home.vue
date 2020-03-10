@@ -25,7 +25,7 @@ export default {
   components: {
   },
   data() {
-    
+
     return {
       network: null,
       edges: new Map(),
@@ -44,7 +44,7 @@ export default {
   // },
   computed: {
     trackedModules(){
-      return this.$store.state.trackedModuels;
+      return this.$store.state.user.trackedModules;
     },
     nodeColor() {
       return {

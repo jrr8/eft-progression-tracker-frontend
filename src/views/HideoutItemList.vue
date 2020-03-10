@@ -114,11 +114,11 @@ export default {
             this.expandedItemInfo = [];
             this.printRow();
         }
-    } 
+    }
   },
   computed: {
     trackedModules(){
-      return this.$store.state.trackedModules;
+      return this.$store.state.user.trackedModules || new Map();
     },
     trackedModulesDropdownList(){
         return Array.from(this.trackedModules.keys());
