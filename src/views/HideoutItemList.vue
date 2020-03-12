@@ -39,7 +39,7 @@
                 </template>
 
                 <template class="container" v-slot:item.itemsRequired="{ item }">
-                    {{item.itemsRequired.toLocaleString()}}
+                    ({{item.itemsRequired.itemsOwned.toLocaleString()}}/{{item.itemsRequired.itemsRequired.toLocaleString()}})
                 </template>
 
                  <template v-slot:expanded-item="{ headers }">
@@ -54,8 +54,8 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="module in expandedItemInfo" :key="module.name">
-                                    <td>{{ module.name }}</td>
-                                    <td>{{ module.numRequired.toLocaleString() }}</td>
+                                    <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.name }}</td>
+                                    <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.numRequired.toLocaleString() }}</td>
                                     </tr>
                                 </tbody>
                             </template>
@@ -70,6 +70,7 @@
 <script>
 import modules from '../assets/modules';
 import items from '../assets/items';
+import graph from '../assets/graph';
 
 // const itemList = [];
 // const allItemsMap = new Map();
@@ -83,6 +84,7 @@ export default {
         selectedTrackedModule: '',
         itemList: [],
         allItemsMap: new Map(),
+        itemsOwned: new Map(),
         expandedItemInfo: [],
         expanded: [],
         search: '',
@@ -117,6 +119,9 @@ export default {
     }
   },
   computed: {
+    completedModules(){
+      return this.$store.state.user.hideoutModulesCompleted;
+    },
     trackedModules(){
       return this.$store.state.user.trackedModules || new Map();
     },
@@ -129,8 +134,42 @@ export default {
   mounted() {
         this.createAllItemsMap();
         this.buildListData();
+        // this.buildItemsOwnedData();
+        // console.log(this.itemsOwned);
   },
   methods: {
+    getModuleNameById(id){
+      let moduleName = '';
+      graph.data.nodes.forEach((module, index, array) => {
+        if(module.id == id){
+          moduleName = module.label;
+        }
+      });
+      return moduleName;
+    },
+    getModuleIdByName(moduleName){
+      let moduleId = '';
+      graph.data.nodes.forEach((module, index, array) => {
+        if(module.label == moduleName){
+          moduleId = module.id;
+        }
+      });
+      return moduleId;
+    },
+    buildItemsOwnedData(){
+        this.completedModules.forEach((value, moduleId, map) => {
+                    debugger;
+            const moduleName = this.getModuleNameById(moduleId);
+            const moduleItems = modules[moduleName].itemsRequired;
+            for(let itemName in items){
+                if(!this.itemsOwned.get(itemName)){
+                    this.itemsOwned.set(itemName, items[itemName]);
+                }else{
+                    this.itemsOwned.set(itemName, this.itemsOwned.get(itemName) + items[itemName]);
+                }
+            }   
+        });
+    },
     buildListData() {
         let itemMap = new Map();
         if(this.selectedTrackedModule != ''){
@@ -139,10 +178,16 @@ export default {
                     let items = modules[moduleName].itemsRequired;
                     for(let itemName in items){
                         if(!itemMap.get(itemName)){
-                            itemMap.set(itemName, items[itemName]);
+                            if(!this.completedModules.get(this.getModuleIdByName(moduleName)))
+                                itemMap.set(itemName, {itemsRequired: items[itemName], itemsOwned: 0});
+                            else
+                                itemMap.set(itemName, {itemsRequired: items[itemName], itemsOwned: items[itemName]});
                         }
                         else{
-                            itemMap.set(itemName, itemMap.get(itemName) + items[itemName]);
+                            if(!this.completedModules.get(this.getModuleIdByName(moduleName)))
+                                itemMap.set(itemName, {itemsRequired: itemMap.get(itemName).itemsRequired + items[itemName], itemsOwned: itemMap.get(itemName).itemsOwned});
+                            else
+                                itemMap.set(itemName, {itemsRequired: itemMap.get(itemName).itemsRequired  + items[itemName], itemsOwned: itemMap.get(itemName).itemsOwned + items[itemName]});
                         }
                     }
                 }
@@ -152,14 +197,22 @@ export default {
                 let items = modules[moduleName].itemsRequired;
                 for(let itemName in items){
                     if(!itemMap.get(itemName)){
-                        itemMap.set(itemName, items[itemName]);
+                        if(!this.completedModules.get(this.getModuleIdByName(moduleName)))
+                                itemMap.set(itemName, {itemsRequired: items[itemName], itemsOwned: 0});
+                        else
+                                itemMap.set(itemName, {itemsRequired: items[itemName], itemsOwned: items[itemName]});
                     }
                     else{
-                        itemMap.set(itemName, itemMap.get(itemName) + items[itemName]);
+                        debugger;
+                        if(!this.completedModules.get(this.getModuleIdByName(moduleName)))
+                            itemMap.set(itemName, {itemsRequired: itemMap.get(itemName).itemsRequired  + items[itemName], itemsOwned: itemMap.get(itemName).itemsOwned});
+                        else
+                            itemMap.set(itemName, {itemsRequired: itemMap.get(itemName).itemsRequired  + items[itemName], itemsOwned: itemMap.get(itemName).itemsOwned + items[itemName]});
                     }
                 }
             }
         }
+        console.log(itemMap);
         this.itemList = [];
         itemMap.forEach((value, key, map) => {
             if(items.items[key]){
@@ -192,10 +245,19 @@ export default {
                     let items = modules[moduleName].itemsRequired;
                     for(let itemName in items){
                         if(this.expanded[0].href == itemName){
+                            if(this.completedModules.get(this.getModuleIdByName(moduleName))){
                             this.expandedItemInfo.push({
                                 name: moduleName,
-                                numRequired: items[itemName]
-                            })
+                                numRequired: items[itemName],
+                                completed: true
+                            });
+                        }else{
+                                this.expandedItemInfo.push({
+                                name: moduleName,
+                                numRequired: items[itemName],
+                                completed: false
+                            });
+                        }
                         }
                     }
                 }
@@ -205,10 +267,19 @@ export default {
                 let items = modules[moduleName].itemsRequired;
                 for(let itemName in items){
                     if(this.expanded[0].href == itemName){
-                        this.expandedItemInfo.push({
-                            name: moduleName,
-                            numRequired: items[itemName]
-                        })
+                        if(this.completedModules.get(this.getModuleIdByName(moduleName))){
+                            this.expandedItemInfo.push({
+                                name: moduleName,
+                                numRequired: items[itemName],
+                                completed: true
+                            });
+                        }else{
+                                this.expandedItemInfo.push({
+                                name: moduleName,
+                                numRequired: items[itemName],
+                                completed: false
+                            });
+                        }
                     }
                 }
             }
@@ -229,5 +300,9 @@ export default {
 .container img {
     width: 100%;
     height: auto;
+}
+
+.isModuleCompleted{
+    background-color: grey;
 }
 </style>

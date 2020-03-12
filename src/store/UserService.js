@@ -35,5 +35,23 @@ export default {
 
       resolve(new User(user));
     });
+  },
+  updateUserCompletedModules(newModule) {
+    return new Promise((resolve) => {
+      debugger;
+      const userData = localStorage.getItem(options.userKey);
+      const user = userData ? JSON.parse(userData) : {};
+      const hideoutModulesCompleted = new Map(user.hideoutModulesCompleted);
+
+      if(newModule.isCompleted)
+        hideoutModulesCompleted.set(newModule.moduleId, true);
+      else
+        hideoutModulesCompleted.delete(newModule.moduleId);
+
+      user.hideoutModulesCompleted = Array.from(hideoutModulesCompleted);
+      localStorage.setItem(options.userKey,JSON.stringify(user));
+
+      resolve(new User(user));
+    });
   }
 }

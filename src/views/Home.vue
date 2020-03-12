@@ -1,10 +1,12 @@
 <template>
   <div class="full-height">
-    <input style="color: white; border: 2px solid white;" type="text" v-model="question" @input="searchModulesForMatch()" @focus="onInputFocused()" @blur="onInputBlurred()">
-        <!-- <input style="color: white; border: 2px solid white;"  type="text" v-model="question" @change="searchModulesForMatch()"> -->
-    <button v-on:click="saveGraph()">Save</button>
-    <v-btn class="ma-2 butn" outlined color="indigo" @click="$router.push('hideoutItemList')" >Item List</v-btn>
-    <v-btn class="ma-2 butn" outlined color="indigo" @click="addModuleToTrackedMap()" >Track Selected Module</v-btn>
+    <div class="container">
+      <input style="color: white; border: 2px solid white;" type="text" v-model="question" @input="searchModulesForMatch()" @focus="onInputFocused()" @blur="onInputBlurred()">
+      <button v-on:click="saveGraph()">Save</button>
+      <v-btn class="ma-2 butn" outlined color="indigo" @click="$router.push('hideoutItemList')" >Item List</v-btn>
+      <v-btn class="ma-2 butn" outlined color="indigo" @click="addModuleToTrackedMap()" >Track Selected Module</v-btn>
+      <v-checkbox color="red darken-3" :disabled="selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Hideout Module Complete'"></v-checkbox>
+    </div>
     <span class="full-height" ref="vis">
       <!--<img src="../assets/logo.png">-->
       <!--<HelloWorld msg="Welcome to Your Vue.js App"/>-->
@@ -32,8 +34,13 @@ export default {
       question: '',
       inputFocused: false,
       selectedModule: '',
-      trackedModuels: new Map(),
-      prevModulesForCurrentModule: []
+      selectedModuleId: '',
+      trackedModuels: new Map(), //TODO: Remove
+      prevModulesForCurrentModule: [],
+      nodeSet: new vis.DataSet(),
+      edgeSet: new vis.DataSet(),
+      isDisabled2: true
+      // completedModules: new Map()
     };
   },
   // watch: {
@@ -43,9 +50,27 @@ export default {
     // }
   // },
   computed: {
+    isDisabled(){
+        debugger;
+        return this.selectedModuleId == '';
+    },
     trackedModules(){
       return this.$store.state.user.trackedModules;
     },
+    completedModules(){
+      return this.$store.state.user.hideoutModulesCompleted;
+    },
+    isModuleCompletedForCheckbox: {
+      get: function(){
+        if(this.selectedModuleId !== '' && this.completedModules)
+          return this.completedModules.get(this.selectedModuleId) ? true: false;
+        else
+          return false;
+      },
+      set: function(isChecked){
+        this.toggleCompletedModule();
+      }
+    }, 
     nodeColor() {
       return {
         background: '#bbe1fa',
@@ -72,6 +97,20 @@ export default {
         },
       };
     },
+    completedNodeColor(){
+      return {
+        border: '#000000',
+        background: '#000000',
+        hover: {
+          background: '#a5d2eb',
+          border: '#305e92',
+        },
+        highlight: {
+          background: '#fa322f',
+          border: '#2eb81e',
+        },
+      };
+    },
     edgeOptions() {
       return {
         arrows: 'to',
@@ -86,10 +125,70 @@ export default {
 
   },
   mounted() {
+    this.getVisData();
     this.initVis();
     this.setSelectOnClickHandler();
+    this.highlightCompletedModulesOnInit();
   },
   methods: {
+    toggleCompletedModule(){
+      debugger;
+      if(!this.completedModules.get(this.selectedModuleId)){
+        // this.completedModules.set(this.selectedModuleId, true);
+        this.$store.dispatch('updateUserCompletedModules', {moduleId: this.selectedModuleId, isCompleted: true}).then(() => {
+          this.highlightCompletedModule(this.selectedModuleId, true);
+        });
+      }else{
+        this.$store.dispatch('updateUserCompletedModules', {moduleId: this.selectedModuleId, isCompleted: false});
+        this.highlightCompletedModule(this.selectedModuleId, false);
+        // this.completedModules.delete(this.selectedModuleId);
+      }
+    },
+    highlightCompletedModule(id, highlightTrue){ 
+        var curNode = this.nodeSet.get(id);
+        if(this.completedModules.get(id)){
+          if(highlightTrue){
+            curNode.color = this.completedNodeColor;
+          }else{
+            curNode.color = this.nodeColor;
+          }
+        }
+        this.nodeSet.update(curNode);
+    },
+    highlightCompletedModulesOnInit(){
+      this.completedModules.forEach((module, moduleId, array) => {
+        this.highlightCompletedModule(moduleId, true);
+      });
+    },
+    // Too Slow
+    // toggleCompletedModule(){
+    //   console.log("start");
+    //   if(!this.completedModules.get(this.selectedModuleId))
+    //     this.completedModules.set(this.selectedModuleId, true);
+    //   else
+    //     this.completedModules.delete(this.selectedModuleId);
+    //   console.log("middle");
+    //   this.highlightCompletedModules();
+    //   console.log("end");
+    // },
+    // highlightCompletedModules(){ 
+    //   this.nodeSet.forEach((node)=> {
+    //     var clickedNode = node;
+    //     if(this.completedModules.get(node.id)){
+    //       clickedNode.color = {
+    //         border: '#000000',
+    //         background: '#000000',
+    //         highlight: {
+    //           border: '#2B7CE9',
+    //           background: '#D2E5FF'
+    //         }
+    //       }
+    //     }else{
+    //       clickedNode.color = this.nodeColor;
+    //     }
+    //       this.nodeSet.update(clickedNode);
+    //   });
+    // },
     setSelectOnClickHandler() {
       this.network.on('deselectNode', (params) => {
         if(this.inputFocused){
@@ -99,11 +198,14 @@ export default {
         }
       });
       this.network.on('click', (params) => {
+        debugger;
         if (params.nodes.length) {
           this.selectedModule = this.getModuleNameById(params.nodes[0]);
+          this.selectedModuleId = params.nodes[0];
           this.selectAllChildren(params.nodes[0]);
         }else{
           this.selectedModule = '';
+          this.selectedModuleId = '';
         }
       });
     },
@@ -181,7 +283,9 @@ export default {
     },
     initVis() {
       const container = this.$refs.vis;
-      const data = this.getVisData();
+      const data = {
+        nodes: this.nodeSet,
+        edges: this.edgeSet};
       const options = {
         edges: {
           smooth: {
@@ -230,10 +334,13 @@ export default {
         this.edges.set(id, edge);
       });
 
-      return {
-        nodes: new vis.DataSet(nodes),
-        edges: new vis.DataSet(edges),
-      };
+      this.nodeSet = new vis.DataSet(nodes);
+      this.edgeSet = new vis.DataSet(edges)
+
+      // return {
+      //   nodes: new vis.DataSet(nodes),
+      //   edges: new vis.DataSet(edges),
+      // };
     },
     searchModulesForMatch(){
       const vm = this;
@@ -268,5 +375,9 @@ export default {
 .butn{
   background-color: white;
   margin: 10px;
+}
+
+.container {
+  display: flex; /* or inline-flex */
 }
 </style>

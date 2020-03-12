@@ -40,6 +40,16 @@ export default new Vuex.Store({
             UserService.updateUserTrackedModules(payload).then(user => {
               commit("setUser", { user })
             })
-      },
+        },
+        updateUserCompletedModules({ commit }, payload) {
+            return new Promise((resolve, reject) => {
+                debugger;
+                UserService.updateUserCompletedModules(payload).then(user => {
+                commit("setUser", { user })
+                });
+                resolve();
+            });
+        },
+            
     }
 })
