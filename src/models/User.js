@@ -5,6 +5,7 @@ export default class User {
   hideoutModulesCompleted;
   trackedModules;
   itemsOwned;
+  itemsInInventory;
 
   constructor(data) {
     if(Array.isArray(data.hideoutModulesCompleted)){
@@ -23,6 +24,12 @@ export default class User {
       this.itemsOwned = new Map(data.itemsOwned);
     }else{
       this.itemsOwned = data.itemsOwned;
+    }
+
+    if(Array.isArray(data.itemsInInventory)){
+      this.itemsInInventory = new Map(data.itemsInInventory);
+    }else{
+      this.itemsInInventory = data.itemsInInventory;
     }
   }
 }

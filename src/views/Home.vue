@@ -6,12 +6,16 @@
       <v-btn class="ma-2 butn" outlined color="indigo" @click="$router.push('hideoutItemList')" >Item List</v-btn>
       <v-btn class="ma-2 butn" outlined color="indigo" @click="addModuleToTrackedMap()" >Track Selected Module</v-btn>
       <v-checkbox color="red darken-3" :disabled="selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Hideout Module Complete'"></v-checkbox>
+      <tracked-modules-dialog></tracked-modules-dialog>
     </div>
-    <span class="full-height" ref="vis">
+ 
+    <span ref="vis">
       <!--<img src="../assets/logo.png">-->
       <!--<HelloWorld msg="Welcome to Your Vue.js App"/>-->
     </span>
+  
   </div>
+  
 </template>
 
 <script>
@@ -19,16 +23,19 @@
 // import HelloWorld from '@/components/HelloWorld.vue';
 import * as vis from 'vis-network';
 import graph from '../assets/graph';
+import trackedModulesDialog from "../components/TrackedModulesDialog"
+import graphService from "../store/graphService"
 
-// let prevModulesForCurrentModule = [];
 
 export default {
   name: 'Home',
   components: {
+    trackedModulesDialog
   },
   data() {
 
     return {
+      dialog:false,
       network: null,
       edges: new Map(),
       question: '',
@@ -50,6 +57,9 @@ export default {
     // }
   // },
   computed: {
+    visData(){
+      return this.$store.state.visData;
+    },
     isDisabled(){
         debugger;
         return this.selectedModuleId == '';
@@ -134,18 +144,16 @@ export default {
     toggleCompletedModule(){
       debugger;
       if(!this.completedModules.get(this.selectedModuleId)){
-        // this.completedModules.set(this.selectedModuleId, true);
         this.$store.dispatch('updateUserCompletedModules', {moduleId: this.selectedModuleId, isCompleted: true}).then(() => {
           this.highlightCompletedModule(this.selectedModuleId, true);
         });
       }else{
         this.$store.dispatch('updateUserCompletedModules', {moduleId: this.selectedModuleId, isCompleted: false});
         this.highlightCompletedModule(this.selectedModuleId, false);
-        // this.completedModules.delete(this.selectedModuleId);
       }
     },
     highlightCompletedModule(id, highlightTrue){ 
-        var curNode = this.nodeSet.get(id);
+        var curNode = this.visData.nodes.get(id);
         if(this.completedModules.get(id)){
           if(highlightTrue){
             curNode.color = this.completedNodeColor;
@@ -153,7 +161,7 @@ export default {
             curNode.color = this.nodeColor;
           }
         }
-        this.nodeSet.update(curNode);
+        this.visData.nodes.update(curNode);
     },
     highlightCompletedModulesOnInit(){
       this.completedModules.forEach((module, moduleId, array) => {
@@ -283,9 +291,11 @@ export default {
     },
     initVis() {
       const container = this.$refs.vis;
-      const data = {
-        nodes: this.nodeSet,
-        edges: this.edgeSet};
+      // const data = {
+      //   nodes: this.nodeSet,
+      //   edges: this.edgeSet};
+      const data = this.visData;
+      debugger;
       const options = {
         edges: {
           smooth: {
@@ -379,5 +389,12 @@ export default {
 
 .container {
   display: flex; /* or inline-flex */
+
+}
+
+.popup-visible {
+    position: absolute;
+    z-index: 10;
+    visibility: visible;
 }
 </style>

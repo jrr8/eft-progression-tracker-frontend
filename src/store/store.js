@@ -12,6 +12,7 @@ export default new Vuex.Store({
         //       trackedModules that return state.user.trackedModules?
         // trackedModules: new Map(),
         user: { },
+        visData: { }
     },
     mutations: {
         // put sychronous functions for changing state e.g. add, edit, delete
@@ -25,6 +26,10 @@ export default new Vuex.Store({
 
         setUser(state, payload) {
             state.user = payload.user;
+        },
+
+        setVisData(state, payload){
+            state.visData = payload;
         }
 
     },
@@ -47,6 +52,14 @@ export default new Vuex.Store({
                 UserService.updateUserCompletedModules(payload).then(user => {
                 commit("setUser", { user })
                 });
+                resolve();
+            });
+        },
+        updateUserItemsInInventory({ commit }, payload) {
+            return new Promise((resolve, reject) => {
+                UserService.updateUserItemsInInventory(payload).then(user => {
+                    commit("setUser", { user })
+                    });
                 resolve();
             });
         },

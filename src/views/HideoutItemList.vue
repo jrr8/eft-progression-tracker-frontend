@@ -3,6 +3,7 @@
         <v-card>
             <v-card-title>
                 Items
+                <v-checkbox color="red darken-3" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
                 <v-spacer></v-spacer>
                 <v-text-field
                     v-model="search"
@@ -16,14 +17,14 @@
                     v-model="selectedTrackedModule"
                     :items="trackedModulesDropdownList"
                     attach
-                    chips
                     label="Tracked Hideout Modules"
-                    @change="buildListData()"
+                    @change="buildItemListForTable()"
+                    clearable
                 ></v-select>
             </v-card-title>
 
             <v-data-table
-                :headers="headers"
+                :headers="computedHeaders"
                 :items="itemList"
                 :items-per-page="10"
                 class="elevation-1"
@@ -40,6 +41,16 @@
 
                 <template class="container" v-slot:item.itemsRequired="{ item }">
                     ({{item.itemsRequired.itemsOwned.toLocaleString()}}/{{item.itemsRequired.itemsRequired.toLocaleString()}})
+                </template>
+
+                <template class="container" v-slot:item.itemsInInventory="{ item }">
+                    <v-btn  class="mx-2 incAndDecButton" fab dark small color="pink" @click="updateItemInInventory(item.href, -1, 0)">
+                        <v-icon dark>mdi-minus</v-icon>
+                    </v-btn>
+                    {{item.itemsInInventory.found.toLocaleString()}}
+                    <v-btn class="mx-2 incAndDecButton" fab dark small color="pink" @click="updateItemInInventory(item.href, 1, 0)">
+                        <v-icon x-small dark>mdi-plus</v-icon>
+                    </v-btn>
                 </template>
 
                  <template v-slot:expanded-item="{ headers }">
@@ -67,13 +78,12 @@
     </div>
 </template>
 
+
 <script>
 import modules from '../assets/modules';
 import items from '../assets/items';
 import graph from '../assets/graph';
 
-// const itemList = [];
-// const allItemsMap = new Map();
 
 export default {
   name: 'HideoutItemList',
@@ -88,6 +98,7 @@ export default {
         expandedItemInfo: [],
         expanded: [],
         search: '',
+        hideImageColumn: false,
         headers: [
             {
                 text: 'Image',
@@ -107,14 +118,13 @@ export default {
             },
             { text: 'Numver Required', value: 'numRequired' },
         ],
-
     };
   },
   watch: {
     expanded: function (val) {
         if(this.expanded.length){
             this.expandedItemInfo = [];
-            this.printRow();
+            this.buildDropDownData();
         }
     }
   },
@@ -127,17 +137,39 @@ export default {
     },
     trackedModulesDropdownList(){
         return Array.from(this.trackedModules.keys());
+    },
+    itemsInInventory(){
+        return this.$store.state.user.itemsInInventory;
+    },
+    computedHeaders () {
+      if(this.hideImageColumn)
+        return this.headers.filter(header => header.text !== "Image");
+    
+        return this.headers;
     }
   },
   created() {
   },
   mounted() {
         this.createAllItemsMap();
-        this.buildListData();
-        // this.buildItemsOwnedData();
-        // console.log(this.itemsOwned);
+        this.buildItemListForTable();
   },
   methods: {
+    updateItemInInventory(itemHref, numFound, numFoundInRaid){
+        let data = {
+            foundInc: numFound,
+            foundInRaidInc: numFoundInRaid 
+        };
+        this.$store.dispatch('updateUserItemsInInventory', {itemName:itemHref, itemData: data}).then(() => {
+             for (var i in this.itemList){
+                if(this.itemList[i].href == itemHref){
+                    this.itemList[i].itemsInInventory = {found: this.itemList[i].itemsInInventory.found + data.foundInc,
+                                        foundInRaid: this.itemList[i].itemsInInventory.foundInRaid + data.foundInRaidInc
+                                        }
+                }
+            }
+        });
+    },
     getModuleNameById(id){
       let moduleName = '';
       graph.data.nodes.forEach((module, index, array) => {
@@ -158,7 +190,6 @@ export default {
     },
     buildItemsOwnedData(){
         this.completedModules.forEach((value, moduleId, map) => {
-                    debugger;
             const moduleName = this.getModuleNameById(moduleId);
             const moduleItems = modules[moduleName].itemsRequired;
             for(let itemName in items){
@@ -170,20 +201,25 @@ export default {
             }   
         });
     },
-    buildListData() {
+    buildItemListForTable(){
+        const itemMap = this.buildItemDataMapForTable();
+        this.buildItemList(itemMap);
+    },
+    buildItemDataMapForTable() {
+        debugger;
         let itemMap = new Map();
-        if(this.selectedTrackedModule != ''){
-            for (let moduleName in modules) {
+        for (let moduleName in modules) { //Loops through all modules
+            let items = modules[moduleName].itemsRequired;
+            if(this.selectedTrackedModule){ //Module is selected in the tracked dropdown
                 if(this.trackedModules.get(this.selectedTrackedModule).includes(moduleName)){
-                    let items = modules[moduleName].itemsRequired;
-                    for(let itemName in items){
-                        if(!itemMap.get(itemName)){
-                            if(!this.completedModules.get(this.getModuleIdByName(moduleName)))
+                    for(let itemName in items){ //Loops through all required items for given module
+                        if(!itemMap.get(itemName)){ // Item is not in map, add new item
+                            if(!this.completedModules.get(this.getModuleIdByName(moduleName))) // Module is not completed, contribute no items
                                 itemMap.set(itemName, {itemsRequired: items[itemName], itemsOwned: 0});
                             else
                                 itemMap.set(itemName, {itemsRequired: items[itemName], itemsOwned: items[itemName]});
                         }
-                        else{
+                        else{ // Item already in map, add required items to existing item
                             if(!this.completedModules.get(this.getModuleIdByName(moduleName)))
                                 itemMap.set(itemName, {itemsRequired: itemMap.get(itemName).itemsRequired + items[itemName], itemsOwned: itemMap.get(itemName).itemsOwned});
                             else
@@ -191,11 +227,8 @@ export default {
                         }
                     }
                 }
-            }
-        }else{
-            for (let moduleName in modules) {
-                let items = modules[moduleName].itemsRequired;
-                for(let itemName in items){
+            }else{ //No module is selected in the tracked dropdown
+                for(let itemName in items){ //Loops through all required items for given module
                     if(!itemMap.get(itemName)){
                         if(!this.completedModules.get(this.getModuleIdByName(moduleName)))
                                 itemMap.set(itemName, {itemsRequired: items[itemName], itemsOwned: 0});
@@ -203,7 +236,6 @@ export default {
                                 itemMap.set(itemName, {itemsRequired: items[itemName], itemsOwned: items[itemName]});
                     }
                     else{
-                        debugger;
                         if(!this.completedModules.get(this.getModuleIdByName(moduleName)))
                             itemMap.set(itemName, {itemsRequired: itemMap.get(itemName).itemsRequired  + items[itemName], itemsOwned: itemMap.get(itemName).itemsOwned});
                         else
@@ -212,25 +244,49 @@ export default {
                 }
             }
         }
-        console.log(itemMap);
-        this.itemList = [];
+        return itemMap;
+    },
+    buildItemList(itemMap){
+       this.itemList = [];
         itemMap.forEach((value, key, map) => {
             if(items.items[key]){
-                this.itemList.push({
+                if(this.itemsInInventory.get(key)){
+                    this.itemList.push({
                         name: items.items[key].name,
                         itemsRequired: value,
-                        itemsInInventory: 0,
+                        itemsInInventory: {found: this.itemsInInventory.get(key).found, foundInRaid: this.itemsInInventory.get(key).foundInRaid},
                         imgUrl: items.items[key].imgUrl,
                         href: key
                     });
+                }
+                else{
+                    this.itemList.push({
+                        name: items.items[key].name,
+                        itemsRequired: value,
+                        itemsInInventory: {found: 0, foundInRaid: 0},
+                        imgUrl: items.items[key].imgUrl,
+                        href: key
+                    });
+                } 
             }else
-                this.itemList.push({
+                if(this.itemsInInventory.get(key)){
+                    this.itemList.push({
                         name: key,
                         itemsRequired: value,
-                        itemsInInventory: 0,
+                        itemsInInventory: {found: this.itemsInInventory.get(key).found, foundInRaid: this.itemsInInventory.get(key).foundInRaid},
                         imgUrl: '',
                         href: key
                     });
+                }
+                else{
+                    this.itemList.push({
+                        name: key,
+                        itemsRequired: value,
+                        itemsInInventory: {found: 0, foundInRaid: 0},
+                        imgUrl: '',
+                        href: key
+                    });
+                } 
         });
     },
     createAllItemsMap(){
@@ -238,7 +294,7 @@ export default {
             this.allItemsMap.set(itemName, items.items[itemName])
         }
     },
-    printRow(){
+    buildDropDownData(){
         if(this.selectedTrackedModule != ''){
             for (let moduleName in modules) {
                 if(this.trackedModules.get(this.selectedTrackedModule).includes(moduleName)){
@@ -304,5 +360,10 @@ export default {
 
 .isModuleCompleted{
     background-color: grey;
+}
+
+.incAndDecButton{
+    width: 20px;
+    height: 20px;
 }
 </style>

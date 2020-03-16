@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <!-- <v-navigation-drawer
             permanent
             expand-on-hover
@@ -46,11 +46,13 @@
             </v-list>
           </v-navigation-drawer> -->
     <router-view/>
-  </div>
+  </v-app>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld';
+import graph from './assets/graph';
+import * as vis from 'vis-network';
 
 export default {
   name: 'App',
@@ -65,22 +67,98 @@ export default {
   computed: {
     user() {
       return this.$store.state.user;
-    }
+    },
+    nodeColor() {
+      return {
+        background: '#bbe1fa',
+        border: '#3282b8',
+        hover: {
+          background: '#a5d2eb',
+          border: '#305e92',
+        },
+        highlight: {
+          background: '#fa322f',
+          border: '#2eb81e',
+        },
+      };
+    },
+    nodeOptions() {
+      return {
+        physics: false,
+        shape: 'box',
+        widthConstraint: 300,
+        heightConstraint: 50,
+        color: this.nodeColor,
+        font: {
+          size: 30,
+        },
+      };
+    },
+    completedNodeColor(){
+      return {
+        border: '#000000',
+        background: '#000000',
+        hover: {
+          background: '#a5d2eb',
+          border: '#305e92',
+        },
+        highlight: {
+          background: '#fa322f',
+          border: '#2eb81e',
+        },
+      };
+    },
+    edgeOptions() {
+      return {
+        arrows: 'to',
+        color: {
+          color: this.nodeColor.hover.background,
+          highlight: this.nodeColor.highlight.border,
+        },
+      };
+    },
   },
 
   created() {
     this.$store.dispatch("fetchUser").then(() => {
       console.log(this.user);
     });
+    this.getVisData();
   },
+  methods: {
+    getVisData() {
+      const nodes = graph.data.nodes.map((node) => ({
+        ...node,
+        ...this.nodeOptions,
+      }));
+
+      const edges = [];
+      graph.data.edges.forEach((edge_, i) => {
+        const id = `e_${String(i + 1).padStart(3, '0')}`;
+        const edge = {
+          id,
+          ...edge_,
+          ...this.edgeOptions,
+        };
+
+        edges.push(edge);
+      });
+
+      this.nodeSet = new vis.DataSet(nodes);
+      this.edgeSet = new vis.DataSet(edges);
+
+      this.$store.commit('setVisData', {nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges)})
+
+      // return {
+      //   nodes: new vis.DataSet(nodes),
+      //   edges: new vis.DataSet(edges),
+      // };
+    },
+  }
 };
 </script>
 
 <style lang="less">
-html, body {
-  height: 100%;
-  background: #1b262c;
-}
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -89,6 +167,7 @@ html, body {
   text-align: center;
   color: #2c3e50;
   height: 100%;
+  background: #1b262c;
 }
 
 #nav {
