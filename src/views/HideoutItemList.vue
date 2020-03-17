@@ -32,9 +32,6 @@
                 :single-expand="true"
                 :sort-desc="true"
             >
-                <template class="container" v-slot:item.image="{ item }">
-                    <v-img :src="item.imgUrl" aspect-ratio="1.7" contain></v-img>
-                </template>
 
                 <template class="container" v-slot:item.itemsRequired="{ item }">
                     ({{item.itemsRequired.itemsOwned.toLocaleString()}}/{{item.itemsRequired.itemsRequired.toLocaleString()}})
@@ -70,6 +67,10 @@
                         </v-simple-table>
                     </td>
                 </template>
+
+              <template class="container" v-slot:item.image="{ item }">
+                <v-img :src="item.imgUrl" max-height="70px" contain></v-img>
+              </template>
             </v-data-table>
     </div>
 </template>
@@ -96,15 +97,15 @@ export default {
         search: '',
         hideImageColumn: false,
         headers: [
-            {
-                text: 'Image',
-                align: 'start',
-                value: 'image',
-                sortable: false,
-            },
             { text: 'Item Name', value: 'name' },
             { text: 'Items Required', value: 'itemsRequired' },
             { text: 'Items in Inventory', value: 'itemsInInventory' },
+            {
+              text: 'Image',
+              align: 'start',
+              value: 'image',
+              sortable: false,
+            },
         ],
         expandedHeaders: [
             {
@@ -140,7 +141,7 @@ export default {
     computedHeaders () {
       if(this.hideImageColumn)
         return this.headers.filter(header => header.text !== "Image");
-    
+
         return this.headers;
     }
   },
@@ -154,7 +155,7 @@ export default {
     updateItemInInventory(itemHref, numFound, numFoundInRaid){
         let data = {
             foundInc: numFound,
-            foundInRaidInc: numFoundInRaid 
+            foundInRaidInc: numFoundInRaid
         };
         this.$store.dispatch('updateUserItemsInInventory', {itemName:itemHref, itemData: data}).then(() => {
              for (var i in this.itemList){
@@ -194,7 +195,7 @@ export default {
                 }else{
                     this.itemsOwned.set(itemName, this.itemsOwned.get(itemName) + items[itemName]);
                 }
-            }   
+            }
         });
     },
     buildItemListForTable(){
@@ -263,7 +264,7 @@ export default {
                         imgUrl: items.items[key].imgUrl,
                         href: key
                     });
-                } 
+                }
             }else
                 if(this.itemsInInventory.get(key)){
                     this.itemList.push({
@@ -282,7 +283,7 @@ export default {
                         imgUrl: '',
                         href: key
                     });
-                } 
+                }
         });
     },
     createAllItemsMap(){
