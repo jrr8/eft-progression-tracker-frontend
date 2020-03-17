@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper" class="full-height">
+  <div id="wrapper">
         <button class="button button5 button-fill-bottom" @click="$router.push('features')">Try It Out</button>
         <button class="button button5 disabled" title="Coming Soon">Login </button>
   </div>
@@ -33,9 +33,6 @@ export default {
 
 
 <style scoped lang="less">
-.full-height {
-  height: 100%;
-}
 .button {
   background-color: #4CAF50; /* Green */
   border: none;

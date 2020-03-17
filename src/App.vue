@@ -45,15 +45,16 @@
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
-            <v-content>
+    <v-content>
 
     <!-- Provides the application the proper gutter -->
-    <v-container fluid>
+    <v-container fluid fill-height>
 
       <!-- If using vue-router -->
       <router-view></router-view>
     </v-container>
-  </v-content>
+
+    </v-content>
   </v-app>
 </template>
 
@@ -100,16 +101,8 @@ export default {
   background: #1b262c;
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.container.container--fluid.fill-height > * {
+  width: 100%;
+  height: 100%;
 }
 </style>
