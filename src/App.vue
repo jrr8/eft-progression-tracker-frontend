@@ -1,6 +1,6 @@
 <template>
-  <v-app id="app">
-    <!-- <v-navigation-drawer
+  <v-app >
+    <v-navigation-drawer app
             permanent
             expand-on-hover
           >
@@ -44,8 +44,16 @@
                 <v-list-item-title>Starred</v-list-item-title>
               </v-list-item>
             </v-list>
-          </v-navigation-drawer> -->
-    <router-view/>
+          </v-navigation-drawer>
+            <v-content>
+
+    <!-- Provides the application the proper gutter -->
+    <v-container fluid>
+
+      <!-- If using vue-router -->
+      <router-view></router-view>
+    </v-container>
+  </v-content>
   </v-app>
 </template>
 
@@ -68,92 +76,14 @@ export default {
     user() {
       return this.$store.state.user;
     },
-    nodeColor() {
-      return {
-        background: '#bbe1fa',
-        border: '#3282b8',
-        hover: {
-          background: '#a5d2eb',
-          border: '#305e92',
-        },
-        highlight: {
-          background: '#fa322f',
-          border: '#2eb81e',
-        },
-      };
-    },
-    nodeOptions() {
-      return {
-        physics: false,
-        shape: 'box',
-        widthConstraint: 300,
-        heightConstraint: 50,
-        color: this.nodeColor,
-        font: {
-          size: 30,
-        },
-      };
-    },
-    completedNodeColor(){
-      return {
-        border: '#000000',
-        background: '#000000',
-        hover: {
-          background: '#a5d2eb',
-          border: '#305e92',
-        },
-        highlight: {
-          background: '#fa322f',
-          border: '#2eb81e',
-        },
-      };
-    },
-    edgeOptions() {
-      return {
-        arrows: 'to',
-        color: {
-          color: this.nodeColor.hover.background,
-          highlight: this.nodeColor.highlight.border,
-        },
-      };
-    },
   },
 
   created() {
     this.$store.dispatch("fetchUser").then(() => {
       console.log(this.user);
     });
-    this.getVisData();
   },
   methods: {
-    getVisData() {
-      const nodes = graph.data.nodes.map((node) => ({
-        ...node,
-        ...this.nodeOptions,
-      }));
-
-      const edges = [];
-      graph.data.edges.forEach((edge_, i) => {
-        const id = `e_${String(i + 1).padStart(3, '0')}`;
-        const edge = {
-          id,
-          ...edge_,
-          ...this.edgeOptions,
-        };
-
-        edges.push(edge);
-      });
-
-      this.nodeSet = new vis.DataSet(nodes);
-      this.edgeSet = new vis.DataSet(edges);
-
-      this.$store.commit('setVisData', {nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges)})
-
-      // return {
-      //   nodes: new vis.DataSet(nodes),
-      //   edges: new vis.DataSet(edges),
-      // };
-    },
   }
 };
 </script>

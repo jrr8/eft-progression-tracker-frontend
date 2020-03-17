@@ -1,9 +1,6 @@
 <template>
     <div style="width: 75%; margin: auto; top:25%;">
-        <v-card>
-            <v-card-title>
-                Items
-                <v-checkbox color="red darken-3" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
+                        <v-checkbox color="red darken-3" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
                 <v-spacer></v-spacer>
                 <v-text-field
                     v-model="search"
@@ -21,7 +18,7 @@
                     @change="buildItemListForTable()"
                     clearable
                 ></v-select>
-            </v-card-title>
+
 
             <v-data-table
                 :headers="computedHeaders"
@@ -36,7 +33,7 @@
                 :sort-desc="true"
             >
                 <template class="container" v-slot:item.image="{ item }">
-                    <img :src="item.imgUrl">
+                    <v-img :src="item.imgUrl" aspect-ratio="1.7" contain></v-img>
                 </template>
 
                 <template class="container" v-slot:item.itemsRequired="{ item }">
@@ -74,7 +71,6 @@
                     </td>
                 </template>
             </v-data-table>
-        </v-card>
     </div>
 </template>
 

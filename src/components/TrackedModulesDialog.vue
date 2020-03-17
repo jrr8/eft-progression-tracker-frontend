@@ -34,6 +34,7 @@
 <script>
 import modules from '../assets/modules';
 import graph from '../assets/graph';
+import graphService from "../store/graphService"
 
 export default {
   name: 'TrackedModulesDialog',
@@ -57,6 +58,7 @@ export default {
   },
   computed: {
     completedModules(){
+      console.log("computed");
       return this.$store.state.user.hideoutModulesCompleted;
     },
   },
@@ -87,9 +89,12 @@ export default {
       console.log(this.getModuleIdByName(moduleName));
       if(!this.completedModules.get(this.getModuleIdByName(moduleName))){
         this.$store.dispatch('updateUserCompletedModules', {moduleId: this.getModuleIdByName(moduleName), isCompleted: true}).then(() => {
+          graphService.highlightCompletedModule(this.getModuleIdByName(moduleName), true, this.completedModules);
         });
       }else{
         this.$store.dispatch('updateUserCompletedModules', {moduleId: this.getModuleIdByName(moduleName), isCompleted: false}).then(() => {
+          console.log("deleted");
+          graphService.highlightCompletedModule(this.getModuleIdByName(moduleName), false, this.completedModules);
         });
       }
     },

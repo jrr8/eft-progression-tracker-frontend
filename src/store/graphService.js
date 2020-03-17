@@ -1,77 +1,117 @@
 import * as vis from 'vis-network';
 import graph from '../assets/graph';
 
+let nodeColor = {
+    background: '#bbe1fa',
+    border: '#3282b8',
+    hover: {
+    background: '#a5d2eb',
+    border: '#305e92',
+        },
+    highlight: {
+    background: '#fa322f',
+    border: '#2eb81e',
+        }
+};
+let nodeOptions = {
+    physics: false,
+    shape: 'box',
+    widthConstraint: 300,
+    heightConstraint: 50,
+    color: nodeColor,
+    font: {
+    size: 30,
+    },
+};
+let completedNodeColor = {
+    border: '#000000',
+    background: '#000000',
+    hover: {
+    background: '#a5d2eb',
+    border: '#305e92',
+    },
+    highlight: {
+    background: '#fa322f',
+    border: '#2eb81e',
+    },
+};
+let edgeOptions = {
+    arrows: 'to',
+    color: {
+    color: nodeColor.hover.background,
+    highlight: nodeColor.highlight.border,
+    },
+};
+
+let network = null;
+let visData = null;
+
+let edges = new Map();
+
+
 const options = {
     get userKey() { return 'user'; },
-    get nodeColor() {
-        return {
-          background: '#bbe1fa',
-          border: '#3282b8',
-          hover: {
-            background: '#a5d2eb',
-            border: '#305e92',
-          },
-          highlight: {
-            background: '#fa322f',
-            border: '#2eb81e',
-          },
-        };
-      },
-      get nodeOptions() {
-        return {
-          physics: false,
-          shape: 'box',
-          widthConstraint: 300,
-          heightConstraint: 50,
-          color: this.nodeColor,
-          font: {
-            size: 30,
-          },
-        };
-      },
-      get completedNodeColor(){
-        return {
-          border: '#000000',
-          background: '#000000',
-          hover: {
-            background: '#a5d2eb',
-            border: '#305e92',
-          },
-          highlight: {
-            background: '#fa322f',
-            border: '#2eb81e',
-          },
-        };
-      },
-      get edgeOptions() {
-        return {
-          arrows: 'to',
-          color: {
-            color: this.nodeColor.hover.background,
-            highlight: this.nodeColor.highlight.border,
-          },
-        };
-      },
   };
   
 export default {
-    printTest(){
-        console.log("test");
+    // class
+    selectedModule: '',
+    selectedModuleId: '',
+    prevModulesForCurrentModule: [],
+    getVisData(){
+        console.log("in getter");
+        console.log(visData);
+        return visData;
     },
-    highlightCompletedModule(id, highlightTrue){ 
-        var curNode = this.visData.nodes.get(id);
-        if(this.completedModules.get(id)){
-          if(highlightTrue){
-            curNode.color = this.completedNodeColor;
-          }else{
-            curNode.color = this.nodeColor;
-          }
+    getNetwork(){
+        return network;
+    },
+    getselectedModuleId(){
+        return selectedModuleId;
+    },
+    highlightCompletedModule(id, highlightTrue, completedModules){ 
+        console.log(completedModules);
+        debugger;
+        var curNode = visData.nodes.get(id);
+        if(highlightTrue){ //TODO: Check
+            curNode.color = completedNodeColor;
+        }else{
+            console.log("unhighlight");
+            curNode.color = nodeColor;
         }
-        this.visData.nodes.update(curNode);
+        visData.nodes.update(curNode);
     },
-    highlightCompletedModulesOnInit(){
-        this.completedModules.forEach((module, moduleId, array) => {
-            this.highlightCompletedModule(moduleId, true);
+    highlightCompletedModulesOnInit(completedModules){
+        completedModules.forEach((module, moduleId, array) => {
+            this.highlightCompletedModule(moduleId, true, completedModules);
+        });
+    },
+    getModuleNameById(id){
+        let moduleName = '';
+        graph.data.nodes.forEach((module, index, array) => {
+          if(module.id == id){
+            moduleName = module.label;
+          }
+        });
+        return moduleName;
+    },
+    setSelectOnClickHandler() {
+        // this.network.on('deselectNode', (params) => {
+        //   if(this.inputFocused){
+        //     this.network.setSelection(params.previousSelection);
+        //   }else{
+        //     console.log('skipping');
+        //   }
+        // });
+        network.on('click', (params) => {
+          if (params.nodes.length) {
+            this.selectedModule = this.getModuleNameById(params.nodes[0]);
+            this.selectedModuleId = params.nodes[0];
+            this.selectAllChildren(params.nodes[0]);
+          }else{
+            this.selectedModule = '';
+            this.selectedModuleId = '';
+          }
         });
     },
     selectAllChildren(node) {
@@ -85,12 +125,12 @@ export default {
           const current = stack.pop();
           visited.nodes.add(current);
   
-          this.network.getConnectedNodes(current, 'from').forEach((child) => {
+          network.getConnectedNodes(current, 'from').forEach((child) => {
             stack.push(child);
           });
   
-          this.network.getConnectedEdges(current).forEach((edgeId) => {
-            const edge = this.edges.get(edgeId);
+          network.getConnectedEdges(current).forEach((edgeId) => {
+            const edge = visData.edges.get(edgeId);
             if (edge.to === current) {
               visited.edges.add(edgeId);
             }
@@ -99,7 +139,7 @@ export default {
   
         this.prevModulesForCurrentModule = Array.from(visited.nodes);
   
-        this.network.setSelection({
+        network.setSelection({
           nodes: Array.from(visited.nodes),
           edges: Array.from(visited.edges),
         });
@@ -107,79 +147,69 @@ export default {
     getScale() {
         // TODO: Set dynmaically based on screen size
         return 0.3;
-      },
-      initVis() {
-        const container = this.$refs.vis;
-        // const data = {
-        //   nodes: this.nodeSet,
-        //   edges: this.edgeSet};
-        const data = this.visData;
-        debugger;
+    },
+    initVis(networkRef) {
+        this.buildVisData();
+        const container = networkRef;
+
+        const data = visData;
+
         const options = {
-          edges: {
+            edges: {
             smooth: {
-              type: 'cubicBezier',
-              forceDirection: 'horizontal',
-              roundness: 1,
+                type: 'cubicBezier',
+                forceDirection: 'horizontal',
+                roundness: 1,
             },
-          },
-          interaction: {
+            },
+            interaction: {
             hover: true,
             selectConnectedEdges: false,
-          },
+            },
         };
-  
-        this.network = new vis.Network(container, data, options);
-        // this.network.on("click", function(params) {
-        //   if (params.edges.length > 0) {
-        //     console.log(params.nodes[0]);
-        //     this.getPrevModule("103");
-        //   }
-        // });
-        console.log("here");
-        this.network.moveTo({
-          scale: this.getScale(),
-          position: {
+
+        network = new vis.Network(container, data, options);
+
+        network.moveTo({
+            scale: this.getScale(),
+            position: {
             x: 650,
             y: 300,
-          },
+            },
         });
-      },
-      getVisData() {
+
+        this.setSelectOnClickHandler();
+    },
+    buildVisData() {
         const nodes = graph.data.nodes.map((node) => ({
-          ...node,
-          ...this.nodeOptions,
+            ...node,
+            ...nodeOptions,
         }));
-  
+
         const edges = [];
         graph.data.edges.forEach((edge_, i) => {
-          const id = `e_${String(i + 1).padStart(3, '0')}`;
-          const edge = {
+            const id = `e_${String(i + 1).padStart(3, '0')}`;
+            const edge = {
             id,
             ...edge_,
-            ...this.edgeOptions,
-          };
-  
-          edges.push(edge);
-          this.edges.set(id, edge);
+            ...edgeOptions,
+            };
+
+            edges.push(edge);
+            // this.edges.set(id, edge);
         });
-  
-        this.nodeSet = new vis.DataSet(nodes);
-        this.edgeSet = new vis.DataSet(edges)
-  
-        // return {
-        //   nodes: new vis.DataSet(nodes),
-        //   edges: new vis.DataSet(edges),
-        // };
-      },
-      searchModulesForMatch(){
+
+        visData = {nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges)}
+    },
+    searchModulesForMatch(){
         const vm = this;
         let matchingModules = [];
         graph.data.nodes.forEach(item => {
-          if(vm.question && item.label.toLowerCase().includes(vm.question.toLowerCase())){
+            if(vm.question && item.label.toLowerCase().includes(vm.question.toLowerCase())){
             matchingModules.push(item.id);
-          }
+            }
         });
         vm.network.selectNodes(matchingModules, false);
-      },
+    },
+
 }
