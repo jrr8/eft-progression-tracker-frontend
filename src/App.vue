@@ -48,7 +48,7 @@
     <v-content>
 
     <!-- Provides the application the proper gutter -->
-    <v-container fluid fill-height>
+    <v-container fluid>
 
       <!-- If using vue-router -->
       <router-view></router-view>
@@ -101,8 +101,8 @@ export default {
   background: #1b262c;
 }
 
-.container.container--fluid.fill-height > * {
+.container.container--fluid > * {
   width: 100%;
-  height: 100%;
+  height: 100vh;
 }
 </style>

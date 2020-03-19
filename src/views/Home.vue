@@ -1,5 +1,5 @@
 <template>
-  <div class="full-height">
+  <div class="d-flex-col">
     <div class="container">
       <input style="color: white; border: 2px solid white;" type="text" v-model="question" @input="searchModulesForMatch()" @focus="onInputFocused()" @blur="onInputBlurred()">
       <button v-on:click="saveGraph()">Save</button>
@@ -8,10 +8,10 @@
       <v-checkbox color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Hideout Module Complete'"></v-checkbox>
       <tracked-modules-dialog></tracked-modules-dialog>
     </div>
- 
-    <span ref="vis"></span>
+
+    <span ref="vis" class="flex-grow"></span>
   </div>
-  
+
 </template>
 
 <script>
@@ -60,7 +60,7 @@ export default {
       set: function(isChecked){
         this.toggleCompletedModule();
       }
-    }, 
+    },
   },
   created() {
 
@@ -140,7 +140,7 @@ export default {
     //   this.highlightCompletedModules();
     //   console.log("end");
     // },
-    // highlightCompletedModules(){ 
+    // highlightCompletedModules(){
     //   this.nodeSet.forEach((node)=> {
     //     var clickedNode = node;
     //     if(this.completedModules.get(node.id)){
@@ -162,9 +162,13 @@ export default {
 
 
 <style scoped lang="less">
-.full-height {
-  height: 100%;
-  position: relative;
+.d-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-grow {
+  flex-grow: 1;
 }
 
 .items{
