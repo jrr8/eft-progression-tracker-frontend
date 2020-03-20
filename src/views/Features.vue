@@ -1,8 +1,8 @@
 <template>
   <div id="wrapper" class="full-height">
-        <button class="button button5 button-fill-bottom" @click="$router.push('home')">Hideout</button>
-        <button class="button button5  disabled" @click="$router.push('features')">Quests</button>
-        <button class="button button5  disabled">Profile</button>
+        <button class="button button5 button-fill-bottom no-focus" @click="$router.push('home')">Hideout</button>
+        <button class="button button5  disabled no-focus" @click="$router.push('features')">Quests</button>
+        <button class="button button5  disabled no-focus">Profile</button>
   </div>
 </template>
 

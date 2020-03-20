@@ -101,6 +101,16 @@ export default {
   background: #1b262c;
 }
 
+.no-focus {
+  &:focus {
+    outline: none;
+  }
+
+  *:focus {
+    outline: none;
+  }
+}
+
 .container.container--fluid > * {
   width: 100%;
   height: 100vh;

@@ -9,7 +9,7 @@
       <tracked-modules-dialog></tracked-modules-dialog>
     </div>
 
-    <span ref="vis" class="flex-grow"></span>
+    <span ref="vis" class="flex-grow no-focus"></span>
   </div>
 
 </template>
@@ -112,10 +112,6 @@ export default {
       a.href = URL.createObjectURL(file);
       a.download = fileName;
       a.click();
-    },
-    getScale() {
-      // TODO: Set dynmaically based on screen size
-      return 0.3;
     },
     searchModulesForMatch(){
       const vm = this;
