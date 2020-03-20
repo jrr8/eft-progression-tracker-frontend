@@ -25,30 +25,30 @@
               nav
               dense
             >
-              <v-list-item link>
-                <v-list-item-icon>
-                  <v-icon>mdi-folder</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>My Files</v-list-item-title>
+              <v-list-item :class="[computedPage == '/' ? activeClass : '', 'nav-item']" link>
+                <!-- <v-list-item-icon>
+                  <v-icon>fas fa-list</v-icon>
+                </v-list-item-icon> -->
+                <v-list-item-title @click="$router.push('/')" >Home</v-list-item-title>
               </v-list-item>
-              <v-list-item link>
-                <v-list-item-icon>
+              <v-list-item :class="[computedPage.includes('hideoutItemList') ? activeClass : '', 'nav-item']" link>
+                <!-- <v-list-item-icon>
+                  <v-icon>fas fa-list</v-icon>
+                </v-list-item-icon> -->
+                <v-list-item-title  @click="$router.push('hideoutItemList')" >Item List</v-list-item-title>
+              </v-list-item>
+              <v-list-item :class="[computedPage.includes('home') ? activeClass : '', 'nav-item']" link>
+                <!-- <v-list-item-icon>
                   <v-icon>mdi-account-multiple</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>Shared with me</v-list-item-title>
-              </v-list-item>
-              <v-list-item link>
-                <v-list-item-icon>
-                  <v-icon>mdi-star</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>Starred</v-list-item-title>
+                </v-list-item-icon> -->
+                <v-list-item-title @click="$router.push('home')">Hideout Module Graph</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-navigation-drawer>
     <v-content>
 
     <!-- Provides the application the proper gutter -->
-    <v-container fluid>
+    <v-container fluid style="padding: 0px;">
 
       <!-- If using vue-router -->
       <router-view></router-view>
@@ -71,12 +71,17 @@ export default {
   },
 
   data: () => ({
+    activeClass: 'active'
   }),
 
   computed: {
     user() {
       return this.$store.state.user;
     },
+    computedPage(){
+      console.log(this.$route.path);
+      return this.$route.path;
+    }
   },
 
   created() {
@@ -104,5 +109,10 @@ export default {
 .container.container--fluid > * {
   width: 100%;
   height: 100vh;
+}
+
+.active {
+  background: #3a0f0f;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 </style>

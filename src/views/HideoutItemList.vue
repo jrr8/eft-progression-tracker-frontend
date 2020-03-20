@@ -1,5 +1,7 @@
 <template>
     <div style="width: 75%; margin: auto; top:25%;">
+        <v-card>
+            <v-card-title>
                         <v-checkbox color="red darken-3" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
                 <v-spacer></v-spacer>
                 <v-text-field
@@ -18,7 +20,7 @@
                     @change="buildItemListForTable()"
                     clearable
                 ></v-select>
-
+            </v-card-title>
 
             <v-data-table
                 :headers="computedHeaders"
@@ -72,6 +74,7 @@
                 <v-img :src="item.imgUrl" max-height="70px" contain></v-img>
               </template>
             </v-data-table>
+            </v-card>
     </div>
 </template>
 

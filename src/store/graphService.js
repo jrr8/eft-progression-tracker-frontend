@@ -10,12 +10,13 @@ let nodeColor = {
         },
     highlight: {
     background: '#fa322f',
-    border: '#2eb81e',
+    border: '#000000',
         }
 };
 let nodeOptions = {
     physics: false,
     shape: 'box',
+    borderWidthSelected: 4,
     widthConstraint: 300,
     heightConstraint: 50,
     color: nodeColor,
@@ -23,9 +24,22 @@ let nodeOptions = {
     size: 30,
     },
 };
+let nodeOptionsCompleted = {
+    physics: false,
+    shape: 'box',
+    borderWidth: 2,
+    borderWidthSelected: 2,
+    widthConstraint: 300,
+    heightConstraint: 50,
+    color: completedNodeColor,
+    font: {
+    size: 30,
+    },
+};
 let completedNodeColor = {
-    border: '#000000',
-    background: '#000000',
+    border: '#2eb81e',
+    background: '#bbe1fa',
+
     hover: {
     background: '#a5d2eb',
     border: '#305e92',
@@ -69,12 +83,24 @@ export default {
     getselectedModuleId(){
         return selectedModuleId;
     },
+    searchModulesForMatch(searchString){
+        console.log(searchString);
+        let matchingModules = [];
+        graph.data.nodes.forEach(item => {
+          if(searchString && item.label.toLowerCase().includes(searchString.toLowerCase())){
+            matchingModules.push(item.id);
+          }
+        });
+        network.selectNodes(matchingModules, false);
+    },
     highlightCompletedModule(id, highlightTrue, completedModules){ 
         console.log(completedModules);
         debugger;
         var curNode = visData.nodes.get(id);
         if(highlightTrue){ //TODO: Check
             curNode.color = completedNodeColor;
+            curNode.borderWidth = 4;
+            curNode.borderWidthSelected = 4;
         }else{
             console.log("unhighlight");
             curNode.color = nodeColor;
@@ -200,16 +226,6 @@ export default {
         });
 
         visData = {nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges)}
-    },
-    searchModulesForMatch(){
-        const vm = this;
-        let matchingModules = [];
-        graph.data.nodes.forEach(item => {
-            if(vm.question && item.label.toLowerCase().includes(vm.question.toLowerCase())){
-            matchingModules.push(item.id);
-            }
-        });
-        vm.network.selectNodes(matchingModules, false);
     },
 
 }

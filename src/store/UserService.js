@@ -55,7 +55,11 @@ export default {
       const user = userData ? JSON.parse(userData) : {};
       const trackedModules = new Map(user.trackedModules);
 
-      trackedModules.set(newModule.name, newModule.modules);
+      if(newModule.isTracked)
+        trackedModules.set(newModule.name, newModule.modules);
+      else
+        trackedModules.delete(newModule.name);
+        
       user.trackedModules = Array.from(trackedModules);
       localStorage.setItem(options.userKey,JSON.stringify(user));
 

@@ -1,11 +1,16 @@
 <template>
   <div class="d-flex-col">
-    <div class="container">
-      <input style="color: white; border: 2px solid white;" type="text" v-model="question" @input="searchModulesForMatch()" @focus="onInputFocused()" @blur="onInputBlurred()">
-      <button v-on:click="saveGraph()">Save</button>
-      <v-btn class="ma-2 butn" outlined color="indigo" @click="$router.push('hideoutItemList')" >Item List</v-btn>
-      <v-btn class="ma-2 butn" outlined color="indigo" @click="addModuleToTrackedMap()" >Track Selected Module</v-btn>
-      <v-checkbox color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Hideout Module Complete'"></v-checkbox>
+    <div class="user-interaction-header">
+      <div class="search-input-container">
+        <input class="search-input" type="text" v-model="question" @input="graphService.searchModulesForMatch(question)" @focus="onInputFocused()" @blur="onInputBlurred()">
+      </div>
+      <!-- <button v-on:click="saveGraph()">Save</button> -->
+      <!-- <v-btn class="ma-2 butn" outlined color="indigo" @click="$router.push('hideoutItemList')" >Item List</v-btn>
+      <v-btn class="ma-2 butn" outlined color="indigo" @click="addModuleToTrackedMap()" >Track Selected Module</v-btn> -->
+      <div class="checkbox-container">
+        <v-checkbox class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Hideout Module Completed'">Hello</v-checkbox>
+        <v-checkbox class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleTrackedForCheckbox" :label="'Hideout Module Tracked'"></v-checkbox>
+      </div>
       <tracked-modules-dialog></tracked-modules-dialog>
     </div>
 
@@ -61,6 +66,17 @@ export default {
         this.toggleCompletedModule();
       }
     },
+    isModuleTrackedForCheckbox: {
+      get: function(){
+        if(this.graphService.selectedModuleId !== '' && this.trackedModules)
+          return this.trackedModules.get(this.graphService.selectedModule) ? true: false;
+        else
+          return false;
+      },
+      set: function(isChecked){
+        this.toggleModuleToTrackedMap();
+      }
+    },
   },
   created() {
 
@@ -69,6 +85,7 @@ export default {
     graphService.initVis(this.$refs.vis);
     this.network = graphService.getNetwork();
     graphService.highlightCompletedModulesOnInit(this.completedModules);
+    console.log(this.$router.currentRoute);
   },
   methods: {
     toggleCompletedModule(){
@@ -84,20 +101,19 @@ export default {
     },
     onInputFocused(){
       this.inputFocused = true;
-      this.searchModulesForMatch();
+      graphService.searchModulesForMatch(this.question);
     },
     onInputBlurred(){
       setTimeout(()=>{
         this.inputFocused = false;
       },200);
     },
-    addModuleToTrackedMap(){
-      if(this.graphService.selectedModule != ''){
-        // TODO: needed to put into object first, not individual. Investigate this
-        console.log("in method");
-        console.log(graphService.getVisData().nodes.get('109').label);
-        this.$store.dispatch('updateUserTrackedModules', {name: this.graphService.selectedModule, modules: this.graphService.prevModulesForCurrentModule.map((id) => graphService.getVisData().nodes.get(id).label)});
-      }
+    toggleModuleToTrackedMap(){
+      if(this.graphService.selectedModule != '' && !this.trackedModules.get(this.graphService.selectedModule)){
+        this.$store.dispatch('updateUserTrackedModules', {name: this.graphService.selectedModule, modules: this.graphService.prevModulesForCurrentModule.map((id) => graphService.getVisData().nodes.get(id).label), isTracked: true});
+      } else {
+        this.$store.dispatch('updateUserTrackedModules', {name: this.graphService.selectedModule, modules: this.graphService.prevModulesForCurrentModule.map((id) => graphService.getVisData().nodes.get(id).label), isTracked: false});
+      }       
     },
     saveGraph() {
       this.download(
@@ -116,16 +132,6 @@ export default {
     getScale() {
       // TODO: Set dynmaically based on screen size
       return 0.3;
-    },
-    searchModulesForMatch(){
-      const vm = this;
-      let matchingModules = [];
-      graph.data.nodes.forEach(item => {
-        if(vm.question && item.label.toLowerCase().includes(vm.question.toLowerCase())){
-          matchingModules.push(item.id);
-        }
-      });
-      vm.network.selectNodes(matchingModules, false);
     },
   },
 };
@@ -185,8 +191,35 @@ export default {
   margin: 10px;
 }
 
-.container {
+.user-interaction-header {
   display: flex; /* or inline-flex */
+  background: #3a0f0f; 
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.checkbox-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox {
+  margin: 0px;
+}
+
+.search-input {
+  color: white; border: 2px solid white;
+}
+
+.search-input-container {
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+}
+
+.search-input-container.search-input {
+  color: white; 
+  border: 2px solid white;
+  height: 100%;
 
 }
 
