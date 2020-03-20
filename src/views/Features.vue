@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper" class="full-height">
+  <div id="wrapper">
         <button class="button button5 button-fill-bottom no-focus" @click="$router.push('home')">Hideout</button>
         <button class="button button5  disabled no-focus" @click="$router.push('features')">Quests</button>
         <button class="button button5  disabled no-focus">Profile</button>
@@ -34,9 +34,6 @@ export default {
 
 
 <style scoped lang="less">
-.full-height {
-  height: 100%;
-}
 .button {
   background-color: #4CAF50; /* Green */
   border: none;
