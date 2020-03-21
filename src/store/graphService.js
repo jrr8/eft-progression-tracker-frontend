@@ -66,7 +66,7 @@ let edges = new Map();
 const options = {
     get userKey() { return 'user'; },
   };
-  
+
 export default {
     // class
     selectedModule: '',
@@ -83,17 +83,7 @@ export default {
     getselectedModuleId(){
         return selectedModuleId;
     },
-    searchModulesForMatch(searchString){
-        console.log(searchString);
-        let matchingModules = [];
-        graph.data.nodes.forEach(item => {
-          if(searchString && item.label.toLowerCase().includes(searchString.toLowerCase())){
-            matchingModules.push(item.id);
-          }
-        });
-        network.selectNodes(matchingModules, false);
-    },
-    highlightCompletedModule(id, highlightTrue, completedModules){ 
+    highlightCompletedModule(id, highlightTrue, completedModules){
         console.log(completedModules);
         debugger;
         var curNode = visData.nodes.get(id);
@@ -146,15 +136,15 @@ export default {
           edges: new Set(),
         };
         const stack = [node];
-  
+
         while (stack.length) {
           const current = stack.pop();
           visited.nodes.add(current);
-  
+
           network.getConnectedNodes(current, 'from').forEach((child) => {
             stack.push(child);
           });
-  
+
           network.getConnectedEdges(current).forEach((edgeId) => {
             const edge = visData.edges.get(edgeId);
             if (edge.to === current) {
@@ -162,17 +152,13 @@ export default {
             }
           });
         }
-  
+
         this.prevModulesForCurrentModule = Array.from(visited.nodes);
-  
+
         network.setSelection({
           nodes: Array.from(visited.nodes),
           edges: Array.from(visited.edges),
         });
-    },
-    getScale() {
-        // TODO: Set dynmaically based on screen size
-        return 0.3;
     },
     initVis(networkRef) {
         this.buildVisData();
@@ -197,12 +183,13 @@ export default {
         network = new vis.Network(container, data, options);
 
         network.moveTo({
-            scale: this.getScale(),
             position: {
-            x: 650,
-            y: 300,
+              x: 650,
+              y: 300,
             },
         });
+
+        network.fit();
 
         this.setSelectOnClickHandler();
     },
@@ -226,6 +213,15 @@ export default {
         });
 
         visData = {nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges)}
+    },
+    searchModulesForMatch(question){
+      let matchingModules = [];
+      graph.data.nodes.forEach(item => {
+        if(question && item.label.toLowerCase().includes(question.toLowerCase())){
+          matchingModules.push(item.id);
+        }
+      });
+      network.selectNodes(matchingModules, false);
     },
 
 }

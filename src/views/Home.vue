@@ -1,9 +1,7 @@
 <template>
   <div class="d-flex-col">
     <div class="user-interaction-header">
-      <div class="search-input-container">
         <input class="search-input" type="text" v-model="question" @input="graphService.searchModulesForMatch(question)" @focus="onInputFocused()" @blur="onInputBlurred()">
-      </div>
       <!-- <button v-on:click="saveGraph()">Save</button> -->
       <!-- <v-btn class="ma-2 butn" outlined color="indigo" @click="$router.push('hideoutItemList')" >Item List</v-btn>
       <v-btn class="ma-2 butn" outlined color="indigo" @click="addModuleToTrackedMap()" >Track Selected Module</v-btn> -->
@@ -14,7 +12,7 @@
       <tracked-modules-dialog></tracked-modules-dialog>
     </div>
 
-    <span ref="vis" class="flex-grow"></span>
+    <span ref="vis" class="flex-grow no-focus"></span>
   </div>
 
 </template>
@@ -82,10 +80,12 @@ export default {
 
   },
   mounted() {
-    graphService.initVis(this.$refs.vis);
-    this.network = graphService.getNetwork();
-    graphService.highlightCompletedModulesOnInit(this.completedModules);
-    console.log(this.$router.currentRoute);
+    //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd)
+    this.$store.dispatch("fetchUser").then(() => {
+      graphService.initVis(this.$refs.vis);
+      this.network = graphService.getNetwork();
+      graphService.highlightCompletedModulesOnInit(this.completedModules);
+    });
   },
   methods: {
     toggleCompletedModule(){
@@ -128,10 +128,6 @@ export default {
       a.href = URL.createObjectURL(file);
       a.download = fileName;
       a.click();
-    },
-    getScale() {
-      // TODO: Set dynmaically based on screen size
-      return 0.3;
     },
   },
 };
@@ -195,11 +191,13 @@ export default {
   display: flex; /* or inline-flex */
   background: #3a0f0f; 
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  align-items: center;
 }
 
 .checkbox-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .checkbox {
@@ -211,16 +209,13 @@ export default {
 }
 
 .search-input-container {
-  flex-direction: column;
   height: 100%;
-  justify-content: center;
 }
 
-.search-input-container.search-input {
+.search-input {
   color: white; 
   border: 2px solid white;
-  height: 100%;
-
+  margin: 10px;
 }
 
 .popup-visible {

@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
-        <button class="button button5 button-fill-bottom" @click="$router.push('features')">Try It Out</button>
-        <button class="button button5 disabled" title="Coming Soon">Login </button>
+        <button class="button button5 button-fill-bottom no-focus" @click="$router.push('features')">Try It Out</button>
+        <button class="button button5 disabled no-focus" title="Coming Soon">Login </button>
   </div>
 </template>
 

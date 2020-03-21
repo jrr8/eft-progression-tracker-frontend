@@ -1,8 +1,8 @@
 <template>
-    <div style="width: 75%; margin: auto; top:25%;">
-        <v-card>
+    <div class="back">
+        <v-card style="width: 75%; margin: auto; height: 100%;">
             <v-card-title>
-                        <v-checkbox color="red darken-3" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
+                <v-checkbox color="red darken-3" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
                 <v-spacer></v-spacer>
                 <v-text-field
                     v-model="search"
@@ -21,59 +21,65 @@
                     clearable
                 ></v-select>
             </v-card-title>
+            <!-- <v-layout column style="height: 150vh">
+            <v-flex md6 style="overflow-y: scroll">  -->
+                <v-data-table
+                    style="overflow-y: scroll; height: calc(100% - 102px);"
+                    :headers="computedHeaders"
+                    :items="itemList"
+                    :items-per-page="10"
+                    class="elevation-1"
+                    :search="search"
+                    item-key="name"
+                    show-expand
+                    :expanded.sync="expanded"
+                    :single-expand="true"
+                    :sort-desc="true"
+                    :fixed-header="true"
+                >
 
-            <v-data-table
-                :headers="computedHeaders"
-                :items="itemList"
-                :items-per-page="10"
-                class="elevation-1"
-                :search="search"
-                item-key="name"
-                show-expand
-                :expanded.sync="expanded"
-                :single-expand="true"
-                :sort-desc="true"
-            >
+                    <template class="container" v-slot:item.itemsRequired="{ item }">
+                        ({{item.itemsRequired.itemsOwned.toLocaleString()}}/{{item.itemsRequired.itemsRequired.toLocaleString()}})
+                    </template>
 
-                <template class="container" v-slot:item.itemsRequired="{ item }">
-                    ({{item.itemsRequired.itemsOwned.toLocaleString()}}/{{item.itemsRequired.itemsRequired.toLocaleString()}})
+                    <template class="container" v-slot:item.itemsInInventory="{ item }">
+                        <v-btn  class="mx-2 incAndDecButton" fab dark small color="pink" @click="updateItemInInventory(item.href, -1, 0)">
+                            <v-icon dark>mdi-minus</v-icon>
+                        </v-btn>
+                        {{item.itemsInInventory.found.toLocaleString()}}
+                        <v-btn class="mx-2 incAndDecButton" fab dark small color="pink" @click="updateItemInInventory(item.href, 1, 0)">
+                            <v-icon x-small dark>mdi-plus</v-icon>
+                        </v-btn>
+                    </template>
+
+                    <template v-slot:expanded-item="{ headers }">
+                        <td :colspan="headers.length">
+                            <v-simple-table>
+                                <template v-slot:default>
+                                    <thead>
+                                        <tr>
+                                        <th>Module Name</th>
+                                        <th>Items Required</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="module in expandedItemInfo" :key="module.name">
+                                        <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.name }}</td>
+                                        <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.numRequired.toLocaleString() }}</td>
+                                        </tr>
+                                    </tbody>
+                                </template>
+                            </v-simple-table>
+                        </td>
+                    </template>
+
+                <template class="container" v-slot:item.image="{ item }">
+                    <v-img :src="item.imgUrl" max-height="70px" contain></v-img>
                 </template>
+                </v-data-table>
+            <!-- </v-flex>
+            </v-layout> -->
 
-                <template class="container" v-slot:item.itemsInInventory="{ item }">
-                    <v-btn  class="mx-2 incAndDecButton" fab dark small color="pink" @click="updateItemInInventory(item.href, -1, 0)">
-                        <v-icon dark>mdi-minus</v-icon>
-                    </v-btn>
-                    {{item.itemsInInventory.found.toLocaleString()}}
-                    <v-btn class="mx-2 incAndDecButton" fab dark small color="pink" @click="updateItemInInventory(item.href, 1, 0)">
-                        <v-icon x-small dark>mdi-plus</v-icon>
-                    </v-btn>
-                </template>
-
-                 <template v-slot:expanded-item="{ headers }">
-                    <td :colspan="headers.length">
-                        <v-simple-table>
-                            <template v-slot:default>
-                                <thead>
-                                    <tr>
-                                    <th>Module Name</th>
-                                    <th>Items Required</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="module in expandedItemInfo" :key="module.name">
-                                    <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.name }}</td>
-                                    <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.numRequired.toLocaleString() }}</td>
-                                    </tr>
-                                </tbody>
-                            </template>
-                        </v-simple-table>
-                    </td>
-                </template>
-
-              <template class="container" v-slot:item.image="{ item }">
-                <v-img :src="item.imgUrl" max-height="70px" contain></v-img>
-              </template>
-            </v-data-table>
             </v-card>
     </div>
 </template>
@@ -151,8 +157,12 @@ export default {
   created() {
   },
   mounted() {
+    //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd)
+    this.$store.dispatch("fetchUser").then(() => {
         this.createAllItemsMap();
         this.buildItemListForTable();
+    });
+
   },
   methods: {
     updateItemInInventory(itemHref, numFound, numFoundInRaid){
@@ -365,5 +375,10 @@ export default {
 .incAndDecButton{
     width: 20px;
     height: 20px;
+}
+
+.back {
+  background-image: url(https://cdn.wccftech.com/wp-content/uploads/2017/04/escape-from-tarkov-logo.jpg);
+  background-size: cover;
 }
 </style>
