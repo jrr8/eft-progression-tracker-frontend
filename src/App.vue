@@ -107,7 +107,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  height: 100%;
   background: #1b262c;
 }
 
@@ -121,9 +120,12 @@ export default {
   }
 }
 
-.container.container--fluid > * {
-  width: 100%;
-  height: 100vh;
+.container.container--fluid {
+  height: 100%;
+
+  > * {
+    height: 100%;
+  }
 }
 
 .active {
