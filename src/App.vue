@@ -1,5 +1,6 @@
 <template>
   <v-app >
+    <img class="page-nav-drawer-icon" @click.stop="toggleIsNavDrawerActive()" src="./assets/nav-drawer-icon.png" height="35" width="35">
     <v-navigation-drawer app
             src="https://www.jbklutse.com/wp-content/uploads/2019/03/Escape-from-Tarkov.jpg"
             v-model="isNavDrawerActive"
@@ -169,7 +170,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px;
+  height: 75px;
 }
 
 .neon {
@@ -192,6 +193,14 @@ export default {
 
 .nav-drawer-icon:hover {
   background-color: #3a0f0f;
+}
+
+.page-nav-drawer-icon {
+  position: absolute;
+  left: 10px;
+  top: 20px;
+  cursor: pointer;
+  z-index: 1;
 }
 </style>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex-col">
     <div class="user-interaction-header">
-      <img class="nav-drawer-icon" @click.stop="toggleIsNavDrawerActive()" src="../assets/nav-drawer-icon.png" height="35" width="35">
+
         <input class="search-input" type="text" v-model="question" @input="graphService.searchModulesForMatch(question)" @focus="onInputFocused()" @blur="onInputBlurred()">
       <!-- <button v-on:click="saveGraph()">Save</button> -->
       <!-- <v-btn class="ma-2 butn" outlined color="indigo" @click="$router.push('hideoutItemList')" >Item List</v-btn>
