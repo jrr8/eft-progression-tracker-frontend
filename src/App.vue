@@ -1,24 +1,15 @@
 <template>
   <v-app >
     <v-navigation-drawer app
-            permanent
-            expand-on-hover
             src="https://www.jbklutse.com/wp-content/uploads/2019/03/Escape-from-Tarkov.jpg"
+            v-model="isNavDrawerActive"
+            temporary
           >
-            <v-list>
-              <v-list-item class="px-2">
-                <v-list-item-avatar>
-                  <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
-                </v-list-item-avatar>
-              </v-list-item>
 
-              <v-list-item link>
-                <v-list-item-content>
-                  <v-list-item-title class="title">Sandra Adams</v-list-item-title>
-                  <v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+            <div class="nav-bar-header">
+              <img class="nav-drawer-icon" @click.stop="toggleIsNavDrawerActive()" src="./assets/nav-drawer-icon.png" height="35" width="35">
+              <h1 class="neon">Tarkov Assistant</h1>
+            </div>
 
             <v-divider></v-divider>
 
@@ -82,19 +73,33 @@ export default {
     computedPage(){
       console.log(this.$route.path);
       return this.$route.path;
-    }
+    },
+    isNavDrawerActive: {
+      get: function(){
+        return this.$store.state.isNavDrawerActive;
+      },
+      set: function(isActive){
+        console.log(isActive);
+        this.$store.commit('setNavDrawerIsActive', {isNavDrawerActive: isActive});
+      }
+    },
   },
 
   created() {
     this.$store.dispatch("fetchUser").then(() => {
       console.log(this.user);
     });
+    this.$vuetify.theme.dark = true;
   },
   methods: {
     navToHome(){
       console.log("nav to home clicked");
       this.$router.push('/');
-    }
+    },
+    toggleIsNavDrawerActive(){
+      console.log("here");
+      this.$store.commit('setNavDrawerIsActive', {isNavDrawerActive: !this.isNavDrawerActive});
+    },
   }
 };
 </script>
@@ -130,6 +135,7 @@ export default {
 
 .active {
   background: #3a0f0f;
+  opacity: 1;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   color: white;
 }
@@ -141,7 +147,51 @@ export default {
   color: white;
 }
 
+.container.container--fluid > * {
+  width: 100%;
+  height: 100vh;
+}
+
 .black-text {
   color: white;
 }
+
+.theme--dark.active.nav-item {
+  &::before{
+    opacity: 0;
+  }
+  &:hover::before{
+    opacity: .1;
+  }
+}
+
+.nav-bar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+.neon {
+  color: #fff;
+  text-shadow:
+    0 0 5px #fff,
+    0 0 10px #fff,
+    0 0 20px #fff,
+    0 0 40px #3a0f0f,
+    0 0 80px #3a0f0f,
+    0 0 90px #3a0f0f,
+    0 0 100px #3a0f0f,
+    0 0 150px #3a0f0f;
+}
+
+.nav-drawer-icon {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.nav-drawer-icon:hover {
+  background-color: #3a0f0f;
+}
 </style>
+

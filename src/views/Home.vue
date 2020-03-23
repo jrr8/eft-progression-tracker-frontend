@@ -1,14 +1,18 @@
 <template>
   <div class="d-flex-col">
     <div class="user-interaction-header">
+      <img class="nav-drawer-icon" @click.stop="toggleIsNavDrawerActive()" src="../assets/nav-drawer-icon.png" height="35" width="35">
         <input class="search-input" type="text" v-model="question" @input="graphService.searchModulesForMatch(question)" @focus="onInputFocused()" @blur="onInputBlurred()">
       <!-- <button v-on:click="saveGraph()">Save</button> -->
       <!-- <v-btn class="ma-2 butn" outlined color="indigo" @click="$router.push('hideoutItemList')" >Item List</v-btn>
       <v-btn class="ma-2 butn" outlined color="indigo" @click="addModuleToTrackedMap()" >Track Selected Module</v-btn> -->
       <div class="checkbox-container">
-        <v-checkbox class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Hideout Module Completed'">Hello</v-checkbox>
-        <v-checkbox class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleTrackedForCheckbox" :label="'Hideout Module Tracked'"></v-checkbox>
+        <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Hideout Module Completed'"></v-checkbox>
+        <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleTrackedForCheckbox" :label="'Hideout Module Tracked'"></v-checkbox>
       </div>
+      <!-- <v-btn  @click.stop="toggleIsNavDrawerActive()"> -->
+        
+      <!-- </v-btn> -->
       <tracked-modules-dialog></tracked-modules-dialog>
     </div>
 
@@ -53,6 +57,9 @@ export default {
     completedModules(){
       return this.$store.state.user.hideoutModulesCompleted;
     },
+    isNavDrawerActive(){
+      return this.$store.state.isNavDrawerActive;
+    },
     isModuleCompletedForCheckbox: {
       get: function(){
         if(this.graphService.selectedModuleId !== '' && this.completedModules)
@@ -80,7 +87,8 @@ export default {
 
   },
   mounted() {
-    //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd)
+    //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd) 
+    //  TODO: Move to created
     this.$store.dispatch("fetchUser").then(() => {
       graphService.initVis(this.$refs.vis);
       this.network = graphService.getNetwork();
@@ -88,6 +96,10 @@ export default {
     });
   },
   methods: {
+    toggleIsNavDrawerActive(){
+      console.log("here");
+      this.$store.commit('setNavDrawerIsActive', {isNavDrawerActive: !this.isNavDrawerActive});
+    },
     toggleCompletedModule(){
       if(!this.completedModules.get(this.graphService.selectedModuleId)){
         this.$store.dispatch('updateUserCompletedModules', {moduleId: this.graphService.selectedModuleId, isCompleted: true}).then(() => {
@@ -188,6 +200,7 @@ export default {
 }
 
 .user-interaction-header {
+  //  TODO: Add padding
   display: flex; /* or inline-flex */
   background: #3a0f0f; 
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);

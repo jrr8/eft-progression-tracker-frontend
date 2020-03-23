@@ -24,7 +24,8 @@
             <!-- <v-layout column style="height: 150vh">
             <v-flex md6 style="overflow-y: scroll">  -->
                 <v-data-table
-                    style="overflow-y: scroll; height: calc(100% - 102px);"
+                    style="height: calc(100% - 102px);"
+                    :height="'calc(100% - 59px)'"
                     :headers="computedHeaders"
                     :items="itemList"
                     :items-per-page="10"
@@ -35,7 +36,7 @@
                     :expanded.sync="expanded"
                     :single-expand="true"
                     :sort-desc="true"
-                    :fixed-header="true"
+                    fixed-header
                 >
 
                     <template class="container" v-slot:item.itemsRequired="{ item }">
@@ -381,4 +382,10 @@ export default {
   background-image: url(https://cdn.wccftech.com/wp-content/uploads/2017/04/escape-from-tarkov-logo.jpg);
   background-size: cover;
 }
+
+// .fixed-header ::v-deep .v-data-table__wrapper{
+//     height: 100%;
+// }
+
+
 </style>

@@ -12,7 +12,8 @@ export default new Vuex.Store({
         //       trackedModules that return state.user.trackedModules?
         // trackedModules: new Map(),
         user: { },
-        visData: { }
+        visData: { },
+        isNavDrawerActive: false
     },
     mutations: {
         // put sychronous functions for changing state e.g. add, edit, delete
@@ -30,6 +31,11 @@ export default new Vuex.Store({
 
         setVisData(state, payload){
             state.visData = payload;
+        },
+
+        setNavDrawerIsActive(state, payload){
+            // console.log(payload.isNavDrawerActive);
+            state.isNavDrawerActive = payload.isNavDrawerActive;
         }
 
     },
