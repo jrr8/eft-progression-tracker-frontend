@@ -1,5 +1,5 @@
 <template>
-    <div class="back">
+    <div class="back viewport-height">
         <v-card style="width: 75%; margin: auto; height: 100%;">
             <v-card-title>
                 <v-checkbox color="red darken-3" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>

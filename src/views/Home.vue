@@ -1,6 +1,6 @@
 <template>
-  <div class="d-flex-col">
-    <div class="user-interaction-header">
+  <div class="d-flex-col viewport-height">
+    <div ref="header" class="user-interaction-header">
 
         <input class="search-input" type="text" v-model="question" @input="graphService.searchModulesForMatch(question)" @focus="onInputFocused()" @blur="onInputBlurred()">
       <!-- <button v-on:click="saveGraph()">Save</button> -->
@@ -11,12 +11,12 @@
         <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleTrackedForCheckbox" :label="'Hideout Module Tracked'"></v-checkbox>
       </div>
       <!-- <v-btn  @click.stop="toggleIsNavDrawerActive()"> -->
-        
+
       <!-- </v-btn> -->
       <tracked-modules-dialog></tracked-modules-dialog>
     </div>
 
-    <span ref="vis" class="flex-grow no-focus"></span>
+    <div ref="vis" class="no-focus" :style="graphStyle"></div>
   </div>
 
 </template>
@@ -34,12 +34,12 @@ export default {
     trackedModulesDialog
   },
   data() {
-
     return {
       dialog:false,
       edges: new Map(),
       question: '',
       inputFocused: false,
+      graphStyle: null,
       graphService,
     };
   },
@@ -87,13 +87,15 @@ export default {
 
   },
   mounted() {
-    //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd) 
+    //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd)
     //  TODO: Move to created
     this.$store.dispatch("fetchUser").then(() => {
       graphService.initVis(this.$refs.vis);
       this.network = graphService.getNetwork();
       graphService.highlightCompletedModulesOnInit(this.completedModules);
     });
+
+    this.graphStyle = { height: `calc(100% - ${this.$refs.header.clientHeight}px)` };
   },
   methods: {
     toggleIsNavDrawerActive(){
@@ -125,7 +127,7 @@ export default {
         this.$store.dispatch('updateUserTrackedModules', {name: this.graphService.selectedModule, modules: this.graphService.prevModulesForCurrentModule.map((id) => graphService.getVisData().nodes.get(id).label), isTracked: true});
       } else {
         this.$store.dispatch('updateUserTrackedModules', {name: this.graphService.selectedModule, modules: this.graphService.prevModulesForCurrentModule.map((id) => graphService.getVisData().nodes.get(id).label), isTracked: false});
-      }       
+      }
     },
     saveGraph() {
       this.download(
@@ -181,10 +183,6 @@ export default {
   flex-direction: column;
 }
 
-.flex-grow {
-  flex-grow: 1;
-}
-
 .items{
   display: flex;
 
@@ -202,7 +200,7 @@ export default {
 .user-interaction-header {
   //  TODO: Add padding
   display: flex; /* or inline-flex */
-  background: #3a0f0f; 
+  background: #3a0f0f;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   align-items: center;
 }
@@ -226,7 +224,7 @@ export default {
 }
 
 .search-input {
-  color: white; 
+  color: white;
   border: 2px solid white;
   margin: 10px;
 }
