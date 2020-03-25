@@ -1,11 +1,10 @@
 <template>
+  <div>
+    <v-btn class="module-list-btn" color="#1b262c" dark @click.stop="initModuleDataList()">
+      <v-icon class="module-list-icon" light>list</v-icon>
+      All Modules          
+    </v-btn>
     <v-dialog v-model="dialog" max-width="500">
-      <template v-slot:activator="{ on }">
-        <v-btn class="module-list-btn" color="#1b262c" dark v-on="on">
-          <v-icon class="module-list-icon" light>list</v-icon>
-          All Modules          
-        </v-btn>
-      </template>
       <v-card >
         <v-text-field
           v-model="search"
@@ -33,6 +32,7 @@
         </v-data-table>
       </v-card>
     </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -71,21 +71,26 @@ export default {
       return this.$store.state.user.trackedModules;
     },
   },
-  watch: {
-    completedModules: function () { //  TODO: May need to change
-      console.log("watched");
-      this.buildModuleDataList();
-    }
-  },
+  // watch: {
+  //   completedModules: function () { //  TODO: May need to change
+  //     console.log("watched");
+  //     this.buildModuleDataList();
+  //   }
+  // },
   created() {
-    this.$store.dispatch("fetchUser").then(() => {
-      this.buildModuleDataList();
-    });
+
   },
   mounted() {
 
   },
   methods: {
+    initModuleDataList(){
+      // TODO: Loading indicator??
+      this.dialog = true;
+      this.$store.dispatch("fetchUser").then(() => {
+        this.buildModuleDataList();
+      });
+    },
     // buildModuleDataList(){
     //   for(module in modules){
     //     if(this.completedModules.get(this.getModuleIdByName(module))){

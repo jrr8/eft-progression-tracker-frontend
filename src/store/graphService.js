@@ -2,8 +2,8 @@ import * as vis from 'vis-network';
 import graph from '../assets/graph';
 
 let nodeColor = {
-    background: '#bbe1fa',
-    border: '#3282b8',
+    background: '#3a0f0f',
+    border: '#3a0f0f',
     hover: {
     background: '#a5d2eb',
     border: '#305e92',
@@ -15,6 +15,7 @@ let nodeColor = {
 };
 let nodeOptions = {
     physics: false,
+    shadow: true,
     shape: 'box',
     borderWidthSelected: 200, // Doesnt Work
     widthConstraint: 300,
@@ -22,6 +23,7 @@ let nodeOptions = {
     color: nodeColor,
     font: {
       size: 30,
+      color: '#ffffff'
     },
 };
 let nodeOptionsCompleted = {
@@ -37,8 +39,8 @@ let nodeOptionsCompleted = {
     },
 };
 let completedNodeColor = {
-    border: '#2eb81e',
-    background: '#bbe1fa',
+    border: '#ffffff',
+    background: '#3a0f0f',
 
     hover: {
     background: '#a5d2eb',
@@ -46,10 +48,11 @@ let completedNodeColor = {
     },
     highlight: {
     background: '#fa322f',
-    border: '#2eb81e',
+    border: '#ffffff',
     },
 };
 let edgeOptions = {
+  shadow: true,
     arrows: 'to',
     color: {
     color: nodeColor.hover.background,
@@ -89,8 +92,8 @@ export default {
         var curNode = visData.nodes.get(id);
         if(highlightTrue){ //TODO: Check
             curNode.color = completedNodeColor;
-            curNode.borderWidth = 4;
-            curNode.borderWidthSelected = 1;
+            // curNode.borderWidth = 4;
+            // curNode.borderWidthSelected = 1;
         }else{
             console.log("unhighlight");
             curNode.borderWidth = 1;
@@ -182,6 +185,8 @@ export default {
         };
 
         network = new vis.Network(container, data, options);
+        console.log("here");
+        console.log(network.getOptionsFromConfigurator());
 
         network.moveTo({
             position: {
