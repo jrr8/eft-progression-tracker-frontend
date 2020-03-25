@@ -2,51 +2,34 @@
   <v-app >
     <img class="page-nav-drawer-icon" @click.stop="toggleIsNavDrawerActive()" src="./assets/nav-drawer-icon.png" height="35" width="35">
     <v-navigation-drawer app
-            src="https://www.jbklutse.com/wp-content/uploads/2019/03/Escape-from-Tarkov.jpg"
-            v-model="isNavDrawerActive"
-            temporary
-          >
+      src="https://www.jbklutse.com/wp-content/uploads/2019/03/Escape-from-Tarkov.jpg"
+      v-model="isNavDrawerActive"
+      temporary
+    >
+      <div class="nav-bar-header">
+        <img class="nav-drawer-icon" @click.stop="toggleIsNavDrawerActive()" src="./assets/nav-drawer-icon.png" height="35" width="35">
+        <h1 class="neon">Tarkov Assistant</h1>
+      </div>
 
-            <div class="nav-bar-header">
-              <img class="nav-drawer-icon" @click.stop="toggleIsNavDrawerActive()" src="./assets/nav-drawer-icon.png" height="35" width="35">
-              <h1 class="neon">Tarkov Assistant</h1>
-            </div>
+      <v-divider></v-divider>
 
-            <v-divider></v-divider>
+      <v-list
+        nav
+        dense
+      >
+        <v-list-item :to="'/'" :class="[computedPage == '/' ? activeClass : 'inactive', 'nav-item']" link>
+          <v-list-item-title style="color: white;" color:white router >Hideout Module Tree</v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="'hideoutItemList'" :class="[computedPage.includes('hideoutItemList') ? activeClass : 'inactive', 'nav-item']" link>
+          <v-list-item-title style="color: white;">Item List</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
-            <v-list
-              nav
-              dense
-            >
-              <v-list-item :to="'/'" :class="[computedPage == '/' ? activeClass : 'inactive', 'nav-item']" link>
-                <!-- <v-list-item-icon>
-                  <v-icon>fas fa-list</v-icon>
-                </v-list-item-icon> -->
-                <v-list-item-title style="color: white;" color:white router >Home</v-list-item-title>
-              </v-list-item>
-              <v-list-item :to="'hideoutItemList'" :class="[computedPage.includes('hideoutItemList') ? activeClass : 'inactive', 'nav-item']" link>
-                <!-- <v-list-item-icon>
-                  <v-icon>fas fa-list</v-icon>
-                </v-list-item-icon> -->
-                <v-list-item-title style="color: white;">Item List</v-list-item-title>
-              </v-list-item>
-              <v-list-item :to="'home'" :class="[computedPage.includes('home') ? activeClass : 'inactive', 'nav-item']" link>
-                <!-- <v-list-item-icon>
-                  <v-icon>mdi-account-multiple</v-icon>
-                </v-list-item-icon> -->
-                <v-list-item-title style="color: white;">Hideout Module Graph</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-navigation-drawer>
     <v-content>
-
-    <!-- Provides the application the proper gutter -->
-    <v-container fluid style="padding: 0px;">
-
-      <!-- If using vue-router -->
-      <router-view></router-view>
-    </v-container>
-
+      <v-container fluid style="padding: 0px;">
+        <router-view></router-view>
+      </v-container>
     </v-content>
   </v-app>
 </template>

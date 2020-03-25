@@ -37,6 +37,7 @@
                     :single-expand="true"
                     :sort-desc="true"
                     fixed-header
+                    must-sort
                 >
 
                     <template class="container" v-slot:item.itemsRequired="{ item }">

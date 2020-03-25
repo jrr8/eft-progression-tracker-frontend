@@ -16,12 +16,12 @@ let nodeColor = {
 let nodeOptions = {
     physics: false,
     shape: 'box',
-    borderWidthSelected: 4,
+    borderWidthSelected: 200, // Doesnt Work
     widthConstraint: 300,
     heightConstraint: 50,
     color: nodeColor,
     font: {
-    size: 30,
+      size: 30,
     },
 };
 let nodeOptionsCompleted = {
@@ -90,9 +90,10 @@ export default {
         if(highlightTrue){ //TODO: Check
             curNode.color = completedNodeColor;
             curNode.borderWidth = 4;
-            curNode.borderWidthSelected = 4;
+            curNode.borderWidthSelected = 1;
         }else{
             console.log("unhighlight");
+            curNode.borderWidth = 1;
             curNode.color = nodeColor;
         }
         visData.nodes.update(curNode);

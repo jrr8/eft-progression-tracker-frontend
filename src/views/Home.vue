@@ -1,21 +1,20 @@
 <template>
   <div class="d-flex-col viewport-height">
     <div ref="header" class="user-interaction-header">
-
-        <input class="search-input" type="text" v-model="question" @input="graphService.searchModulesForMatch(question)" @focus="onInputFocused()" @blur="onInputBlurred()">
-      <!-- <button v-on:click="saveGraph()">Save</button> -->
-      <!-- <v-btn class="ma-2 butn" outlined color="indigo" @click="$router.push('hideoutItemList')" >Item List</v-btn>
-      <v-btn class="ma-2 butn" outlined color="indigo" @click="addModuleToTrackedMap()" >Track Selected Module</v-btn> -->
-      <div class="checkbox-container">
-        <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Hideout Module Completed'"></v-checkbox>
-        <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleTrackedForCheckbox" :label="'Hideout Module Tracked'"></v-checkbox>
+      <div :class="[graphService.selectedModuleId != '' ? 'hideout-module-info-active' : 'hideout-module-info-inactive']" class="hideout-module-info">
+        <div v-if="graphService.selectedModuleId != ''" style="display: flex; margin-left: 50px;">
+          <h1 class="selected-module-header">{{graphService.getModuleNameById(graphService.selectedModuleId)}}</h1>
+          <div class="checkbox-container">
+            <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Hideout Module Completed'"></v-checkbox>
+            <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleTrackedForCheckbox" :label="'Hideout Module Tracked'"></v-checkbox>
+          </div>
+        </div>
       </div>
-      <!-- <v-btn  @click.stop="toggleIsNavDrawerActive()"> -->
-
-      <!-- </v-btn> -->
+      <v-text-field hide-details class="search-input" label="Search Module"
+        v-model="question" @input="graphService.searchModulesForMatch(question)" @focus="onInputFocused()" @blur="onInputBlurred()"
+      ></v-text-field>
       <tracked-modules-dialog></tracked-modules-dialog>
     </div>
-
     <div ref="vis" class="no-focus" :style="graphStyle"></div>
   </div>
 
@@ -203,12 +202,38 @@ export default {
   background: #3a0f0f;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   align-items: center;
+  padding: 10px 10px;
+  height: auto;
+}
+
+.hideout-module-info-inactive {
+  height:56px; 
+  // margin-left: 500px; 
+  width: 1500px; 
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.hideout-module-info-active {
+  height:auto; 
+  // margin-left: 500px; 
+  width: 1500px; 
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.selected-module-header {
+  // width: 500px; 
+  color: white;
+  flex-shrink: 1;
+  flex-grow: 1;
 }
 
 .checkbox-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 250px;
 }
 
 .checkbox {
@@ -216,17 +241,14 @@ export default {
 }
 
 .search-input {
-  color: white; border: 2px solid white;
+  padding-top: 0px;
+  margin-top: 0px;
+  margin-left: 10px;
+  flex-shrink: 0;
 }
 
 .search-input-container {
   height: 100%;
-}
-
-.search-input {
-  color: white;
-  border: 2px solid white;
-  margin: 10px;
 }
 
 .popup-visible {

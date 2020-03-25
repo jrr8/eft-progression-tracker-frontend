@@ -1,8 +1,10 @@
 <template>
-  <v-row justify="center">
     <v-dialog v-model="dialog" max-width="500">
       <template v-slot:activator="{ on }">
-        <v-btn color="primary" dark v-on="on">Show List of all Modules</v-btn>
+        <v-btn class="module-list-btn" color="#1b262c" dark v-on="on">
+          <v-icon class="module-list-icon" light>list</v-icon>
+          All Modules          
+        </v-btn>
       </template>
       <v-card >
         <v-text-field
@@ -20,6 +22,9 @@
           class="elevation-1"
           hide-default-footer
         >
+          <template v-slot:item.isCompleted="{ item }">
+            <v-checkbox v-model="item.isCompleted" @change="toggleCompletedModule(item.name)"></v-checkbox>
+          </template>
 
           <template v-slot:item.isTracked="{ item }">
             <v-checkbox v-model="item.isTracked" @change="toggleCompletedModule(item.name)"></v-checkbox>
@@ -28,7 +33,6 @@
         </v-data-table>
       </v-card>
     </v-dialog>
-  </v-row>
 </template>
 
 <script>
@@ -52,37 +56,61 @@ export default {
             value: 'name',
             sortable: true,
         },
-        { text: 'Tracked?', value: 'isTracked' },
+        { text: 'Completed', value: 'isCompleted' },
+        { text: 'Tracked', value: 'isTracked' }
       ],
     };
   },
   computed: {
     completedModules(){
-      console.log("computed");
+      console.log("computed Dialog");
       return this.$store.state.user.hideoutModulesCompleted;
     },
+    trackedModules(){
+      console.log("computed");
+      return this.$store.state.user.trackedModules;
+    },
+  },
+  watch: {
+    completedModules: function () { //  TODO: May need to change
+      console.log("watched");
+      this.buildModuleDataList();
+    }
   },
   created() {
-
+    this.$store.dispatch("fetchUser").then(() => {
+      this.buildModuleDataList();
+    });
   },
   mounted() {
-    this.buildModuleDataList();
+
   },
   methods: {
+    // buildModuleDataList(){
+    //   for(module in modules){
+    //     if(this.completedModules.get(this.getModuleIdByName(module))){
+    //       this.moduleList.push({
+    //         name: module,
+    //         isCompleted: true
+    //       });
+    //     }else{
+    //       this.moduleList.push({
+    //         name: module,
+    //         isCompleted: false
+    //       });
+    //     }
+    //   };
+    // },
     buildModuleDataList(){
+      this.moduleList = [];
       for(module in modules){
-        if(this.completedModules.get(this.getModuleIdByName(module))){
-          this.moduleList.push({
-            name: module,
-            isTracked: true
-          });
-        }else{
-          this.moduleList.push({
-            name: module,
-            isTracked: false
-          });
-        }
-      }
+        this.moduleList.push({
+          name: module,
+          isCompleted: this.completedModules.get(this.getModuleIdByName(module)) != undefined,
+          isTracked: this.trackedModules.get(module) != undefined
+        });
+      };
+      console.log(this.moduleList);
     },
     toggleCompletedModule(moduleName){
       debugger;
@@ -122,4 +150,14 @@ export default {
 
 
 <style scoped lang="less">
+
+//TODO: Behaves differently for Chrome and Firefox
+.module-list-btn {
+  margin-left: 25px;
+  margin-right: 10px;
+}
+
+.module-list-icon {
+  margin-right: 5px;
+}
 </style>
