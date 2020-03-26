@@ -17,10 +17,10 @@
         nav
         dense
       >
-        <v-list-item :to="'/'" :class="[computedPage == '/' ? activeClass : 'inactive', 'nav-item']" link>
+        <v-list-item :to="'/'" :class="[computedPage == '/' ? activeClass : 'page-inactive', 'nav-item']" link>
           <v-list-item-title style="color: white;" color:white router >Hideout Module Tree</v-list-item-title>
         </v-list-item>
-        <v-list-item :to="'hideoutItemList'" :class="[computedPage.includes('hideoutItemList') ? activeClass : 'inactive', 'nav-item']" link>
+        <v-list-item :to="'hideoutItemList'" :class="[computedPage.includes('hideoutItemList') ? activeClass : 'page-inactive', 'nav-item']" link>
           <v-list-item-title style="color: white;">Item List</v-list-item-title>
         </v-list-item>
       </v-list>
@@ -47,7 +47,7 @@ export default {
   },
 
   data: () => ({
-    activeClass: 'active'
+    activeClass: 'page-active'
   }),
 
   computed: {
@@ -113,14 +113,14 @@ export default {
   height: 100vh;
 }
 
-.active {
+.page-active {
   background: #3a0f0f;
   opacity: 1;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   color: white;
 }
 
-.inactive {
+.page-inactive {
   background: #3a0f0f;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   opacity: 0.4;
@@ -131,7 +131,7 @@ export default {
   color: white;
 }
 
-.theme--dark.active.nav-item {
+.theme--dark.page-active.nav-item {
   &::before{
     opacity: 0;
   }

@@ -123,9 +123,9 @@ export default {
     },
     toggleModuleToTrackedMap(){
       if(this.graphService.selectedModule != '' && !this.trackedModules.get(this.graphService.selectedModule)){
-        this.$store.dispatch('updateUserTrackedModules', {name: this.graphService.selectedModule, modules: this.graphService.prevModulesForCurrentModule.map((id) => graphService.getVisData().nodes.get(id).label), isTracked: true});
+        this.$store.dispatch('updateUserTrackedModules', {name: this.graphService.selectedModule, isTracked: true});
       } else {
-        this.$store.dispatch('updateUserTrackedModules', {name: this.graphService.selectedModule, modules: this.graphService.prevModulesForCurrentModule.map((id) => graphService.getVisData().nodes.get(id).label), isTracked: false});
+        this.$store.dispatch('updateUserTrackedModules', {name: this.graphService.selectedModule, isTracked: false});
       }
     },
     saveGraph() {

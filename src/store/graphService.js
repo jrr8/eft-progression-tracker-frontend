@@ -2,10 +2,10 @@ import * as vis from 'vis-network';
 import graph from '../assets/graph';
 
 let nodeColor = {
-    background: '#3a0f0f',
-    border: '#3a0f0f',
+    background: '#631919',
+    border: '#631919',
     hover: {
-    background: '#a5d2eb',
+    background: '#a62b2b',
     border: '#305e92',
         },
     highlight: {
@@ -39,16 +39,16 @@ let nodeOptionsCompleted = {
     },
 };
 let completedNodeColor = {
-    border: '#ffffff',
-    background: '#3a0f0f',
+    border: '#3cc962',
+    background: '#631919',
 
     hover: {
-    background: '#a5d2eb',
+    background: '#a62b2b',
     border: '#305e92',
     },
     highlight: {
     background: '#fa322f',
-    border: '#ffffff',
+    border: '#3cc962',
     },
 };
 let edgeOptions = {
@@ -134,28 +134,33 @@ export default {
           }
         });
     },
+    getAllChildrenNodesAndEdges(node){
+      const visited = {
+        nodes: new Set(),
+        edges: new Set(),
+      };
+      const stack = [node];
+
+      while (stack.length) {
+        const current = stack.pop();
+        visited.nodes.add(current);
+
+        network.getConnectedNodes(current, 'from').forEach((child) => {
+          stack.push(child);
+        });
+
+        network.getConnectedEdges(current).forEach((edgeId) => {
+          const edge = visData.edges.get(edgeId);
+          if (edge.to === current) {
+            visited.edges.add(edgeId);
+          }
+        });
+      }
+
+      return visited;
+    },
     selectAllChildren(node) {
-        const visited = {
-          nodes: new Set(),
-          edges: new Set(),
-        };
-        const stack = [node];
-
-        while (stack.length) {
-          const current = stack.pop();
-          visited.nodes.add(current);
-
-          network.getConnectedNodes(current, 'from').forEach((child) => {
-            stack.push(child);
-          });
-
-          network.getConnectedEdges(current).forEach((edgeId) => {
-            const edge = visData.edges.get(edgeId);
-            if (edge.to === current) {
-              visited.edges.add(edgeId);
-            }
-          });
-        }
+        const visited = this.getAllChildrenNodesAndEdges(node)
 
         this.prevModulesForCurrentModule = Array.from(visited.nodes);
 

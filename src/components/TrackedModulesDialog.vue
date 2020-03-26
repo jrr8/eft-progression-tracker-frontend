@@ -26,7 +26,7 @@
           </template>
 
           <template v-slot:item.isTracked="{ item }">
-            <v-checkbox v-model="item.isTracked" @change="toggleCompletedModule(item.name)"></v-checkbox>
+            <v-checkbox v-model="item.isTracked" @change="toggleModuleToTrackedMap(item.name)"></v-checkbox>
           </template>
         
         </v-data-table>
@@ -63,11 +63,9 @@ export default {
   },
   computed: {
     completedModules(){
-      console.log("computed Dialog");
       return this.$store.state.user.hideoutModulesCompleted;
     },
     trackedModules(){
-      console.log("computed");
       return this.$store.state.user.trackedModules;
     },
   },
@@ -106,6 +104,14 @@ export default {
     //     }
     //   };
     // },
+    toggleModuleToTrackedMap(moduleName){
+      console.log(moduleName);
+      if(!this.trackedModules.get(moduleName)){
+        this.$store.dispatch('updateUserTrackedModules', {name: moduleName, isTracked: true});
+      } else {
+        this.$store.dispatch('updateUserTrackedModules', {name: moduleName, isTracked: false});
+      }
+    },
     buildModuleDataList(){
       this.moduleList = [];
       for(module in modules){
@@ -118,15 +124,12 @@ export default {
       console.log(this.moduleList);
     },
     toggleCompletedModule(moduleName){
-      debugger;
-      console.log(this.getModuleIdByName(moduleName));
       if(!this.completedModules.get(this.getModuleIdByName(moduleName))){
         this.$store.dispatch('updateUserCompletedModules', {moduleId: this.getModuleIdByName(moduleName), isCompleted: true}).then(() => {
           graphService.highlightCompletedModule(this.getModuleIdByName(moduleName), true, this.completedModules);
         });
       }else{
         this.$store.dispatch('updateUserCompletedModules', {moduleId: this.getModuleIdByName(moduleName), isCompleted: false}).then(() => {
-          console.log("deleted");
           graphService.highlightCompletedModule(this.getModuleIdByName(moduleName), false, this.completedModules);
         });
       }

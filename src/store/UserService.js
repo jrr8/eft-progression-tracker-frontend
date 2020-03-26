@@ -56,7 +56,7 @@ export default {
       const trackedModules = new Map(user.trackedModules);
 
       if(newModule.isTracked)
-        trackedModules.set(newModule.name, newModule.modules);
+        trackedModules.set(newModule.name, newModule.isTracked);
       else
         trackedModules.delete(newModule.name);
         
