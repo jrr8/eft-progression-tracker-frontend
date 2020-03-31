@@ -55,7 +55,6 @@ export default {
       return this.$store.state.user;
     },
     computedPage(){
-      console.log(this.$route.path);
       return this.$route.path;
     },
     isNavDrawerActive: {
@@ -63,7 +62,6 @@ export default {
         return this.$store.state.isNavDrawerActive;
       },
       set: function(isActive){
-        console.log(isActive);
         this.$store.commit('setNavDrawerIsActive', {isNavDrawerActive: isActive});
       }
     },
@@ -71,17 +69,14 @@ export default {
 
   created() {
     this.$store.dispatch("fetchUser").then(() => {
-      console.log(this.user);
     });
     this.$vuetify.theme.dark = true;
   },
   methods: {
     navToHome(){
-      console.log("nav to home clicked");
       this.$router.push('/');
     },
     toggleIsNavDrawerActive(){
-      console.log("here");
       this.$store.commit('setNavDrawerIsActive', {isNavDrawerActive: !this.isNavDrawerActive});
     },
   }

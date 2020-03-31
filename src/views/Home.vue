@@ -47,7 +47,6 @@ export default {
       return this.$store.state.visData;
     },
     isDisabled(){
-        debugger;
         return this.selectedModuleId == '';
     },
     trackedModules(){
@@ -98,7 +97,6 @@ export default {
   },
   methods: {
     toggleIsNavDrawerActive(){
-      console.log("here");
       this.$store.commit('setNavDrawerIsActive', {isNavDrawerActive: !this.isNavDrawerActive});
     },
     toggleCompletedModule(){

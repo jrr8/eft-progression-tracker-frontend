@@ -17,7 +17,6 @@ export default {
                                                               hideoutModulesCompleted: Array.from(new Map()),
                                                               itemsInInventory: Array.from(new Map())}));
       }
-      debugger;
       const user = userData ? JSON.parse(userData) : {};
 
       resolve(new User(user));
@@ -25,7 +24,6 @@ export default {
   },
   updateUserItemsInInventory(item){
     return new Promise((resolve) => {
-      debugger;
       const userData = localStorage.getItem(options.userKey);
       const user = userData ? JSON.parse(userData) : {};
       const itemsInInventory = new Map(user.itemsInInventory);

@@ -4,32 +4,38 @@
       <v-icon class="module-list-icon" light>list</v-icon>
       All Modules          
     </v-btn>
-    <v-dialog v-model="dialog" max-width="500">
+    <v-dialog :scrollable="true" v-model="dialog" max-width="500" :height="'height: 75%'">
       <v-card >
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-        <v-data-table
-          :search="search"
-          :headers="headers"
-          :items="moduleList"
-          :items-per-page="100"
-          class="elevation-1"
-          hide-default-footer
-        >
-          <template v-slot:item.isCompleted="{ item }">
-            <v-checkbox v-model="item.isCompleted" @change="toggleCompletedModule(item.name)"></v-checkbox>
-          </template>
+        <v-card-title>
+          <v-text-field 
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
+        </v-card-title>
+        <v-card-text style="height: calc(100% - 74px); padding: 0px;">
+          <v-data-table
+            style="height:100%;"
+            :height="'calc(100% - 59px)'"
+            :search="search"
+            :headers="headers"
+            :items="moduleList"
+            :items-per-page="100"
+            class="elevation-1"
+            fixed-header
+          >
+            <template v-slot:item.isCompleted="{ item }">
+              <v-checkbox v-model="item.isCompleted" @change="toggleCompletedModule(item.name)"></v-checkbox>
+            </template>
 
-          <template v-slot:item.isTracked="{ item }">
-            <v-checkbox v-model="item.isTracked" @change="toggleModuleToTrackedMap(item.name)"></v-checkbox>
-          </template>
-        
-        </v-data-table>
+            <template v-slot:item.isTracked="{ item }">
+              <v-checkbox v-model="item.isTracked" @change="toggleModuleToTrackedMap(item.name)"></v-checkbox>
+            </template>
+          
+          </v-data-table>
+        </v-card-text>
       </v-card>
     </v-dialog>
   </div>
@@ -69,12 +75,6 @@ export default {
       return this.$store.state.user.trackedModules;
     },
   },
-  // watch: {
-  //   completedModules: function () { //  TODO: May need to change
-  //     console.log("watched");
-  //     this.buildModuleDataList();
-  //   }
-  // },
   created() {
 
   },
@@ -105,7 +105,6 @@ export default {
     //   };
     // },
     toggleModuleToTrackedMap(moduleName){
-      console.log(moduleName);
       if(!this.trackedModules.get(moduleName)){
         this.$store.dispatch('updateUserTrackedModules', {name: moduleName, isTracked: true});
       } else {
@@ -121,7 +120,6 @@ export default {
           isTracked: this.trackedModules.get(module) != undefined
         });
       };
-      console.log(this.moduleList);
     },
     toggleCompletedModule(moduleName){
       if(!this.completedModules.get(this.getModuleIdByName(moduleName))){

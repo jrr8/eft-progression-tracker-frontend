@@ -76,8 +76,6 @@ export default {
     selectedModuleId: '',
     prevModulesForCurrentModule: [],
     getVisData(){
-        console.log("in getter");
-        console.log(visData);
         return visData;
     },
     getNetwork(){
@@ -87,15 +85,12 @@ export default {
         return selectedModuleId;
     },
     highlightCompletedModule(id, highlightTrue, completedModules){
-        console.log(completedModules);
-        debugger;
         var curNode = visData.nodes.get(id);
         if(highlightTrue){ //TODO: Check
             curNode.color = completedNodeColor;
             // curNode.borderWidth = 4;
             // curNode.borderWidthSelected = 1;
         }else{
-            console.log("unhighlight");
             curNode.borderWidth = 1;
             curNode.color = nodeColor;
         }
@@ -190,8 +185,6 @@ export default {
         };
 
         network = new vis.Network(container, data, options);
-        console.log("here");
-        console.log(network.getOptionsFromConfigurator());
 
         network.moveTo({
             position: {

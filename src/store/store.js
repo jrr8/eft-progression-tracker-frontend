@@ -34,7 +34,6 @@ export default new Vuex.Store({
         },
 
         setNavDrawerIsActive(state, payload){
-            // console.log(payload.isNavDrawerActive);
             state.isNavDrawerActive = payload.isNavDrawerActive;
         }
 
@@ -47,14 +46,12 @@ export default new Vuex.Store({
             });
         },
         updateUserTrackedModules({ commit }, payload) {
-            debugger;
             UserService.updateUserTrackedModules(payload).then(user => {
               commit("setUser", { user })
             })
         },
         updateUserCompletedModules({ commit }, payload) {
             return new Promise((resolve, reject) => {
-                debugger;
                 UserService.updateUserCompletedModules(payload).then(user => {
                 commit("setUser", { user })
                 });
