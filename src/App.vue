@@ -135,6 +135,25 @@ export default {
   }
 }
 
+.bkg-img {
+  position: relative;
+
+  &::before {
+    @opaque: #ffffff0e;
+
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(@opaque, @opaque),url(https://cdn.wccftech.com/wp-content/uploads/2017/04/escape-from-tarkov-logo.jpg);
+    background-position-x: center;
+    background-size: cover;
+    filter: blur(2px);
+  }
+}
+
 .nav-bar-header {
   display: flex;
   justify-content: center;

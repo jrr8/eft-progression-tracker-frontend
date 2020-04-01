@@ -15,7 +15,7 @@
       ></v-text-field>
       <tracked-modules-dialog></tracked-modules-dialog>
     </div>
-    <div ref="vis" class="no-focus" :style="graphStyle"></div>
+    <div ref="vis" class="no-focus bkg-img" :style="graphStyle"></div>
   </div>
 
 </template>
@@ -205,23 +205,23 @@ export default {
 }
 
 .hideout-module-info-inactive {
-  height:56px; 
-  // margin-left: 500px; 
-  width: 1500px; 
+  height:56px;
+  // margin-left: 500px;
+  width: 1500px;
   flex-grow: 1;
   flex-shrink: 1;
 }
 
 .hideout-module-info-active {
-  height:auto; 
-  // margin-left: 500px; 
-  width: 1500px; 
+  height:auto;
+  // margin-left: 500px;
+  width: 1500px;
   flex-grow: 1;
   flex-shrink: 1;
 }
 
 .selected-module-header {
-  // width: 500px; 
+  // width: 500px;
   color: white;
   flex-shrink: 1;
   flex-grow: 1;
