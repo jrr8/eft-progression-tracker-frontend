@@ -5,8 +5,8 @@
         <div v-if="graphService.selectedModuleId != ''" style="display: flex; margin-left: 50px;">
           <h1 class="selected-module-header">{{graphService.getModuleNameById(graphService.selectedModuleId)}}</h1>
           <div class="checkbox-container">
-            <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Hideout Module Completed'"></v-checkbox>
-            <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleTrackedForCheckbox" :label="'Hideout Module Tracked'"></v-checkbox>
+            <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Module Completed'"></v-checkbox>
+            <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleTrackedForCheckbox" :label="'Module Tracked'"></v-checkbox>
           </div>
         </div>
       </div>
@@ -231,7 +231,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 250px;
+  width: 200px;
 }
 
 .checkbox {

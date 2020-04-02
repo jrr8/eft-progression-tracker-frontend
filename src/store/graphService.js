@@ -5,12 +5,12 @@ let nodeColor = {
     background: '#631919',
     border: '#631919',
     hover: {
-    background: '#a62b2b',
-    border: '#305e92',
+    background: '#1b262c',
+    border: '#919191',
         },
     highlight: {
-    background: '#fa322f',
-    border: '#000000',
+    background: '#1b262c',
+    border: '#919191',
         }
 };
 let nodeOptions = {
@@ -43,11 +43,11 @@ let completedNodeColor = {
     background: '#631919',
 
     hover: {
-    background: '#a62b2b',
-    border: '#305e92',
+    background: '#1b262c',
+    border: '#3cc962',
     },
     highlight: {
-    background: '#fa322f',
+    background: '#1b262c',
     border: '#3cc962',
     },
 };
@@ -55,7 +55,7 @@ let edgeOptions = {
   shadow: true,
     arrows: 'to',
     color: {
-    color: nodeColor.hover.background,
+    color: '#919191',
     highlight: nodeColor.highlight.border,
     },
 };

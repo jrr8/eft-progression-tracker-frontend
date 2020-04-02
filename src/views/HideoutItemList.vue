@@ -44,7 +44,7 @@
 
                 <template class="container" v-slot:item.itemsInInventory="{ item }">
                     <v-btn  class="mx-2 incAndDecButton" fab dark small color="pink" @click="updateItemInInventory(item.href, -1, 0)">
-                        <v-icon dark>mdi-minus</v-icon>
+                        <v-icon >mdi-minus</v-icon>
                     </v-btn>
                     {{item.itemsInInventory.found.toLocaleString()}}
                     <v-btn class="mx-2 incAndDecButton" fab dark small color="pink" @click="updateItemInInventory(item.href, 1, 0)">
