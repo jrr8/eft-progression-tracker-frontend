@@ -11,8 +11,8 @@
             v-model="search"
             append-icon="mdi-magnify"
             label="Search"
-            single-line
             hide-details
+            color="#e3d6ac"
           ></v-text-field>
         </v-card-title>
         <v-card-text style="height: calc(100% - 74px); padding: 0px;">
@@ -27,11 +27,11 @@
             fixed-header
           >
             <template v-slot:item.isCompleted="{ item }">
-              <v-checkbox v-model="item.isCompleted" @change="toggleCompletedModule(item.name)"></v-checkbox>
+              <v-checkbox color="#e3d6ac" v-model="item.isCompleted" @change="toggleCompletedModule(item.name)"></v-checkbox>
             </template>
 
             <template v-slot:item.isTracked="{ item }">
-              <v-checkbox v-model="item.isTracked" @change="toggleModuleToTrackedMap(item.name)"></v-checkbox>
+              <v-checkbox color="#e3d6ac" v-model="item.isTracked" @change="toggleModuleToTrackedMap(item.name)"></v-checkbox>
             </template>
           
           </v-data-table>

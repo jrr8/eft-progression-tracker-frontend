@@ -2,15 +2,15 @@
   <div class="d-flex-col viewport-height">
     <div ref="header" class="user-interaction-header">
       <div :class="[graphService.selectedModuleId != '' ? 'hideout-module-info-active' : 'hideout-module-info-inactive']" class="hideout-module-info">
-        <div v-if="graphService.selectedModuleId != ''" style="display: flex; margin-left: 50px;">
-          <h1 class="selected-module-header">{{graphService.getModuleNameById(graphService.selectedModuleId)}}</h1>
+        <div v-if="graphService.selectedModuleId != ''" style="display: flex; margin-left: 50px; ">
+          <h1 style="color: #e3d6ac" class="selected-module-header">{{graphService.getModuleNameById(graphService.selectedModuleId)}}</h1>
           <div class="checkbox-container">
-            <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Module Completed'"></v-checkbox>
-            <v-checkbox hide-details class="checkbox" color="red darken-3" :disabled="graphService.selectedModuleId == ''" v-model="isModuleTrackedForCheckbox" :label="'Module Tracked'"></v-checkbox>
+            <v-checkbox hide-details class="checkbox" color="#e3d6ac" :disabled="graphService.selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Module Completed'"></v-checkbox>
+            <v-checkbox hide-details class="checkbox" color="#e3d6ac" :disabled="graphService.selectedModuleId == ''" v-model="isModuleTrackedForCheckbox" :label="'Module Tracked'"></v-checkbox>
           </div>
         </div>
       </div>
-      <v-text-field hide-details class="search-input" label="Search Module"
+      <v-text-field color="#e3d6ac" hide-details class="search-input" label="Search Module"
         v-model="question" @input="graphService.searchModulesForMatch(question)" @focus="onInputFocused()" @blur="onInputBlurred()"
       ></v-text-field>
       <tracked-modules-dialog></tracked-modules-dialog>
@@ -142,35 +142,6 @@ export default {
     },
   },
 };
-    // Too Slow
-    // toggleCompletedModule(){
-    //   console.log("start");
-    //   if(!this.completedModules.get(this.selectedModuleId))
-    //     this.completedModules.set(this.selectedModuleId, true);
-    //   else
-    //     this.completedModules.delete(this.selectedModuleId);
-    //   console.log("middle");
-    //   this.highlightCompletedModules();
-    //   console.log("end");
-    // },
-    // highlightCompletedModules(){
-    //   this.nodeSet.forEach((node)=> {
-    //     var clickedNode = node;
-    //     if(this.completedModules.get(node.id)){
-    //       clickedNode.color = {
-    //         border: '#000000',
-    //         background: '#000000',
-    //         highlight: {
-    //           border: '#2B7CE9',
-    //           background: '#D2E5FF'
-    //         }
-    //       }
-    //     }else{
-    //       clickedNode.color = this.nodeColor;
-    //     }
-    //       this.nodeSet.update(clickedNode);
-    //   });
-    // },
 </script>
 
 

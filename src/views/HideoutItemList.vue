@@ -2,14 +2,14 @@
     <div class="back viewport-height">
         <v-card style="width: 75%; margin: auto; height: 100%;">
             <v-card-title>
-                <v-checkbox color="red darken-3" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
+                <v-checkbox color="#baa661" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
                 <v-spacer></v-spacer>
                 <v-text-field
                     v-model="search"
                     append-icon="mdi-magnify"
                     label="Search"
-                    single-line
                     hide-details
+                    color="#baa661"
                 ></v-text-field>
                 <v-spacer></v-spacer>
                 <v-select
@@ -19,6 +19,8 @@
                     label="Tracked Hideout Modules"
                     @change="buildItemListForTable()"
                     clearable
+                    hide-details
+                    color="#baa661"
                 ></v-select>
             </v-card-title>
             <v-data-table
@@ -43,11 +45,11 @@
                 </template>
 
                 <template class="container" v-slot:item.itemsInInventory="{ item }">
-                    <v-btn  class="mx-2 incAndDecButton" fab dark small color="pink" @click="updateItemInInventory(item.href, -1, 0)">
+                    <v-btn class="mx-2 incAndDecButton" fab dark small color="#3a0f0f" @click="updateItemInInventory(item.href, -1, 0)">
                         <v-icon >mdi-minus</v-icon>
                     </v-btn>
                     {{item.itemsInInventory.found.toLocaleString()}}
-                    <v-btn class="mx-2 incAndDecButton" fab dark small color="pink" @click="updateItemInInventory(item.href, 1, 0)">
+                    <v-btn class="mx-2 incAndDecButton" fab dark small color="#3a0f0f" @click="updateItemInInventory(item.href, 1, 0)">
                         <v-icon x-small dark>mdi-plus</v-icon>
                     </v-btn>
                 </template>
@@ -58,13 +60,13 @@
                             <template v-slot:default>
                                 <thead>
                                     <tr>
-                                    <th>Module Name</th>
-                                    <th>Items Required</th>
+                                    <th style="text-align: center;">Module Name</th>
+                                    <th style="text-align: center;">Items Required</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="module in expandedItemInfo" :key="module.name">
-                                    <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.name }}</td>
+                                    <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.name }} {{module.completed ? ' (Completed)' : ''}}</td>
                                     <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.numRequired.toLocaleString() }}</td>
                                     </tr>
                                 </tbody>
@@ -341,7 +343,8 @@ export default {
 }
 
 .isModuleCompleted{
-    background-color: grey;
+    background-color: #baa661;
+    color: black;
 }
 
 .incAndDecButton{

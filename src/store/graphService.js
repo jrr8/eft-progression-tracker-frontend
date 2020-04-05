@@ -1,16 +1,27 @@
 import * as vis from 'vis-network';
 import graph from '../assets/graph';
 
+let defaultNodeBackgroundColor = '#631919';
+let defaultNodeHoveBrackgroundColor = '#1b262c';
+let defaultNodeBorderColor = '#919191';
+let completedNodeBorderColor = '#3cc962';
+
+
+// let defaultNodeBackgroundColor = '#1b262c';
+// let defaultNodeHoveBrackgroundColor = '#631919';
+// let defaultNodeBorderColor = '#919191';
+// let completedNodeBorderColor = '#3cc962';
+
 let nodeColor = {
-    background: '#631919',
-    border: '#631919',
+    background: defaultNodeBackgroundColor,
+    border: defaultNodeBorderColor,
     hover: {
-    background: '#1b262c',
-    border: '#919191',
+    background: defaultNodeHoveBrackgroundColor,
+    border: defaultNodeBorderColor,
         },
     highlight: {
-    background: '#1b262c',
-    border: '#919191',
+    background: defaultNodeHoveBrackgroundColor,
+    border: defaultNodeBorderColor,
         }
 };
 let nodeOptions = {
@@ -39,24 +50,25 @@ let nodeOptionsCompleted = {
     },
 };
 let completedNodeColor = {
-    border: '#3cc962',
-    background: '#631919',
+    border: completedNodeBorderColor,
+    background: defaultNodeBackgroundColor,
 
     hover: {
-    background: '#1b262c',
-    border: '#3cc962',
+    background: defaultNodeHoveBrackgroundColor,
+    border: completedNodeBorderColor,
     },
     highlight: {
-    background: '#1b262c',
-    border: '#3cc962',
+    background: defaultNodeHoveBrackgroundColor,
+    border: completedNodeBorderColor,
     },
 };
 let edgeOptions = {
+  width: 4,
   shadow: true,
     arrows: 'to',
     color: {
-    color: '#919191',
-    highlight: nodeColor.highlight.border,
+    color: '#8c2020',
+    highlight: '#e3d6ac',
     },
 };
 
