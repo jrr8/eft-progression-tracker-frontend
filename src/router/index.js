@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
-import LandingPage from '../views/LandingPage.vue';
-import Features from '../views/Features.vue';
 import HideoutItemList from '../views/HideoutItemList.vue'
 import About from '../views/About.vue'
 
@@ -15,7 +13,7 @@ const routes = [
     component: Home,
   },
   {
-    path: '/hideoutItemList',
+    path: '/hideout-items',
     name: 'HideoutItemList',
     component: HideoutItemList
   },
