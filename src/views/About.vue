@@ -1,6 +1,6 @@
 <template>
-  <div class="back viewport-height" style="padding: 50px;">
-    <v-card class="card-raised-effect card-overflow-auto" style="width: 50%; margin: auto; height: 100%;">
+  <div class="back viewport-height p50px">
+    <v-card class="card-raised-effect of-auto wdth50p marg-auto hght100p">
       <v-container>
         <v-row dense>
           <v-col cols="12">
@@ -122,29 +122,24 @@ export default {
   box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.233), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.list-margin {
-  margin-left: 30px;
-  margin-bottom: 30px;
+.p50px {
+  padding: 50px;
 }
 
-.list-align-text-left {
-  text-align: left; 
+.wdth50p {
+  width: 50%;
 }
 
-.list-margin-left.li {
-  margin-bottom: 5px;
+.marg-auto {
+  margin: auto;
 }
 
-.card-overflow-auto {
+.hght100p {
+  height: 100%;
+}
+
+.of-auto {
   overflow: auto;
-}
-
-.card-title-center-text {
-  text-align: center;
-}
-
-.card-title-margin {
-  margin: 10px;
 }
 
 .v-card {

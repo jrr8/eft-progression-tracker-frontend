@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-btn class="module-list-btn" color="#1b262c" dark @click.stop="initModuleDataList()">
-      <v-icon class="module-list-icon" light>list</v-icon>
+    <v-btn class="ml25px mr10px" color="#1b262c" dark @click.stop="initModuleDataList()">
+      <v-icon class="mr5px" light>list</v-icon>
       All Modules          
     </v-btn>
     <v-dialog :scrollable="true" v-model="dialog" max-width="500" :height="'height: 75%'">
@@ -15,7 +15,7 @@
             color="#e3d6ac"
           ></v-text-field>
         </v-card-title>
-        <v-card-text style="height: calc(100% - 74px); padding: 0px;">
+        <v-card-text class="hght-calc p0px">
           <v-data-table
             style="height:100%;"
             :height="'calc(100% - 59px)'"
@@ -89,21 +89,6 @@ export default {
         this.buildModuleDataList();
       });
     },
-    // buildModuleDataList(){
-    //   for(module in modules){
-    //     if(this.completedModules.get(this.getModuleIdByName(module))){
-    //       this.moduleList.push({
-    //         name: module,
-    //         isCompleted: true
-    //       });
-    //     }else{
-    //       this.moduleList.push({
-    //         name: module,
-    //         isCompleted: false
-    //       });
-    //     }
-    //   };
-    // },
     toggleModuleToTrackedMap(moduleName){
       if(!this.trackedModules.get(moduleName)){
         this.$store.dispatch('updateUserTrackedModules', {name: moduleName, isTracked: true});
@@ -157,13 +142,25 @@ export default {
 
 <style scoped lang="less">
 
-//TODO: Behaves differently for Chrome and Firefox
-.module-list-btn {
+.ml25px {
   margin-left: 25px;
+}
+
+.mr10px {
   margin-right: 10px;
 }
 
-.module-list-icon {
+.mr5px {
   margin-right: 5px;
 }
+
+.hght-calc {
+  height: calc(100% - 74px);
+}
+
+.p0px {
+  padding: 0px;
+}
+
+
 </style>

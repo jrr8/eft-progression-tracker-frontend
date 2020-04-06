@@ -18,19 +18,19 @@
         dense
       >
         <v-list-item :to="'/'" :class="[computedPage == '/' ? activeClass : 'page-inactive', 'nav-item']" link>
-          <v-list-item-title style="color: white;" color:white router >Hideout Progression Tree</v-list-item-title>
+          <v-list-item-title class="txt-white" color:white router >Hideout Progression Tree</v-list-item-title>
         </v-list-item>
         <v-list-item :to="'hideoutItemList'" :class="[computedPage.includes('hideoutItemList') ? activeClass : 'page-inactive', 'nav-item']" link>
-          <v-list-item-title style="color: white;">Item List</v-list-item-title>
+          <v-list-item-title class="txt-white">Item List</v-list-item-title>
         </v-list-item>
         <v-list-item :to="'about'" :class="[computedPage.includes('about') ? activeClass : 'page-inactive', 'nav-item']" link>
-          <v-list-item-title style="color: white;">About</v-list-item-title>
+          <v-list-item-title class="txt-white">About</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
     <v-content>
-      <v-container fluid style="padding: 0px;">
+      <v-container fluid class="p0px">
         <router-view></router-view>
       </v-container>
     </v-content>
@@ -194,28 +194,30 @@ export default {
   z-index: 1;
 }
 
-/* width */
+.txt-white {
+  color: white;
+}
+
+.p0px {
+  padding: 0px;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px grey; 
   border-radius: 10px;
 }
  
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #3a0f0f; 
-  // background: #290b0b;
   border-radius: 10px;
   opacity: .5;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  // background: #3a0f0f; 
   background: #290b0b;
   opacity: 1;
 }

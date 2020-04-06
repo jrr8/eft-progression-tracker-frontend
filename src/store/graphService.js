@@ -63,7 +63,7 @@ let completedNodeColor = {
     },
 };
 let edgeOptions = {
-  width: 4,
+  width: 3,
   shadow: true,
     arrows: 'to',
     color: {

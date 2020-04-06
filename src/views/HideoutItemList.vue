@@ -1,8 +1,11 @@
 <template>
     <div class="back viewport-height">
-        <v-card style="width: 75%; margin: auto; height: 100%;">
+        <v-card class="wdth75p marg-auto hght100p">
             <v-card-title>
-                <v-checkbox color="#baa661" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
+                <div class="flex fd-col">
+                    <v-checkbox hide-details color="#baa661" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
+                    <v-checkbox hide-details color="#baa661" v-model="areItemsInInventoryIncluded" :label="'Include Inventory in Items Required'"></v-checkbox>
+                </div>
                 <v-spacer></v-spacer>
                 <v-text-field
                     v-model="search"
@@ -23,8 +26,9 @@
                     color="#baa661"
                 ></v-select>
             </v-card-title>
+            <v-divider color="#3a0f0f"></v-divider>
             <v-data-table
-                style="height: calc(100% - 102px);"
+                style="height: calc(100% - 121px);"
                 :height="'calc(100% - 59px)'"
                 :headers="computedHeaders"
                 :items="itemList"
@@ -40,16 +44,21 @@
                 must-sort
             >
 
-                <template class="container" v-slot:item.itemsRequired="{ item }">
-                    ({{item.itemsRequired.itemsOwned.toLocaleString()}}/{{item.itemsRequired.itemsRequired.toLocaleString()}})
+                <template class="wdth200px hght120px" v-slot:item.itemsRequired="{ item }">
+                    <div v-if="!areItemsInInventoryIncluded">
+                        ({{item.itemsRequired.itemsOwned.toLocaleString()}}/{{item.itemsRequired.itemsRequired.toLocaleString()}})
+                    </div>
+                    <div v-if="areItemsInInventoryIncluded">
+                        ({{(item.itemsRequired.itemsOwned + item.itemsInInventory.found).toLocaleString()}}/{{item.itemsRequired.itemsRequired.toLocaleString()}})
+                    </div>
                 </template>
 
-                <template class="container" v-slot:item.itemsInInventory="{ item }">
-                    <v-btn class="mx-2 incAndDecButton" fab dark small color="#3a0f0f" @click="updateItemInInventory(item.href, -1, 0)">
+                <template class="wdth200px hght120px" v-slot:item.itemsInInventory="{ item }">
+                    <v-btn :disabled="item.itemsInInventory.found < 1" class="mx-2 wdth20px hght20px" fab dark small color="#3a0f0f" @click="updateItemInInventory(item.href, -1, 0)">
                         <v-icon >mdi-minus</v-icon>
                     </v-btn>
                     {{item.itemsInInventory.found.toLocaleString()}}
-                    <v-btn class="mx-2 incAndDecButton" fab dark small color="#3a0f0f" @click="updateItemInInventory(item.href, 1, 0)">
+                    <v-btn class="mx-2 wdth20px hght20px" fab dark small color="#3a0f0f" @click="updateItemInInventory(item.href, 1, 0)">
                         <v-icon x-small dark>mdi-plus</v-icon>
                     </v-btn>
                 </template>
@@ -60,8 +69,8 @@
                             <template v-slot:default>
                                 <thead>
                                     <tr>
-                                    <th style="text-align: center;">Module Name</th>
-                                    <th style="text-align: center;">Items Required</th>
+                                    <th class="ta-center">Module Name</th>
+                                    <th class="ta-center">Items Required</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -75,7 +84,7 @@
                     </td>
                 </template>
 
-                <template class="container" v-slot:item.image="{ item }">
+                <template class="wdth200px hght120px" v-slot:item.image="{ item }">
                     <v-img :src="item.imgUrl" max-height="70px" contain></v-img>
                 </template>
             </v-data-table>
@@ -105,6 +114,7 @@ export default {
             expanded: [],
             search: '',
             hideImageColumn: false,
+            areItemsInInventoryIncluded: false,
             headers: [
                 { text: 'Item Name', value: 'name' },
                 { text: 'Items Required', value: 'itemsRequired' },
@@ -331,8 +341,11 @@ export default {
 
 
 <style scoped lang="less">
-.container {
+.wdth200px {
     width: 200px;
+}
+
+.hght120px {
     height: 120px;
 }
 
@@ -347,13 +360,40 @@ export default {
     color: black;
 }
 
-.incAndDecButton{
+.wdth20px {
     width: 20px;
+}
+
+.hght20px {
     height: 20px;
+}
+
+.wdth75p {
+    width: 75%;
+}
+
+.marg-auto {
+    margin: auto;
+}
+
+.hght100p {
+    height: 100%;
+}
+
+.flex {
+    display: flex;
+}
+
+.fd-col {
+    flex-direction: column;
 }
 
 .back {
   background-image: url(https://cdn.wccftech.com/wp-content/uploads/2017/04/escape-from-tarkov-logo.jpg);
   background-size: cover;
+}
+
+.th.ta-center {
+    text-align: center;
 }
 </style>
