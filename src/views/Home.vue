@@ -225,4 +225,5 @@ export default {
     z-index: 10;
     visibility: visible;
 }
+
 </style>
