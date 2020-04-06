@@ -38,16 +38,11 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
 import graph from './assets/graph';
 import * as vis from 'vis-network';
 
 export default {
   name: 'App',
-
-  components: {
-    HelloWorld,
-  },
 
   computed: {
     user() {
