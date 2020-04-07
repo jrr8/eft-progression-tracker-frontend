@@ -1,9 +1,9 @@
 <template>
-  <div class="d-flex-col viewport-height">
-    <div ref="header" class="user-interaction-header">
+  <div class="flex fd-col viewport-height">
+    <div ref="header" class="disp-flex bg-3a0f0f bx-shdw-black algn-itms-center p-lr-10px hght-auto">
       <div :class="[graphService.selectedModuleId != '' ? 'hideout-module-info-active' : 'hideout-module-info-inactive']" class="hideout-module-info">
         <div v-if="graphService.selectedModuleId != ''" style="display: flex; margin-left: 50px; ">
-          <h1 style="color: #e3d6ac" class="selected-module-header">{{graphService.getModuleNameById(graphService.selectedModuleId)}}</h1>
+          <h1 class="selected-module-header color-e3d6ac">{{graphService.getModuleNameById(graphService.selectedModuleId)}}</h1>
           <div class="checkbox-container">
             <v-checkbox hide-details class="checkbox" color="#e3d6ac" :disabled="graphService.selectedModuleId == ''" v-model="isModuleCompletedForCheckbox" :label="'Module Completed'"></v-checkbox>
             <v-checkbox hide-details class="checkbox" color="#e3d6ac" :disabled="graphService.selectedModuleId == ''" v-model="isModuleTrackedForCheckbox" :label="'Module Tracked'"></v-checkbox>
@@ -146,32 +146,39 @@ export default {
 
 
 <style scoped lang="less">
-.d-flex-col {
+.disp-flex {
   display: flex;
+}
+
+.fd-col {
   flex-direction: column;
 }
 
-.items{
-  display: flex;
-
-}
-
-.myitem{
-  display: flex;
-}
-
-.butn{
-  background-color: white;
-  margin: 10px;
-}
-
 .user-interaction-header {
-  //  TODO: Add padding
-  display: flex; /* or inline-flex */
+  display: flex;
   background: #3a0f0f;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   align-items: center;
   padding: 10px 10px;
+  height: auto;
+}
+
+.bg-3a0f0f {
+  background: #3a0f0f;
+}
+.bx-shdw-black {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.algn-itms-center {
+  align-items: center;
+}
+
+.p-lr-10px {
+  padding: 10px 10px;
+}
+
+.hght-auto {
   height: auto;
 }
 
@@ -224,6 +231,10 @@ export default {
     position: absolute;
     z-index: 10;
     visibility: visible;
+}
+
+.color-e3d6ac {
+  color: #e3d6ac;
 }
 
 </style>

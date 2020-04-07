@@ -1,6 +1,6 @@
 <template>
     <div class="back viewport-height">
-        <v-card class="wdth75p marg-auto hght100p">
+        <v-card class="wdth70p marg-auto hght100p">
             <v-card-title>
                 <div class="flex fd-col">
                     <v-checkbox hide-details color="#baa661" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
@@ -28,12 +28,11 @@
             </v-card-title>
             <v-divider color="#3a0f0f"></v-divider>
             <v-data-table
-                style="height: calc(100% - 121px);"
                 :height="'calc(100% - 59px)'"
                 :headers="computedHeaders"
                 :items="itemList"
                 :items-per-page="10"
-                class="elevation-1"
+                class="elevation-1 hght-calc"
                 :search="search"
                 item-key="name"
                 show-expand
@@ -77,6 +76,11 @@
                                     <tr v-for="module in expandedItemInfo" :key="module.name">
                                     <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.name }} {{module.completed ? ' (Completed)' : ''}}</td>
                                     <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.numRequired.toLocaleString() }}</td>
+
+                                    <!-- <td >{{ module.name }}
+                                        <img v-if="module.completed" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fflyclipart.com%2Fgreen-tick-clipart-transparent-background-green-background-clipart-831516&psig=AOvVaw1xTyuW7FsHAyGLaH78aqP0&ust=1586313525209000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMiP9cik1egCFQAAAAAdAAAAABAV" width="40px" height="40px">
+                                    </td>
+                                    <td >{{ module.numRequired.toLocaleString()}}</td> -->
                                     </tr>
                                 </tbody>
                             </template>
@@ -349,7 +353,6 @@ export default {
     height: 120px;
 }
 
-/* resize images */
 .container img {
     width: 100%;
     height: auto;
@@ -368,8 +371,8 @@ export default {
     height: 20px;
 }
 
-.wdth75p {
-    width: 75%;
+.wdth70p {
+    width: 70%;
 }
 
 .marg-auto {
@@ -395,5 +398,9 @@ export default {
 
 .th.ta-center {
     text-align: center;
+}
+
+.hght-calc {
+    height: calc(100% - 121px);
 }
 </style>

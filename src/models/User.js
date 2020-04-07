@@ -8,13 +8,12 @@ export default class User {
   itemsInInventory;
 
   constructor(data) {
-    ['hideoutModulesCompleted', 'trackedModules',
-      'itemsOwned', 'itemsInInventory'].forEach(getMapFromMapOrArray)
-
-    function getMapFromMapOrArray(property) {
+    const getMapFromMapOrArray = (property) => {
       const mapOrArray = data[property];
       this[property] = Array.isArray(mapOrArray) ? new Map(mapOrArray) : mapOrArray;
     }
 
+    ['hideoutModulesCompleted', 'trackedModules',
+      'itemsOwned', 'itemsInInventory'].forEach(getMapFromMapOrArray)
   }
 }

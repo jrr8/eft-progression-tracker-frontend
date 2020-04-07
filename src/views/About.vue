@@ -79,6 +79,25 @@
               </ul>  
             </v-card>
           </v-col>
+
+          <v-col cols="12">
+            <v-card
+              color="#3a0f0f"
+              dark
+            >
+              <v-card-title class="headline">Discord Channel and Bug Reporting</v-card-title>
+              <h4>Discord Channel</h4>
+              <ul>
+                <li>Join our discord channel <a href="https://discord.gg/GjtZ69F">Tarkov Assistant</a> to get announcements on new updates, potential issues and general information regarding the Tarkov Assistant.</li>
+                <li>Here you can also suggest new features you would like to see as well as suggestions on improvements of existing ones.</li>
+              </ul>  
+
+              <h4>Bug Reporting</h4>
+              <ul>
+                <li>Please report any and all bugs you find under the bug-report channel in our discord server.</li>
+              </ul>  
+            </v-card>
+          </v-col>
         </v-row>
       </v-container>
     </v-card>

@@ -1,6 +1,9 @@
 <template>
   <v-app >
-    <img class="page-nav-drawer-icon" @click.stop="toggleIsNavDrawerActive()" src="./assets/nav-drawer-icon.png" height="35" width="35">
+  <div class="page-nav-drawer-icon">
+    <img class="nav-drawer-icon" @click.stop="toggleIsNavDrawerActive()" src="./assets/nav-drawer-icon.png" height="35" width="35">
+    <h1 class="neon">Tarkov Assistant</h1>
+  </div>
     <v-navigation-drawer app
       src="https://www.jbklutse.com/wp-content/uploads/2019/03/Escape-from-Tarkov.jpg"
       v-model="isNavDrawerActive"
@@ -18,13 +21,16 @@
         dense
       >
         <v-list-item :to="{ name: 'Home' }" :class="[classForRoute('Home'), 'nav-item']" link>
-          <v-list-item-title style="color: white;" color:white router >Hideout Progression Tree</v-list-item-title>
+          <v-list-item-title class="col-white" color:white router >Hideout Progression Tree</v-list-item-title>
         </v-list-item>
         <v-list-item :to="{ name: 'HideoutItemList' }" :class="[classForRoute('HideoutItemList'), 'nav-item']" link>
-          <v-list-item-title style="color: white;">Item List</v-list-item-title>
+          <v-list-item-title class="col-white" >Item List</v-list-item-title>
         </v-list-item>
-          <v-list-item :to="{ name: 'About' }" :class="[classForRoute('About'), 'nav-item']" link>
-          <v-list-item-title style="color: white;">About</v-list-item-title>
+        <v-list-item :to="{ name: 'Help' }" :class="[classForRoute('Help'), 'nav-item']" link>
+          <v-list-item-title class="col-white" >Help</v-list-item-title>
+        </v-list-item>
+        <v-list-item :to="{ name: 'About' }" :class="[classForRoute('About'), 'nav-item']" link>
+          <v-list-item-title class="col-white" >About</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -158,14 +164,15 @@ export default {
 .neon {
   color: #fff;
   text-shadow:
-    0 0 5px #fff,
-    0 0 10px #fff,
-    0 0 20px #fff,
+    0 0 5px rgb(133, 133, 133),
+    0 0 10px rgb(133, 133, 133),
+    0 0 20px rgb(133, 133, 133),
     0 0 40px #3a0f0f,
     0 0 80px #3a0f0f,
     0 0 90px #3a0f0f,
     0 0 100px #3a0f0f,
     0 0 150px #3a0f0f;
+    font-size: 24px;
 }
 
 .nav-drawer-icon {
@@ -183,6 +190,8 @@ export default {
   top: 20px;
   cursor: pointer;
   z-index: 1;
+  display: flex;
+  flex-direction: row;
 }
 
 .txt-white {
@@ -191,6 +200,10 @@ export default {
 
 #p0px {
   padding: 0px;
+}
+
+.col-white {
+  color: white;
 }
 
 ::-webkit-scrollbar {
@@ -202,16 +215,13 @@ export default {
   border-radius: 10px;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #3a0f0f;
-  // background: #290b0b;
   border-radius: 10px;
   opacity: .5;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  // background: #3a0f0f;
   background: #290b0b;
   opacity: 1;
 }

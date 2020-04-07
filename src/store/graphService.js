@@ -6,12 +6,6 @@ let defaultNodeHoveBrackgroundColor = '#1b262c';
 let defaultNodeBorderColor = '#919191';
 let completedNodeBorderColor = '#3cc962';
 
-
-// let defaultNodeBackgroundColor = '#1b262c';
-// let defaultNodeHoveBrackgroundColor = '#631919';
-// let defaultNodeBorderColor = '#919191';
-// let completedNodeBorderColor = '#3cc962';
-
 let nodeColor = {
     background: defaultNodeBackgroundColor,
     border: defaultNodeBorderColor,
@@ -123,6 +117,7 @@ export default {
         return moduleName;
     },
     setSelectOnClickHandler() {
+      // TODO: Need to implement later
         // this.network.on('deselectNode', (params) => {
         //   if(this.inputFocused){
         //     this.network.setSelection(params.previousSelection);

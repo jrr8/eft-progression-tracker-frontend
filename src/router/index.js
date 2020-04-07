@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import HideoutItemList from '../views/HideoutItemList.vue'
 import About from '../views/About.vue'
+import Help from '../views/Help.vue'
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/about',
     name: 'About',
     component: About
+  },
+  {
+    path: '/help',
+    name: 'Help',
+    component: Help
   },
 ];
 

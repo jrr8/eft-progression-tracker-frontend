@@ -17,13 +17,12 @@
         </v-card-title>
         <v-card-text class="hght-calc p0px">
           <v-data-table
-            style="height:100%;"
             :height="'calc(100% - 59px)'"
             :search="search"
             :headers="headers"
             :items="moduleList"
             :items-per-page="100"
-            class="elevation-1"
+            class="elevation-1 hght100p"
             fixed-header
           >
             <template v-slot:item.isCompleted="{ item }">
@@ -90,11 +89,8 @@ export default {
       });
     },
     toggleModuleToTrackedMap(moduleName){
-      if(!this.trackedModules.get(moduleName)){
-        this.$store.dispatch('updateUserTrackedModules', {name: moduleName, isTracked: true});
-      } else {
-        this.$store.dispatch('updateUserTrackedModules', {name: moduleName, isTracked: false});
-      }
+      const wasTracked = this.trackedModules.get(moduleName);
+      this.$store.dispatch('updateUserTrackedModules', {name: moduleName, isTracked: !wasTracked});
     },
     buildModuleDataList(){
       this.moduleList = [];
@@ -107,15 +103,10 @@ export default {
       };
     },
     toggleCompletedModule(moduleName){
-      if(!this.completedModules.get(this.getModuleIdByName(moduleName))){
-        this.$store.dispatch('updateUserCompletedModules', {moduleId: this.getModuleIdByName(moduleName), isCompleted: true}).then(() => {
-          graphService.highlightCompletedModule(this.getModuleIdByName(moduleName), true, this.completedModules);
-        });
-      }else{
-        this.$store.dispatch('updateUserCompletedModules', {moduleId: this.getModuleIdByName(moduleName), isCompleted: false}).then(() => {
-          graphService.highlightCompletedModule(this.getModuleIdByName(moduleName), false, this.completedModules);
-        });
-      }
+      const wasCompleted = this.completedModules.get(this.getModuleIdByName(moduleName));
+      this.$store.dispatch('updateUserCompletedModules', {moduleId: this.getModuleIdByName(moduleName), isCompleted: !wasCompleted}).then(() => {
+        graphService.highlightCompletedModule(this.getModuleIdByName(moduleName), !wasCompleted, this.completedModules);
+      });
     },
     getModuleIdByName(moduleName){
       let moduleId = '';
@@ -126,6 +117,15 @@ export default {
       });
       return moduleId;
     },
+    // getModuleIdByName(moduleName){
+    //   let moduleId = '';
+    //   graph.data.nodes.forEach((module, index, array) => {
+    //     if(module.label == moduleName){
+    //       moduleId = module.id;
+    //     }
+    //   });
+    //   return moduleId;
+    // },
     getModuleNameById(id){
       let moduleName = '';
       graph.data.nodes.forEach((module, index, array) => {
@@ -162,5 +162,7 @@ export default {
   padding: 0px;
 }
 
-
+.hght100p {
+  height: 100%;
+}
 </style>
