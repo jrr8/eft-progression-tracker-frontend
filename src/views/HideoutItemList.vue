@@ -364,10 +364,6 @@ export default {
     flex-direction: column;
 }
 
-.back {
-  background-image: url(https://cdn.wccftech.com/wp-content/uploads/2017/04/escape-from-tarkov-logo.jpg);
-  background-size: cover;
-}
 
 .ta-center {
     text-align: center !important;

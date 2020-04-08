@@ -150,10 +150,6 @@ export default {
 
 
 <style scoped lang="less">
-.back {
-  background-image: url(https://cdn.wccftech.com/wp-content/uploads/2017/04/escape-from-tarkov-logo.jpg);
-  background-size: cover;
-}
 
 .card-raised-effect {
   box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.233), 0 6px 20px 0 rgba(0, 0, 0, 0.19);

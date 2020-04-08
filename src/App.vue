@@ -5,7 +5,7 @@
     <h1 class="neon">Tarkov Assistant</h1>
   </div>
     <v-navigation-drawer app
-      src="https://www.jbklutse.com/wp-content/uploads/2019/03/Escape-from-Tarkov.jpg"
+      src="./assets/nav-drawer-background.jpg"
       v-model="isNavDrawerActive"
       temporary
     >
@@ -87,6 +87,7 @@ export default {
 </script>
 
 <style lang="less">
+@background-image: url(./assets/escape-from-tarkov-logo-for-background.jpg);
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -150,7 +151,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: linear-gradient(@opaque, @opaque),url(https://cdn.wccftech.com/wp-content/uploads/2017/04/escape-from-tarkov-logo.jpg);
+    background-image: linear-gradient(@opaque, @opaque), @background-image;
     background-position-x: center;
     background-size: cover;
     filter: blur(2px);
@@ -203,6 +204,11 @@ export default {
 
 #p0px {
   padding: 0px;
+}
+
+.back {
+  background-image: @background-image;
+  background-size: cover;
 }
 
 .col-white {
