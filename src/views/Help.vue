@@ -103,6 +103,7 @@
                         <ul>
                             <li>The first number represents the number of items you have turned in. 
                                 If you have selected the "Include Inventory in Items Required" checkbox, this number will include the items in your inventory.
+                                If you have more than 0 of the item in your inventory, the number will turn beige, otherwise it will remain white.
                             </li>
                             <li>
                                 The second number represents the number of items required for all Hideout Modules using the item.
@@ -110,7 +111,7 @@
                         </ul>
                     </li>
                     <li>Displays how many of that item you have in your inventory. You can also increment and decrement this amount using the buttons on either side.</li>
-                    <li>When viewing the Hideout Modules that use the item, you will also see which modules you have completed.
+                    <li>When viewing the Hideout Modules that use the item, you will also see which modules you have completed, indicated by a green check mark.
                         As stated previously, these completed modules will contribute toward your Items Required count.
                     </li>
                 </ol>  

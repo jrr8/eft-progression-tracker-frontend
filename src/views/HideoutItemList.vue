@@ -47,8 +47,8 @@
                     <div v-if="!areItemsInInventoryIncluded">
                         ({{item.itemsRequired.itemsOwned.toLocaleString()}}/{{item.itemsRequired.itemsRequired.toLocaleString()}})
                     </div>
-                    <div v-if="areItemsInInventoryIncluded">
-                        ({{(item.itemsRequired.itemsOwned + item.itemsInInventory.found).toLocaleString()}}/{{item.itemsRequired.itemsRequired.toLocaleString()}})
+                    <div  v-if="areItemsInInventoryIncluded">
+                        (<span v-bind:class="{ 'colr-baa661': item.itemsInInventory.found > 0}">{{(item.itemsRequired.itemsOwned + item.itemsInInventory.found).toLocaleString()}}</span>/{{item.itemsRequired.itemsRequired.toLocaleString()}})
                     </div>
                 </template>
 
@@ -64,23 +64,23 @@
 
                 <template v-slot:expanded-item="{ headers }">
                     <td :colspan="headers.length">
-                        <v-simple-table>
+                        <v-simple-table class="dropdown-table">
                             <template v-slot:default>
                                 <thead>
                                     <tr>
-                                    <th class="ta-center">Module Name</th>
-                                    <th class="ta-center">Items Required</th>
+                                    <th class="ta-left">Module Name</th>
+                                    <th class="ta-left">Completed</th>
+                                    <th class="ta-right">Items Required</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="module in expandedItemInfo" :key="module.name">
-                                    <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.name }} {{module.completed ? ' (Completed)' : ''}}</td>
-                                    <td v-bind:class="{ isModuleCompleted: module.completed }">{{ module.numRequired.toLocaleString() }}</td>
-
-                                    <!-- <td >{{ module.name }}
-                                        <img v-if="module.completed" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fflyclipart.com%2Fgreen-tick-clipart-transparent-background-green-background-clipart-831516&psig=AOvVaw1xTyuW7FsHAyGLaH78aqP0&ust=1586313525209000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMiP9cik1egCFQAAAAAdAAAAABAV" width="40px" height="40px">
+                                    <tr v-for="module in expandedItemInfo" :key="module.name">                                    
+                                    <td class="ta-left wdth30p">{{ module.name }}</td>
+                                    <td class="ta-left pl34px">
+                                        <v-icon v-if="module.completed" class="mr5px colr-green" green>check_circle_outline</v-icon>
+                                        <v-icon v-if="!module.completed" class="mr5px colr-white" green>check_circle_outline</v-icon>
                                     </td>
-                                    <td >{{ module.numRequired.toLocaleString()}}</td> -->
+                                    <td class="ta-right">{{ module.numRequired.toLocaleString()}}</td>
                                     </tr>
                                 </tbody>
                             </template>
@@ -203,13 +203,10 @@ export default {
             return moduleName;
         },
         getModuleIdByName(moduleName){
-            let moduleId = '';
-            graph.data.nodes.forEach((module, index, array) => {
-                if(module.label == moduleName){
-                moduleId = module.id;
-                }
+            const module = graph.data.nodes.find((module) => {
+                return module.label == moduleName
             });
-            return moduleId;
+            return module.id;
         },
         buildItemsOwnedData(){
             this.completedModules.forEach((value, moduleId, map) => {
@@ -379,6 +376,15 @@ export default {
     margin: auto;
 }
 
+.ml48px {
+
+}
+
+.dropdown-table {
+    margin-left: 48px;
+    margin-right: 40%;
+}
+
 .hght100p {
     height: 100%;
 }
@@ -396,11 +402,46 @@ export default {
   background-size: cover;
 }
 
-.th.ta-center {
-    text-align: center;
+.ta-center {
+    text-align: center !important;
+}
+
+.ta-left {
+    text-align: left;
+}
+
+.ta-right {
+    text-align: right !important;
 }
 
 .hght-calc {
     height: calc(100% - 121px);
 }
+
+.steez {
+    width: 35%;
+}
+
+.colr-green {
+    color: green;
+}
+
+.colr-white {
+    color: white;
+    opacity: .1;
+}
+
+.colr-baa661 {
+    color: #baa661;
+}
+
+.wdth30p {
+    width: 30%;
+}
+
+.pl34px {
+    padding-left: 34px;
+}
+
+
 </style>

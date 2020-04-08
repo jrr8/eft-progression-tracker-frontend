@@ -109,23 +109,11 @@ export default {
       });
     },
     getModuleIdByName(moduleName){
-      let moduleId = '';
-      graph.data.nodes.forEach((module, index, array) => {
-        if(module.label == moduleName){
-          moduleId = module.id;
-        }
+      const module = graph.data.nodes.find((module) => {
+        return module.label == moduleName
       });
-      return moduleId;
+      return module.id;
     },
-    // getModuleIdByName(moduleName){
-    //   let moduleId = '';
-    //   graph.data.nodes.forEach((module, index, array) => {
-    //     if(module.label == moduleName){
-    //       moduleId = module.id;
-    //     }
-    //   });
-    //   return moduleId;
-    // },
     getModuleNameById(id){
       let moduleName = '';
       graph.data.nodes.forEach((module, index, array) => {
