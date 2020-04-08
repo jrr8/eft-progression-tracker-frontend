@@ -46,6 +46,7 @@
 <script>
 import * as vis from 'vis-network';
 import graph from './assets/graph';
+import graphService from './store/graphService';
 
 export default {
   name: 'App',
@@ -68,6 +69,8 @@ export default {
     this.$store.dispatch('fetchUser').then(() => {
     });
     this.$vuetify.theme.dark = true;
+
+    graphService.initVis();
   },
   methods: {
     navToHome() {

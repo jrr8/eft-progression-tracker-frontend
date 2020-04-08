@@ -168,7 +168,7 @@ export default {
   },
   initVis(networkRef) {
     this.buildVisData();
-    const container = networkRef;
+    const container = networkRef || document.createElement('div');
 
     const data = visData;
 
