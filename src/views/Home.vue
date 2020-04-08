@@ -21,9 +21,7 @@
 </template>
 
 <script>
-import * as vis from 'vis-network';
-import graph from '../assets/graph';
-import trackedModulesDialog from '../components/TrackedModulesDialog';
+import trackedModulesDialog from '../components/TrackedModulesDialog.vue';
 import graphService from '../store/graphService';
 
 
@@ -47,7 +45,7 @@ export default {
       return this.$store.state.visData;
     },
     isDisabled() {
-      return this.selectedModuleId == '';
+      return this.selectedModuleId === '';
     },
     trackedModules() {
       return this.$store.state.user.trackedModules;
@@ -63,7 +61,7 @@ export default {
         if (this.graphService.selectedModuleId !== '' && this.completedModules) { return !!this.completedModules.get(this.graphService.selectedModuleId); }
         return false;
       },
-      set(isChecked) {
+      set() {
         this.toggleCompletedModule();
       },
     },
@@ -72,7 +70,7 @@ export default {
         if (this.graphService.selectedModuleId !== '' && this.trackedModules) { return !!this.trackedModules.get(this.graphService.selectedModule); }
         return false;
       },
-      set(isChecked) {
+      set() {
         this.toggleModuleToTrackedMap();
       },
     },
@@ -116,7 +114,7 @@ export default {
       }, 200);
     },
     toggleModuleToTrackedMap() {
-      if (this.graphService.selectedModule != '' && !this.trackedModules.get(this.graphService.selectedModule)) {
+      if (this.graphService.selectedModule !== '' && !this.trackedModules.get(this.graphService.selectedModule)) {
         this.$store.dispatch('updateUserTrackedModules', { name: this.graphService.selectedModule, isTracked: true });
       } else {
         this.$store.dispatch('updateUserTrackedModules', { name: this.graphService.selectedModule, isTracked: false });

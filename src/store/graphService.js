@@ -108,8 +108,8 @@ export default {
     });
   },
   getModuleNameById(id) {
-    const module = graph.data.nodes.find((module) => module.id == id);
-    return module.label;
+    const foundModule = graph.data.nodes.find((module) => module.id === id);
+    return foundModule.label;
   },
   setSelectOnClickHandler() {
     // TODO: Need to implement later

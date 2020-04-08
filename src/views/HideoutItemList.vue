@@ -141,7 +141,7 @@ export default {
     };
   },
   watch: {
-    expanded(val) {
+    expanded() {
       if (this.expanded.length) {
         this.expandedItemInfo = [];
         this.buildDropDownData();
@@ -193,25 +193,12 @@ export default {
       });
     },
     getModuleNameById(id) {
-      const module = graph.data.nodes.find((module) => module.id == id);
-      return module.label;
+      const foundModule = graph.data.nodes.find((module) => module.id === id);
+      return foundModule.label;
     },
     getModuleIdByName(moduleName) {
-      const module = graph.data.nodes.find((module) => module.label == moduleName);
-      return module.id;
-    },
-    buildItemsOwnedData() {
-      this.completedModules.forEach((value, moduleId, map) => {
-        const moduleName = this.getModuleNameById(moduleId);
-        const moduleItems = modules[moduleName].itemsRequired;
-        for (const itemName in items) {
-          if (!this.itemsOwned.get(itemName)) {
-            this.itemsOwned.set(itemName, items[itemName]);
-          } else {
-            this.itemsOwned.set(itemName, this.itemsOwned.get(itemName) + items[itemName]);
-          }
-        }
-      });
+      const foundModule = graph.data.nodes.find((module) => module.label === moduleName);
+      return foundModule.id;
     },
     buildItemListForTable() {
       this.buildItemDataMapForTable();
@@ -245,9 +232,9 @@ export default {
         } else if (!this.completedModules.get(this.getModuleIdByName(moduleName))) { this.itemMap.set(itemName, { itemsRequired: this.itemMap.get(itemName).itemsRequired + items[itemName], itemsOwned: this.itemMap.get(itemName).itemsOwned }); } else { this.itemMap.set(itemName, { itemsRequired: this.itemMap.get(itemName).itemsRequired + items[itemName], itemsOwned: this.itemMap.get(itemName).itemsOwned + items[itemName] }); }
       }
     },
-    buildItemList(itemMap) {
+    buildItemList() {
       this.itemList = [];
-      this.itemMap.forEach((value, key, map) => {
+      this.itemMap.forEach((value, key) => {
         if (items.items[key]) {
           if (this.itemsInInventory.get(key)) {
             this.itemList.push({
@@ -306,7 +293,7 @@ export default {
     addModuleToExpandedItemList(moduleName, curRowItemName) {
       const items = modules[moduleName].itemsRequired;
       for (const itemName in items) {
-        if (curRowItemName == itemName) {
+        if (curRowItemName === itemName) {
           this.expandedItemInfo.push({
             name: moduleName,
             numRequired: items[itemName],
