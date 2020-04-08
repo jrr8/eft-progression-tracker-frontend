@@ -88,7 +88,7 @@
                     </td>
                 </template>
 
-                <template class="wdth200px hght120px" v-slot:item.image="{ item }">
+                <template class="wdth200px" v-slot:item.image="{ item }">
                     <v-img :src="item.imgUrl" max-height="70px" contain></v-img>
                 </template>
             </v-data-table>
@@ -168,6 +168,7 @@ export default {
     },
   },
   created() {
+    graphService.initVis();
   },
   mounted() {
     //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd)
@@ -409,5 +410,12 @@ export default {
     padding-left: 34px;
 }
 
+.pt5px {
+    padding-top: 5px;
+}
+
+.pb5px {
+    padding-bottom: 5px;
+}
 
 </style>

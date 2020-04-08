@@ -63,8 +63,7 @@
                         The input does not need to match the Hideout Module name exactly.
                         For example, typeing a 3 in the search box will highlight all level three modules in the graph.
                     </li>
-                    <li>Selecting this button will bring up a window over the graph that shows a list of all Hideout Modules in Escape from Tarkov.
-                        This will be explained later in the help guide.</li>
+                    <li>Selecting this button will bring up a window over the graph that shows a list of all Hideout Modules in Escape from Tarkov.</li>
                 </ol>
 
               <h4>Selecting a Hideout Module</h4>
