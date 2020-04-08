@@ -2,12 +2,12 @@
   <div>
     <v-btn class="ml25px mr10px" color="#1b262c" dark @click.stop="initModuleDataList()">
       <v-icon class="mr5px" light>list</v-icon>
-      All Modules          
+      All Modules
     </v-btn>
     <v-dialog :scrollable="true" v-model="dialog" max-width="500" :height="'height: 75%'">
       <v-card >
         <v-card-title>
-          <v-text-field 
+          <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
             label="Search"
@@ -32,7 +32,7 @@
             <template v-slot:item.isTracked="{ item }">
               <v-checkbox color="#e3d6ac" v-model="item.isTracked" @change="toggleModuleToTrackedMap(item.name)"></v-checkbox>
             </template>
-          
+
           </v-data-table>
         </v-card-text>
       </v-card>
@@ -43,7 +43,7 @@
 <script>
 import modules from '../assets/modules';
 import graph from '../assets/graph';
-import graphService from "../store/graphService"
+import graphService from '../store/graphService';
 
 export default {
   name: 'TrackedModulesDialog',
@@ -56,21 +56,21 @@ export default {
       search: '',
       headers: [
         {
-            text: 'Module Name',
-            align: 'start',
-            value: 'name',
-            sortable: true,
+          text: 'Module Name',
+          align: 'start',
+          value: 'name',
+          sortable: true,
         },
         { text: 'Completed', value: 'isCompleted' },
-        { text: 'Tracked', value: 'isTracked' }
+        { text: 'Tracked', value: 'isTracked' },
       ],
     };
   },
   computed: {
-    completedModules(){
+    completedModules() {
       return this.$store.state.user.hideoutModulesCompleted;
     },
-    trackedModules(){
+    trackedModules() {
       return this.$store.state.user.trackedModules;
     },
   },
@@ -81,49 +81,42 @@ export default {
 
   },
   methods: {
-    initModuleDataList(){
+    initModuleDataList() {
       // TODO: Loading indicator??
       this.dialog = true;
-      this.$store.dispatch("fetchUser").then(() => {
+      this.$store.dispatch('fetchUser').then(() => {
         this.buildModuleDataList();
       });
     },
-    toggleModuleToTrackedMap(moduleName){
+    toggleModuleToTrackedMap(moduleName) {
       const wasTracked = this.trackedModules.get(moduleName);
-      this.$store.dispatch('updateUserTrackedModules', {name: moduleName, isTracked: !wasTracked});
+      this.$store.dispatch('updateUserTrackedModules', { name: moduleName, isTracked: !wasTracked });
     },
-    buildModuleDataList(){
+    buildModuleDataList() {
       this.moduleList = [];
-      for(module in modules){
+      for (module in modules) {
         this.moduleList.push({
           name: module,
           isCompleted: this.completedModules.get(this.getModuleIdByName(module)) != undefined,
-          isTracked: this.trackedModules.get(module) != undefined
+          isTracked: this.trackedModules.get(module) != undefined,
         });
-      };
+      }
     },
-    toggleCompletedModule(moduleName){
+    toggleCompletedModule(moduleName) {
       const wasCompleted = this.completedModules.get(this.getModuleIdByName(moduleName));
-      this.$store.dispatch('updateUserCompletedModules', {moduleId: this.getModuleIdByName(moduleName), isCompleted: !wasCompleted}).then(() => {
+      this.$store.dispatch('updateUserCompletedModules', { moduleId: this.getModuleIdByName(moduleName), isCompleted: !wasCompleted }).then(() => {
         graphService.highlightCompletedModule(this.getModuleIdByName(moduleName), !wasCompleted, this.completedModules);
       });
     },
-    getModuleIdByName(moduleName){
-      const module = graph.data.nodes.find((module) => {
-        return module.label == moduleName
-      });
+    getModuleIdByName(moduleName) {
+      const module = graph.data.nodes.find((module) => module.label == moduleName);
       return module.id;
     },
-    getModuleNameById(id){
-      let moduleName = '';
-      graph.data.nodes.forEach((module, index, array) => {
-        if(module.id == id){
-          moduleName = module.label;
-        }
-      });
-      return moduleName;
+    getModuleNameById(id) {
+      const module = graph.data.nodes.find((module) => module.id == id);
+      return module.label;
     },
-  }  
+  },
 };
 </script>
 

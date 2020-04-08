@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
-import HideoutItemList from '../views/HideoutItemList.vue'
-import About from '../views/About.vue'
-import Help from '../views/Help.vue'
+import HideoutItemList from '../views/HideoutItemList.vue';
+import About from '../views/About.vue';
+import Help from '../views/Help.vue';
 
 Vue.use(VueRouter);
 
@@ -16,17 +16,17 @@ const routes = [
   {
     path: '/hideout-items',
     name: 'HideoutItemList',
-    component: HideoutItemList
+    component: HideoutItemList,
   },
   {
     path: '/about',
     name: 'About',
-    component: About
+    component: About,
   },
   {
     path: '/help',
     name: 'Help',
-    component: Help
+    component: Help,
   },
 ];
 

@@ -74,7 +74,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="module in expandedItemInfo" :key="module.name">                                    
+                                    <tr v-for="module in expandedItemInfo" :key="module.name">
                                     <td class="ta-left wdth30p">{{ module.name }}</td>
                                     <td class="ta-left pl34px">
                                         <v-icon v-if="module.completed" class="mr5px colr-green" green>check_circle_outline</v-icon>
@@ -105,238 +105,217 @@ import graphService from '../store/graphService';
 
 
 export default {
-    name: 'HideoutItemList',
-    components: {
+  name: 'HideoutItemList',
+  components: {
+  },
+  data() {
+    return {
+      selectedTrackedModule: '',
+      itemList: [],
+      itemMap: new Map(),
+      itemsOwned: new Map(),
+      expandedItemInfo: [],
+      expanded: [],
+      search: '',
+      hideImageColumn: false,
+      areItemsInInventoryIncluded: false,
+      headers: [
+        { text: 'Item Name', value: 'name' },
+        { text: 'Items Required', value: 'itemsRequired' },
+        { text: 'Items in Inventory', value: 'itemsInInventory' },
+        {
+          text: 'Image',
+          align: 'start',
+          value: 'image',
+          sortable: false,
+        },
+      ],
+      expandedHeaders: [
+        {
+          text: 'Module Name',
+          align: 'start',
+          value: 'name',
+        },
+        { text: 'Numver Required', value: 'numRequired' },
+      ],
+    };
+  },
+  watch: {
+    expanded(val) {
+      if (this.expanded.length) {
+        this.expandedItemInfo = [];
+        this.buildDropDownData();
+      }
     },
-    data() {
-        return {
-            selectedTrackedModule: '',
-            itemList: [],
-            itemMap: new Map(),
-            itemsOwned: new Map(),
-            expandedItemInfo: [],
-            expanded: [],
-            search: '',
-            hideImageColumn: false,
-            areItemsInInventoryIncluded: false,
-            headers: [
-                { text: 'Item Name', value: 'name' },
-                { text: 'Items Required', value: 'itemsRequired' },
-                { text: 'Items in Inventory', value: 'itemsInInventory' },
-                {
-                text: 'Image',
-                align: 'start',
-                value: 'image',
-                sortable: false,
-                },
-            ],
-            expandedHeaders: [
-                {
-                    text: 'Module Name',
-                    align: 'start',
-                    value: 'name',
-                },
-                { text: 'Numver Required', value: 'numRequired' },
-            ],
-        };
+  },
+  computed: {
+    completedModules() {
+      return this.$store.state.user.hideoutModulesCompleted;
     },
-    watch: {
-        expanded: function (val) {
-            if(this.expanded.length){
-                this.expandedItemInfo = [];
-                this.buildDropDownData();
-            }
-        }
+    trackedModules() {
+      return this.$store.state.user.trackedModules || new Map();
     },
-    computed: {
-        completedModules(){
-        return this.$store.state.user.hideoutModulesCompleted;
-        },
-        trackedModules(){
-        return this.$store.state.user.trackedModules || new Map();
-        },
-        trackedModulesDropdownList(){
-            return Array.from(this.trackedModules.keys());
-        },
-        itemsInInventory(){
-            return this.$store.state.user.itemsInInventory;
-        },
-        computedHeaders () {
-            if(this.hideImageColumn)
-                return this.headers.filter(header => header.text !== "Image");
+    trackedModulesDropdownList() {
+      return Array.from(this.trackedModules.keys());
+    },
+    itemsInInventory() {
+      return this.$store.state.user.itemsInInventory;
+    },
+    computedHeaders() {
+      if (this.hideImageColumn) { return this.headers.filter((header) => header.text !== 'Image'); }
 
-            return this.headers;
-        }
+      return this.headers;
     },
-    created() {
-    },
-    mounted() {
-        //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd)
-        this.$store.dispatch("fetchUser").then(() => {
-            this.buildItemListForTable();
-        });
-
-    },
-    methods: {
-        updateItemInInventory(itemHref, numFound, numFoundInRaid){
-            let data = {
-                foundInc: numFound,
-                foundInRaidInc: numFoundInRaid
+  },
+  created() {
+  },
+  mounted() {
+    //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd)
+    this.$store.dispatch('fetchUser').then(() => {
+      this.buildItemListForTable();
+    });
+  },
+  methods: {
+    updateItemInInventory(itemHref, numFound, numFoundInRaid) {
+      const data = {
+        foundInc: numFound,
+        foundInRaidInc: numFoundInRaid,
+      };
+      this.$store.dispatch('updateUserItemsInInventory', { itemName: itemHref, itemData: data }).then(() => {
+        for (const i in this.itemList) {
+          if (this.itemList[i].href == itemHref) {
+            this.itemList[i].itemsInInventory = {
+              found: this.itemList[i].itemsInInventory.found + data.foundInc,
+              foundInRaid: this.itemList[i].itemsInInventory.foundInRaid + data.foundInRaidInc,
             };
-            this.$store.dispatch('updateUserItemsInInventory', {itemName:itemHref, itemData: data}).then(() => {
-                for (var i in this.itemList){
-                    if(this.itemList[i].href == itemHref){
-                        this.itemList[i].itemsInInventory = {found: this.itemList[i].itemsInInventory.found + data.foundInc,
-                                                            foundInRaid: this.itemList[i].itemsInInventory.foundInRaid + data.foundInRaidInc
-                                                            }
-                    }
-                }
-            });
-        },
-        getModuleNameById(id){
-            let moduleName = '';
-            graph.data.nodes.forEach((module, index, array) => {
-                if(module.id == id){
-                moduleName = module.label;
-                }
-            });
-            return moduleName;
-        },
-        getModuleIdByName(moduleName){
-            const module = graph.data.nodes.find((module) => {
-                return module.label == moduleName
-            });
-            return module.id;
-        },
-        buildItemsOwnedData(){
-            this.completedModules.forEach((value, moduleId, map) => {
-                const moduleName = this.getModuleNameById(moduleId);
-                const moduleItems = modules[moduleName].itemsRequired;
-                for(let itemName in items){
-                    if(!this.itemsOwned.get(itemName)){
-                        this.itemsOwned.set(itemName, items[itemName]);
-                    }else{
-                        this.itemsOwned.set(itemName, this.itemsOwned.get(itemName) + items[itemName]);
-                    }
-                }
-            });
-        },
-        buildItemListForTable(){
-            this.buildItemDataMapForTable();
-            this.buildItemList();
-            if(this.expanded.length){
-                this.expandedItemInfo = [];
-                this.buildDropDownData();
-            }
-        },
-        buildItemDataMapForTable() {
-            this.itemMap = new Map();
-            if(this.selectedTrackedModule){
-                let trackedModuleChildren = Array.from(graphService.getAllChildrenNodesAndEdges(this.getModuleIdByName(this.selectedTrackedModule)).nodes).map((nodeId) => {return this.getModuleNameById(nodeId)});
-                trackedModuleChildren.forEach((moduleName) => {
-                    this.updateItemInItemMap(moduleName);
-                });
-            }else {
-                for (let moduleName in modules) 
-                    this.updateItemInItemMap(moduleName);
-            }
-        },
-        /**
+          }
+        }
+      });
+    },
+    getModuleNameById(id) {
+      const module = graph.data.nodes.find((module) => module.id == id);
+      return module.label;
+    },
+    getModuleIdByName(moduleName) {
+      const module = graph.data.nodes.find((module) => module.label == moduleName);
+      return module.id;
+    },
+    buildItemsOwnedData() {
+      this.completedModules.forEach((value, moduleId, map) => {
+        const moduleName = this.getModuleNameById(moduleId);
+        const moduleItems = modules[moduleName].itemsRequired;
+        for (const itemName in items) {
+          if (!this.itemsOwned.get(itemName)) {
+            this.itemsOwned.set(itemName, items[itemName]);
+          } else {
+            this.itemsOwned.set(itemName, this.itemsOwned.get(itemName) + items[itemName]);
+          }
+        }
+      });
+    },
+    buildItemListForTable() {
+      this.buildItemDataMapForTable();
+      this.buildItemList();
+      if (this.expanded.length) {
+        this.expandedItemInfo = [];
+        this.buildDropDownData();
+      }
+    },
+    buildItemDataMapForTable() {
+      this.itemMap = new Map();
+      if (this.selectedTrackedModule) {
+        const trackedModuleChildren = Array.from(graphService.getAllChildrenNodesAndEdges(this.getModuleIdByName(this.selectedTrackedModule)).nodes).map((nodeId) => this.getModuleNameById(nodeId));
+        trackedModuleChildren.forEach((moduleName) => {
+          this.updateItemInItemMap(moduleName);
+        });
+      } else {
+        for (const moduleName in modules) { this.updateItemInItemMap(moduleName); }
+      }
+    },
+    /**
          * Updates the number of items required and owned for a module
          *
-         * @param {string} moduleName   String representing the current module being evaluated 
+         * @param {string} moduleName   String representing the current module being evaluated
          */
-        updateItemInItemMap(moduleName){
-            let items = modules[moduleName].itemsRequired;
-            for(let itemName in items){ //Loops through all required items for given module
-                if(!this.itemMap.get(itemName)){
-                    if(!this.completedModules.get(this.getModuleIdByName(moduleName)))
-                        this.itemMap.set(itemName, {itemsRequired: items[itemName], itemsOwned: 0});
-                    else
-                        this.itemMap.set(itemName, {itemsRequired: items[itemName], itemsOwned: items[itemName]});
-                }
-                else{
-                    if(!this.completedModules.get(this.getModuleIdByName(moduleName)))
-                        this.itemMap.set(itemName, {itemsRequired: this.itemMap.get(itemName).itemsRequired + items[itemName], itemsOwned: this.itemMap.get(itemName).itemsOwned});
-                    else
-                        this.itemMap.set(itemName, {itemsRequired: this.itemMap.get(itemName).itemsRequired + items[itemName], itemsOwned: this.itemMap.get(itemName).itemsOwned + items[itemName]});
-                }
-            }
-        },
-        buildItemList(itemMap){
-            this.itemList = [];
-            this.itemMap.forEach((value, key, map) => {
-                if(items.items[key]){
-                    if(this.itemsInInventory.get(key)){
-                        this.itemList.push({
-                            name: items.items[key].name,
-                            itemsRequired: value,
-                            itemsInInventory: {found: this.itemsInInventory.get(key).found, foundInRaid: this.itemsInInventory.get(key).foundInRaid},
-                            imgUrl: items.items[key].imgUrl,
-                            href: key
-                        });
-                    }
-                    else{
-                        this.itemList.push({
-                            name: items.items[key].name,
-                            itemsRequired: value,
-                            itemsInInventory: {found: 0, foundInRaid: 0},
-                            imgUrl: items.items[key].imgUrl,
-                            href: key
-                        });
-                    }
-                }else
-                    if(this.itemsInInventory.get(key)){
-                        this.itemList.push({
-                            name: key,
-                            itemsRequired: value,
-                            itemsInInventory: {found: this.itemsInInventory.get(key).found, foundInRaid: this.itemsInInventory.get(key).foundInRaid},
-                            imgUrl: '',
-                            href: key
-                        });
-                    }
-                    else{
-                        this.itemList.push({
-                            name: key,
-                            itemsRequired: value,
-                            itemsInInventory: {found: 0, foundInRaid: 0},
-                            imgUrl: '',
-                            href: key
-                        });
-                    }
+    updateItemInItemMap(moduleName) {
+      const items = modules[moduleName].itemsRequired;
+      for (const itemName in items) { // Loops through all required items for given module
+        if (!this.itemMap.get(itemName)) {
+          if (!this.completedModules.get(this.getModuleIdByName(moduleName))) { this.itemMap.set(itemName, { itemsRequired: items[itemName], itemsOwned: 0 }); } else { this.itemMap.set(itemName, { itemsRequired: items[itemName], itemsOwned: items[itemName] }); }
+        } else if (!this.completedModules.get(this.getModuleIdByName(moduleName))) { this.itemMap.set(itemName, { itemsRequired: this.itemMap.get(itemName).itemsRequired + items[itemName], itemsOwned: this.itemMap.get(itemName).itemsOwned }); } else { this.itemMap.set(itemName, { itemsRequired: this.itemMap.get(itemName).itemsRequired + items[itemName], itemsOwned: this.itemMap.get(itemName).itemsOwned + items[itemName] }); }
+      }
+    },
+    buildItemList(itemMap) {
+      this.itemList = [];
+      this.itemMap.forEach((value, key, map) => {
+        if (items.items[key]) {
+          if (this.itemsInInventory.get(key)) {
+            this.itemList.push({
+              name: items.items[key].name,
+              itemsRequired: value,
+              itemsInInventory: { found: this.itemsInInventory.get(key).found, foundInRaid: this.itemsInInventory.get(key).foundInRaid },
+              imgUrl: items.items[key].imgUrl,
+              href: key,
             });
-        },
-        buildDropDownData(){
-            if(this.selectedTrackedModule){
-                let trackedModuleChildren = Array.from(graphService.getAllChildrenNodesAndEdges(this.getModuleIdByName(this.selectedTrackedModule)).nodes).map((nodeId) => {return this.getModuleNameById(nodeId)});
-                trackedModuleChildren.forEach((moduleName) => {
-                    this.addModuleToExpandedItemList(moduleName, this.expanded[0].href);
-                });
-            } else {
-                for (let moduleName in modules)
-                    this.addModuleToExpandedItemList(moduleName, this.expanded[0].href);
-            }
-        },
-        /**
+          } else {
+            this.itemList.push({
+              name: items.items[key].name,
+              itemsRequired: value,
+              itemsInInventory: { found: 0, foundInRaid: 0 },
+              imgUrl: items.items[key].imgUrl,
+              href: key,
+            });
+          }
+        } else
+        if (this.itemsInInventory.get(key)) {
+          this.itemList.push({
+            name: key,
+            itemsRequired: value,
+            itemsInInventory: { found: this.itemsInInventory.get(key).found, foundInRaid: this.itemsInInventory.get(key).foundInRaid },
+            imgUrl: '',
+            href: key,
+          });
+        } else {
+          this.itemList.push({
+            name: key,
+            itemsRequired: value,
+            itemsInInventory: { found: 0, foundInRaid: 0 },
+            imgUrl: '',
+            href: key,
+          });
+        }
+      });
+    },
+    buildDropDownData() {
+      if (this.selectedTrackedModule) {
+        const trackedModuleChildren = Array.from(graphService.getAllChildrenNodesAndEdges(this.getModuleIdByName(this.selectedTrackedModule)).nodes).map((nodeId) => this.getModuleNameById(nodeId));
+        trackedModuleChildren.forEach((moduleName) => {
+          this.addModuleToExpandedItemList(moduleName, this.expanded[0].href);
+        });
+      } else {
+        for (const moduleName in modules) { this.addModuleToExpandedItemList(moduleName, this.expanded[0].href); }
+      }
+    },
+    /**
          * Adds the module name, number of items required and if the module is completed to the expandedItemInfo list.
          * Note: Module will not be added if it does not contain the current item.
          *
          * @param {string} moduleName       String representing the current module being evaluated
-         * @param {string} curRorItemName   String representing the name of the item for the current row being expanded  
+         * @param {string} curRorItemName   String representing the name of the item for the current row being expanded
          */
-        addModuleToExpandedItemList(moduleName, curRowItemName){
-            let items = modules[moduleName].itemsRequired;
-            for(let itemName in items){
-                if(curRowItemName == itemName){
-                    this.expandedItemInfo.push({
-                        name: moduleName,
-                        numRequired: items[itemName],
-                        completed: this.completedModules.get(this.getModuleIdByName(moduleName)) != undefined
-                    });
-                }
-            }
+    addModuleToExpandedItemList(moduleName, curRowItemName) {
+      const items = modules[moduleName].itemsRequired;
+      for (const itemName in items) {
+        if (curRowItemName == itemName) {
+          this.expandedItemInfo.push({
+            name: moduleName,
+            numRequired: items[itemName],
+            completed: this.completedModules.get(this.getModuleIdByName(moduleName)) != undefined,
+          });
         }
-    }
+      }
+    },
+  },
 };
 </script>
 

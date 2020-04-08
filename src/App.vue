@@ -44,8 +44,8 @@
 </template>
 
 <script>
-import graph from './assets/graph';
 import * as vis from 'vis-network';
+import graph from './assets/graph';
 
 export default {
   name: 'App',
@@ -55,31 +55,31 @@ export default {
       return this.$store.state.user;
     },
     isNavDrawerActive: {
-      get: function(){
+      get() {
         return this.$store.state.isNavDrawerActive;
       },
-      set: function(isActive){
-        this.$store.commit('setNavDrawerIsActive', {isNavDrawerActive: isActive});
-      }
+      set(isActive) {
+        this.$store.commit('setNavDrawerIsActive', { isNavDrawerActive: isActive });
+      },
     },
   },
 
   created() {
-    this.$store.dispatch("fetchUser").then(() => {
+    this.$store.dispatch('fetchUser').then(() => {
     });
     this.$vuetify.theme.dark = true;
   },
   methods: {
-    navToHome(){
+    navToHome() {
       this.$router.push('/');
     },
-    toggleIsNavDrawerActive(){
-      this.$store.commit('setNavDrawerIsActive', {isNavDrawerActive: !this.isNavDrawerActive});
+    toggleIsNavDrawerActive() {
+      this.$store.commit('setNavDrawerIsActive', { isNavDrawerActive: !this.isNavDrawerActive });
     },
     classForRoute(routeName) {
-      return this.$route.name === routeName ? 'page-active' : 'page-inactive'
+      return this.$route.name === routeName ? 'page-active' : 'page-inactive';
     },
-  }
+  },
 };
 </script>
 
@@ -226,4 +226,3 @@ export default {
   opacity: 1;
 }
 </style>
-

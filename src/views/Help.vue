@@ -27,7 +27,7 @@
                         <li>Modules that you have marked Completed will be represented by a green outline in the progression tree</li>
                         <li>These completed modules will contribute to the items required for other Hideout Module upgrades.</li>
                     </ul>
-                </ul>  
+                </ul>
 
                 <h4>Tracking Hideout Modules</h4>
                 <ul>
@@ -38,13 +38,13 @@
                             These modules can be selected in the Item List Page to show the items required to construct that Hideout Module and all modules leading to the Tracked module.
                         </li>
                     </ul>
-                </ul>  
+                </ul>
 
                 <h4>Inventory</h4>
                 <ul>
                     <li>Tarkov Assistant has a system in which you can maintain the count of the items you own in your in-game storage, located in the Item list Page.</li>
                     <li>Keeping an updated count of the items you own will allow you to quickly see which items you need to keep and which items you can trade/barter either during or after your raids.</li>
-                </ul>  
+                </ul>
             </v-card>
           </v-col>
           <v-col cols="12">
@@ -57,15 +57,15 @@
                 <v-divider color="#3a0f0f"></v-divider>
                 <img class="p10px" src="../assets/MainPage1.png" width="100%">
                 <ol type="1">
-                    <li>Clicking on the 3x3 navigation icon will open the navigation panel from the left. 
+                    <li>Clicking on the 3x3 navigation icon will open the navigation panel from the left.
                         Here is where you will navigate to all of the pages within Tarkov Assistant</li>
-                    <li>You can search for modules within the Hideout Module Tree using the search input. 
-                        The input does not need to match the Hideout Module name exactly. 
+                    <li>You can search for modules within the Hideout Module Tree using the search input.
+                        The input does not need to match the Hideout Module name exactly.
                         For example, typeing a 3 in the search box will highlight all level three modules in the graph.
                     </li>
-                    <li>Selecting this button will bring up a window over the graph that shows a list of all Hideout Modules in Escape from Tarkov. 
+                    <li>Selecting this button will bring up a window over the graph that shows a list of all Hideout Modules in Escape from Tarkov.
                         This will be explained later in the help guide.</li>
-                </ol>  
+                </ol>
 
               <h4>Selecting a Hideout Module</h4>
                 <v-divider color="#3a0f0f"></v-divider>
@@ -75,7 +75,7 @@
                     <li>Selecting a Hideout Module will display the name in the top center of the site.</li>
                     <li>This Checkbox controls whether the currently selected Hideout Module has been completed.</li>
                     <li>This Checkbox controls whether the currently selected Hideout Module is being tracked.</li>
-                </ol> 
+                </ol>
             </v-card>
           </v-col>
           <v-col cols="12">
@@ -85,7 +85,7 @@
             >
               <v-card-title class="headline">Item List Page Navigation</v-card-title>
               <h4>General Navigation</h4>
-              <img class="p10px" src="../assets/ItemListPage.png" width="100%"> 
+              <img class="p10px" src="../assets/ItemListPage.png" width="100%">
               <ol type="1">
                     <li>Checkbox that will disable the item images in the right hand column</li>
                     <li>Checkbox that will add the items in your inventory to the Items Required column.</li>
@@ -94,14 +94,14 @@
                         By selecting a Tracked module, the table will only show items required to construct the Tracked module and all modules leading to it.
                     </li>
                     <li>Selecting the dropdown for an item will provide a list of Hideout Modules that use that item and how many the module requires for construction.</li>
-                </ol>  
+                </ol>
 
                 <h4>Item Dropdown Navigation</h4>
-                <img class="p10px" src="../assets/ItemDropdown.png" width="100%"> 
+                <img class="p10px" src="../assets/ItemDropdown.png" width="100%">
                 <ol type="1">
                     <li>Represents the numbers of items required spanning all Hideout Modules that use the item.
                         <ul>
-                            <li>The first number represents the number of items you have turned in. 
+                            <li>The first number represents the number of items you have turned in.
                                 If you have selected the "Include Inventory in Items Required" checkbox, this number will include the items in your inventory.
                                 If you have more than 0 of the item in your inventory, the number will turn beige, otherwise it will remain white.
                             </li>
@@ -114,7 +114,7 @@
                     <li>When viewing the Hideout Modules that use the item, you will also see which modules you have completed, indicated by a green check mark.
                         As stated previously, these completed modules will contribute toward your Items Required count.
                     </li>
-                </ol>  
+                </ol>
             </v-card>
           </v-col>
         </v-row>
@@ -205,7 +205,7 @@ export default {
   ul {
     margin-left: 30px;
     margin-bottom: 30px;
-    text-align: left; 
+    text-align: left;
 
     ul {
         // margin-left: 35px;
@@ -219,7 +219,7 @@ export default {
   ol {
     margin-left: 30px;
     margin-bottom: 30px;
-    text-align: left; 
+    text-align: left;
 
     li {
 

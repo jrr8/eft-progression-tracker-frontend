@@ -23,18 +23,18 @@
 <script>
 import * as vis from 'vis-network';
 import graph from '../assets/graph';
-import trackedModulesDialog from "../components/TrackedModulesDialog"
-import graphService from "../store/graphService"
+import trackedModulesDialog from '../components/TrackedModulesDialog';
+import graphService from '../store/graphService';
 
 
 export default {
   name: 'Home',
   components: {
-    trackedModulesDialog
+    trackedModulesDialog,
   },
   data() {
     return {
-      dialog:false,
+      dialog: false,
       edges: new Map(),
       question: '',
       inputFocused: false,
@@ -43,42 +43,38 @@ export default {
     };
   },
   computed: {
-    visData(){
+    visData() {
       return this.$store.state.visData;
     },
-    isDisabled(){
-        return this.selectedModuleId == '';
+    isDisabled() {
+      return this.selectedModuleId == '';
     },
-    trackedModules(){
+    trackedModules() {
       return this.$store.state.user.trackedModules;
     },
-    completedModules(){
+    completedModules() {
       return this.$store.state.user.hideoutModulesCompleted;
     },
-    isNavDrawerActive(){
+    isNavDrawerActive() {
       return this.$store.state.isNavDrawerActive;
     },
     isModuleCompletedForCheckbox: {
-      get: function(){
-        if(this.graphService.selectedModuleId !== '' && this.completedModules)
-          return this.completedModules.get(this.graphService.selectedModuleId) ? true: false;
-        else
-          return false;
+      get() {
+        if (this.graphService.selectedModuleId !== '' && this.completedModules) { return !!this.completedModules.get(this.graphService.selectedModuleId); }
+        return false;
       },
-      set: function(isChecked){
+      set(isChecked) {
         this.toggleCompletedModule();
-      }
+      },
     },
     isModuleTrackedForCheckbox: {
-      get: function(){
-        if(this.graphService.selectedModuleId !== '' && this.trackedModules)
-          return this.trackedModules.get(this.graphService.selectedModule) ? true: false;
-        else
-          return false;
+      get() {
+        if (this.graphService.selectedModuleId !== '' && this.trackedModules) { return !!this.trackedModules.get(this.graphService.selectedModule); }
+        return false;
       },
-      set: function(isChecked){
+      set(isChecked) {
         this.toggleModuleToTrackedMap();
-      }
+      },
     },
   },
   created() {
@@ -87,7 +83,7 @@ export default {
   mounted() {
     //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd)
     //  TODO: Move to created
-    this.$store.dispatch("fetchUser").then(() => {
+    this.$store.dispatch('fetchUser').then(() => {
       graphService.initVis(this.$refs.vis);
       this.network = graphService.getNetwork();
       graphService.highlightCompletedModulesOnInit(this.completedModules);
@@ -96,34 +92,34 @@ export default {
     this.graphStyle = { height: `calc(100% - ${this.$refs.header.clientHeight}px)` };
   },
   methods: {
-    toggleIsNavDrawerActive(){
-      this.$store.commit('setNavDrawerIsActive', {isNavDrawerActive: !this.isNavDrawerActive});
+    toggleIsNavDrawerActive() {
+      this.$store.commit('setNavDrawerIsActive', { isNavDrawerActive: !this.isNavDrawerActive });
     },
-    toggleCompletedModule(){
-      if(!this.completedModules.get(this.graphService.selectedModuleId)){
-        this.$store.dispatch('updateUserCompletedModules', {moduleId: this.graphService.selectedModuleId, isCompleted: true}).then(() => {
+    toggleCompletedModule() {
+      if (!this.completedModules.get(this.graphService.selectedModuleId)) {
+        this.$store.dispatch('updateUserCompletedModules', { moduleId: this.graphService.selectedModuleId, isCompleted: true }).then(() => {
           graphService.highlightCompletedModule(this.graphService.selectedModuleId, true, this.completedModules);
         });
-      }else{
-        this.$store.dispatch('updateUserCompletedModules', {moduleId: this.graphService.selectedModuleId, isCompleted: false}).then(() =>{
-        graphService.highlightCompletedModule(this.graphService.selectedModuleId, false, this.completedModules);
+      } else {
+        this.$store.dispatch('updateUserCompletedModules', { moduleId: this.graphService.selectedModuleId, isCompleted: false }).then(() => {
+          graphService.highlightCompletedModule(this.graphService.selectedModuleId, false, this.completedModules);
         });
       }
     },
-    onInputFocused(){
+    onInputFocused() {
       this.inputFocused = true;
       graphService.searchModulesForMatch(this.question);
     },
-    onInputBlurred(){
-      setTimeout(()=>{
+    onInputBlurred() {
+      setTimeout(() => {
         this.inputFocused = false;
-      },200);
+      }, 200);
     },
-    toggleModuleToTrackedMap(){
-      if(this.graphService.selectedModule != '' && !this.trackedModules.get(this.graphService.selectedModule)){
-        this.$store.dispatch('updateUserTrackedModules', {name: this.graphService.selectedModule, isTracked: true});
+    toggleModuleToTrackedMap() {
+      if (this.graphService.selectedModule != '' && !this.trackedModules.get(this.graphService.selectedModule)) {
+        this.$store.dispatch('updateUserTrackedModules', { name: this.graphService.selectedModule, isTracked: true });
       } else {
-        this.$store.dispatch('updateUserTrackedModules', {name: this.graphService.selectedModule, isTracked: false});
+        this.$store.dispatch('updateUserTrackedModules', { name: this.graphService.selectedModule, isTracked: false });
       }
     },
     saveGraph() {
