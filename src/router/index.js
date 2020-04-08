@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
+import HideoutItemList from '../views/HideoutItemList.vue';
+import About from '../views/About.vue';
+import Help from '../views/Help.vue';
 
 Vue.use(VueRouter);
 
@@ -11,12 +14,19 @@ const routes = [
     component: Home,
   },
   {
+    path: '/hideout-items',
+    name: 'HideoutItemList',
+    component: HideoutItemList,
+  },
+  {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    component: About,
+  },
+  {
+    path: '/help',
+    name: 'Help',
+    component: Help,
   },
 ];
 
@@ -25,5 +35,6 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
 
 export default router;
