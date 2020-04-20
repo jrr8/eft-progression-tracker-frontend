@@ -171,6 +171,7 @@ export default {
     graphService.initVis();
   },
   mounted() {
+    this.$ga.page('/hideout-items');
     //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd)
     this.$store.dispatch('fetchUser').then(() => {
       this.buildItemListForTable();

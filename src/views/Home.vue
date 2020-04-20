@@ -79,6 +79,7 @@ export default {
 
   },
   mounted() {
+    this.$ga.page('/home');
     //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd)
     //  TODO: Move to created
     this.$store.dispatch('fetchUser').then(() => {

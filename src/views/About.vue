@@ -123,7 +123,7 @@ export default {
 
   },
   mounted() {
-
+    this.$ga.page('/about');
   },
   methods: {
 

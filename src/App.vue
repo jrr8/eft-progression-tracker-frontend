@@ -77,6 +77,7 @@ export default {
       this.$router.push('/');
     },
     toggleIsNavDrawerActive() {
+      this.$ga.event('navDrawer', 'clicked', 'toggleNavDrawer', 1);
       this.$store.commit('setNavDrawerIsActive', { isNavDrawerActive: !this.isNavDrawerActive });
     },
     classForRoute(routeName) {

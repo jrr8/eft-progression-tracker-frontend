@@ -78,10 +78,10 @@ export default {
 
   },
   mounted() {
-
   },
   methods: {
     initModuleDataList() {
+       this.$ga.event('button', 'clicked', 'toggleModuleDialog', 2);
       // TODO: Loading indicator??
       this.dialog = true;
       this.$store.dispatch('fetchUser').then(() => {
