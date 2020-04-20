@@ -71,6 +71,8 @@ export default {
     this.$vuetify.theme.dark = true;
 
     graphService.initVis();
+
+    alert('spooky new branch!');
   },
   methods: {
     navToHome() {
