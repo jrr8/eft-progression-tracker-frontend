@@ -2,175 +2,175 @@ export default {
   data: {
     nodes: [{
       label: 'Level 2 Illumination',
-      id: '110',
+      id: 'Level 2 Illumination',
       x: -1052,
       y: 5,
     }, {
-      label: 'Level 2 Workbench', id: '109', x: -288, y: -192,
+      label: 'Level 2 Workbench', id: 'Level 2 Workbench', x: -288, y: -192,
     }, {
       label: 'Level 3 Illumination',
-      id: '108',
+      id: 'Level 3 Illumination',
       x: -288,
       y: 4,
     }, {
-      label: 'Level 2 Nutrition Unit', id: '107', x: 861, y: 530,
+      label: 'Level 2 Nutrition Unit', id: 'Level 2 Nutrition Unit', x: 861, y: 530,
     }, {
       label: 'Level 1 Security',
-      id: '106',
+      id: 'Level 1 Security',
       x: -1423,
       y: 96,
     }, {
-      label: 'Level 2 Vents', id: '105', x: -1054, y: 188,
+      label: 'Level 2 Vents', id: 'Level 2 Vents', x: -1054, y: 188,
     }, {
       label: 'Level 2 Generator',
-      id: '104',
+      id: 'Level 2 Generator',
       x: -673,
       y: -89,
     }, {
-      label: 'Level 1 Illumination', id: '103', x: -1423, y: 4,
+      label: 'Level 1 Illumination', id: 'Level 1 Illumination', x: -1423, y: 4,
     }, {
       label: 'Level 2 Water Collector',
-      id: '102',
+      id: 'Level 2 Water Collector',
       x: 91,
       y: 361,
     }, {
-      label: 'Level 3 Rest Space', id: '101', x: 856, y: -391,
+      label: 'Level 3 Rest Space', id: 'Level 3 Rest Space', x: 856, y: -391,
     }, {
       label: 'Level 1 Nutrition Unit',
-      id: '100',
+      id: 'Level 1 Nutrition Unit',
       x: -1058,
       y: 530,
     }, {
-      label: 'Level 2 Security', id: '99', x: -1053, y: 95,
+      label: 'Level 2 Security', id: 'Level 2 Security', x: -1053, y: 95,
     }, {
       label: 'Level 1 Air Filtering Unit',
-      id: '98',
+      id: 'Level 1 Air Filtering Unit',
       x: 858,
       y: 189,
     }, {
-      label: 'Level 2 Heating', id: '97', x: -1050, y: -286,
+      label: 'Level 2 Heating', id: 'Level 2 Heating', x: -1050, y: -286,
     }, {
       label: 'Level 3 Workbench',
-      id: '96',
+      id: 'Level 3 Workbench',
       x: 480,
       y: -191,
     }, {
-      label: 'Level 1 Library', id: '95', x: 1230, y: -391,
+      label: 'Level 1 Library', id: 'Level 1 Library', x: 1230, y: -391,
     }, {
       label: 'Level 1 Bitcoin Farm',
-      id: '94',
+      id: 'Level 1 Bitcoin Farm',
       x: 2022,
       y: 72,
     }, {
-      label: 'Level 3 Medstation', id: '93', x: 1629, y: 619,
+      label: 'Level 3 Medstation', id: 'Level 3 Medstation', x: 1629, y: 619,
     }, {
       label: 'Level 2 Lavatory',
-      id: '92',
+      id: 'Level 2 Lavatory',
       x: 480,
       y: 449,
     }, {
-      label: 'Level 1 Generator', id: '91', x: -1422, y: -89,
+      label: 'Level 1 Generator', id: 'Level 1 Generator', x: -1422, y: -89,
     }, {
       label: 'Level 3 Bitcoin Farm',
-      id: '90',
+      id: 'Level 3 Bitcoin Farm',
       x: 2416,
       y: -192,
     }, {
-      label: 'Level 1 Rest Space', id: '89', x: -1426, y: -389,
+      label: 'Level 1 Rest Space', id: 'Level 1 Rest Space', x: -1426, y: -389,
     }, {
       label: 'Level 1 Scav Case',
-      id: '88',
+      id: 'Level 1 Scav Case',
       x: 2413,
       y: 179,
     }, {
-      label: 'Level 3 Nutrition Unit', id: '87', x: 1627, y: 530,
+      label: 'Level 3 Nutrition Unit', id: 'Level 3 Nutrition Unit', x: 1627, y: 530,
     }, {
       label: 'Level 3 Stash',
-      id: '86',
+      id: 'Level 3 Stash',
       x: -670,
       y: -478,
     }, {
-      label: 'Level 1 Intelligence Center', id: '85', x: -671, y: 271,
+      label: 'Level 1 Intelligence Center', id: 'Level 1 Intelligence Center', x: -671, y: 271,
     }, {
       label: 'Level 1 Stash',
-      id: '84',
+      id: 'Level 1 Stash',
       x: -1426,
       y: -478,
     }, {
-      label: 'Level 1 Medstation', id: '83', x: -1421, y: 619,
+      label: 'Level 1 Medstation', id: 'Level 1 Medstation', x: -1421, y: 619,
     }, {
       label: 'Level 1 Vents',
-      id: '82',
+      id: 'Level 1 Vents',
       x: -1422,
       y: 189,
     }, {
-      label: 'Level 2 Intelligence Center', id: '81', x: 2022, y: 271,
+      label: 'Level 2 Intelligence Center', id: 'Level 2 Intelligence Center', x: 2022, y: 271,
     }, {
       label: 'Level 3 Generator',
-      id: '80',
+      id: 'Level 3 Generator',
       x: 479,
       y: -89,
     }, {
-      label: 'Level 1 Booze Generator', id: '79', x: 2021, y: 361,
+      label: 'Level 1 Booze Generator', id: 'Level 1 Booze Generator', x: 2021, y: 361,
     }, {
       label: 'Level 1 Water Collector',
-      id: '78',
+      id: 'Level 1 Water Collector',
       x: -1417,
       y: 361,
     }, {
-      label: 'Level 4 Stash', id: '77', x: 2767, y: -477,
+      label: 'Level 4 Stash', id: 'Level 4 Stash', x: 2767, y: -477,
     }, {
       label: 'Level 1 Lavatory',
-      id: '76',
+      id: 'Level 1 Lavatory',
       x: -1421,
       y: 448,
     }, {
-      label: 'Level 2 Medstation', id: '75', x: -1059, y: 619,
+      label: 'Level 2 Medstation', id: 'Level 2 Medstation', x: -1059, y: 619,
     }, {
       label: 'Level 3 Heating',
-      id: '74',
+      id: 'Level 3 Heating',
       x: 481,
       y: -286,
     }, {
-      label: 'Level 3 Vents', id: '73', x: 92, y: 188,
+      label: 'Level 3 Vents', id: 'Level 3 Vents', x: 92, y: 188,
     }, {
       label: 'Level 2 Rest Space',
-      id: '72',
+      id: 'Level 2 Rest Space',
       x: -288,
       y: -390,
     }, {
-      label: 'Level 1 Workbench', id: '71', x: -1422, y: -192,
+      label: 'Level 1 Workbench', id: 'Level 1 Workbench', x: -1422, y: -192,
     }, {
       label: 'Level 2 Stash',
-      id: '70',
+      id: 'Level 2 Stash',
       x: -1048,
       y: -478,
     }, {
-      label: 'Level 1 Shooting Range', id: '69', x: -675, y: 4,
+      label: 'Level 1 Shooting Range', id: 'Level 1 Shooting Range', x: -675, y: 4,
     }, {
       label: 'Level 2 Bitcoin Farm',
-      id: '68',
+      id: 'Level 2 Bitcoin Farm',
       x: 2016,
       y: -89,
     }, {
-      label: 'Level 3 Intelligence Center', id: '67', x: 2410, y: 271,
+      label: 'Level 3 Intelligence Center', id: 'Level 3 Intelligence Center', x: 2410, y: 271,
     }, {
       label: 'Level 3 Lavatory',
-      id: '66',
+      id: 'Level 3 Lavatory',
       x: 1241,
       y: 449,
     }, {
-      label: 'Level 3 Water Collector', id: '65', x: 857, y: 361,
+      label: 'Level 3 Water Collector', id: 'Level 3 Water Collector', x: 857, y: 361,
     }, {
       label: 'Level 1 Heating',
-      id: '64',
+      id: 'Level 1 Heating',
       x: -1425,
       y: -286,
     }, {
-      label: 'Level 3 Security', id: '63', x: 90, y: 96,
+      label: 'Level 3 Security', id: 'Level 3 Security', x: 90, y: 96,
     }, {
       label: 'Level 1 Solar Power',
-      id: '62',
+      id: 'Level 1 Solar Power',
       x: 856,
       y: -191,
     }],
