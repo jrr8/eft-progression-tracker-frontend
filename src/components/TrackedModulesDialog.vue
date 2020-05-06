@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     initModuleDataList() {
-       this.$ga.event('button', 'clicked', 'toggleModuleDialog', 2);
+      this.$ga.event('button', 'toggleModuleDialog', 'clicked', 2);
       // TODO: Loading indicator??
       this.dialog = true;
       this.$store.dispatch('fetchUser').then(() => {

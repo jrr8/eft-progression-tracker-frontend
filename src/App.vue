@@ -1,5 +1,54 @@
 <template>
   <v-app >
+     <v-dialog
+      v-model="dialog"
+      max-width="450"
+      persistent
+    >
+      <v-card>
+        <v-card-title class="headline">Allow Google Analytics?</v-card-title>
+
+        <v-card-text>
+          By Agreeing, you will enable Google Analytics to monitor traffic on Tarkov Assistant. 
+          All data collected is anonymous and is only seen and used by the developers of Tarkov Assistant, and will not be distributed in any way.
+          This data is used to better understand which pages and features of the site users visit most to better improve Tarkov Assistant.
+          You can enable or disable Google Analytics at any time through the About page.
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="toggleDataTracking(true)"
+          >
+            Agree
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="toggleDataTracking(false)"
+          >
+            Disagree
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-snackbar
+      v-model="dataAnalyticsAlert"
+      color='green'
+    >
+      {{ dataAnalyticsAlertText }}
+      <v-btn
+        color="Green"
+        text
+        @click="dataAnalyticsAlert = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
   <div class="page-nav-drawer-icon">
     <img class="nav-drawer-icon" @click.stop="toggleIsNavDrawerActive()" src="./assets/nav-drawer-icon.png" height="35" width="35">
     <h1 class="neon">Tarkov Assistant</h1>
@@ -50,7 +99,13 @@ import graphService from './store/graphService';
 
 export default {
   name: 'App',
-
+  data() {
+    return {
+      dialog: false,
+      dataAnalyticsAlertText: '',
+      dataAnalyticsAlert: false
+    }
+  },
   computed: {
     user() {
       return this.$store.state.user;
@@ -66,7 +121,9 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('fetchUser').then(() => {
+    this.$store.dispatch('fetchUser').then((returnedUser) => {
+      if (returnedUser.allowDataCollection === null || returnedUser.allowDataCollection === undefined)
+        this.dialog = true;
     });
     this.$vuetify.theme.dark = true;
 
@@ -83,6 +140,20 @@ export default {
     classForRoute(routeName) {
       return this.$route.name === routeName ? 'page-active' : 'page-inactive';
     },
+    toggleDataTracking(enabled) {
+      this.$store.dispatch('updateDataTrackingPermission', { isEnabled: enabled }).then(() => {
+        this.dialog = false;
+        this.dataAnalyticsAlert = true;
+        if(enabled){
+          this.$ga.enable();
+          this.dataAnalyticsAlertText = 'Google Analytics Enabled';
+
+        } else {
+          this.$ga.disable();
+          this.dataAnalyticsAlertText = 'Google Analytics Disabled';
+        }
+      });
+    }
   },
 };
 </script>

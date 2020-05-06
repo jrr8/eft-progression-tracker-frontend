@@ -95,6 +95,7 @@ export default {
       this.$store.commit('setNavDrawerIsActive', { isNavDrawerActive: !this.isNavDrawerActive });
     },
     toggleCompletedModule() {
+      this.$ga.event('checkbox', 'toggleModuleCompletedCheckbox', 'clicked', 3);
       if (!this.completedModules.get(this.graphService.selectedModuleId)) {
         this.$store.dispatch('updateUserCompletedModules', { moduleId: this.graphService.selectedModuleId, isCompleted: true }).then(() => {
           graphService.highlightCompletedModule(this.graphService.selectedModuleId, true, this.completedModules);
@@ -115,6 +116,7 @@ export default {
       }, 200);
     },
     toggleModuleToTrackedMap() {
+      this.$ga.event('checkbox', 'toggleModuleTrackedCheckbox', 'clicked', 4);
       if (this.graphService.selectedModule !== '' && !this.trackedModules.get(this.graphService.selectedModule)) {
         this.$store.dispatch('updateUserTrackedModules', { name: this.graphService.selectedModule, isTracked: true });
       } else {

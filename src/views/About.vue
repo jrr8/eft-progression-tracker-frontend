@@ -99,9 +99,51 @@
               </ul>
             </v-card>
           </v-col>
+
+         <v-col cols="12">
+            <v-card
+              color="#3a0f0f"
+              dark
+            >
+              <v-card-title class="headline">Google Analytics</v-card-title>
+              <p class="mr25px">
+                Google Analytics is a traffic monitoring tool that allows developers to view the traffic on their website. 
+                This data is used solely for the purpose of better understanding which pages and features our users visit per session.
+                The information collected is completely anonymous and we do not share or distribute this data in any capacity.
+                You can enable or disable this feature at any time using the buttons below.
+              </p>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="toggleDataTracking(true)"
+              >
+                Enable Google Analytics
+              </v-btn>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="toggleDataTracking(false)"
+              >
+                Disable Google Analytics
+              </v-btn>
+            </v-card>
+          </v-col>
         </v-row>
       </v-container>
     </v-card>
+        <v-snackbar
+      v-model="dataAnalyticsAlert"
+      color='green'
+    >
+      {{ dataAnalyticsAlertText }}
+      <v-btn
+        color="Green"
+        text
+        @click="dataAnalyticsAlert = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -113,7 +155,8 @@ export default {
   },
   data() {
     return {
-
+      dataAnalyticsAlertText: '',
+      dataAnalyticsAlert: false
     };
   },
   computed: {
@@ -126,7 +169,19 @@ export default {
     this.$ga.page('/about');
   },
   methods: {
+    toggleDataTracking(enabled) {
+      this.$store.dispatch('updateDataTrackingPermission', { isEnabled: enabled }).then(() => {
+        this.dataAnalyticsAlert = true;
+        if(enabled){
+          this.$ga.enable();
+          this.dataAnalyticsAlertText = 'Google Analytics Enabled';
 
+        } else {
+          this.$ga.disable();
+          this.dataAnalyticsAlertText = 'Google Analytics Disabled';
+        }
+      });
+    }
   },
 };
 </script>
@@ -156,6 +211,10 @@ export default {
 
 .of-auto {
   overflow: auto;
+}
+
+.mr25px {
+  margin-right: 25px;
 }
 
 .v-card {

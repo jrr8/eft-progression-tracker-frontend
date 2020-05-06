@@ -10,6 +10,8 @@ export default class User {
 
   itemsInInventory;
 
+  allowDataCollection;
+
   constructor(data) {
     const getMapFromMapOrArray = (property) => {
       const mapOrArray = data[property];
@@ -18,5 +20,7 @@ export default class User {
 
     ['hideoutModulesCompleted', 'trackedModules',
       'itemsOwned', 'itemsInInventory'].forEach(getMapFromMapOrArray);
+
+      this.allowDataCollection = data['allowDataCollection'];
   }
 }
