@@ -17,6 +17,7 @@ export default {
           itemsOwned: Array.from(new Map()),
           hideoutModulesCompleted: Array.from(new Map()),
           itemsInInventory: Array.from(new Map()),
+          allowDataCollection: null
         }));
       }
       const user = userData ? JSON.parse(userData) : {};
@@ -77,4 +78,15 @@ export default {
       resolve(new User(user));
     });
   },
+  updateDataTrackingPermission(privacyInfo) {
+    return new Promise((resolve) => {
+      const userData = localStorage.getItem(options.userKey);
+      const user = userData ? JSON.parse(userData) : {};
+
+      user.allowDataCollection = privacyInfo.isEnabled;
+      localStorage.setItem(options.userKey, JSON.stringify(user));
+
+      resolve(new User(user));
+    });
+  }
 };

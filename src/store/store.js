@@ -41,8 +41,11 @@ export default new Vuex.Store({
   actions: {
     // put asynchronous functions that can call one or more mutation functions
     fetchUser({ commit }) {
-      UserService.fetchUser().then((user) => {
-        commit('setUser', { user });
+      return new Promise((resolve, reject) => {
+        return UserService.fetchUser().then((user) => {
+          commit('setUser', { user });
+          resolve(user);
+        });
       });
     },
     updateUserTrackedModules({ commit }, payload) {
@@ -66,6 +69,13 @@ export default new Vuex.Store({
         resolve();
       });
     },
-
+    updateDataTrackingPermission({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        UserService.updateDataTrackingPermission(payload).then((user) => {
+          commit('setUser', { user });
+        });
+        resolve();
+      });
+    },
   },
 });

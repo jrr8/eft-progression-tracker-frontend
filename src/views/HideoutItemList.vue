@@ -3,8 +3,8 @@
         <v-card class="wdth70p marg-auto hght100p">
             <v-card-title>
                 <div class="flex fd-col">
-                    <v-checkbox hide-details color="#baa661" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
-                    <v-checkbox hide-details color="#baa661" v-model="areItemsInInventoryIncluded" :label="'Include Inventory in Items Required'"></v-checkbox>
+                    <v-checkbox @click="eventGAToggleImage()" hide-details color="#baa661" v-model="hideImageColumn" :label="'Hide Image Column'"></v-checkbox>
+                    <v-checkbox @click="eventGAToggleIncludeItemsInInventory()" hide-details color="#baa661" v-model="areItemsInInventoryIncluded" :label="'Include Inventory in Items Required'"></v-checkbox>
                 </div>
                 <v-spacer></v-spacer>
                 <v-text-field
@@ -147,6 +147,10 @@ export default {
         this.buildDropDownData();
       }
     },
+    selectedTrackedModule(){
+      // TODO: May need to move from watched, not sure track events that are not function calls
+      this.$ga.event('select', 'trackedModuleSelected', 'clicked', 9);
+    }
   },
   computed: {
     completedModules() {
@@ -171,13 +175,21 @@ export default {
     graphService.initVis();
   },
   mounted() {
+    this.$ga.page('/hideout-items');
     //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd)
     this.$store.dispatch('fetchUser').then(() => {
       this.buildItemListForTable();
     });
   },
   methods: {
+    eventGAToggleImage() {
+      this.$ga.event('checkbox', 'toggleImageCheckbox', 'clicked', 5);
+    },
+    eventGAToggleIncludeItemsInInventory() {
+      this.$ga.event('checkbox', 'toggleIncludeItemsInInventoryCheckbox', 'clicked', 6);
+    },
     updateItemInInventory(itemHref, numFound, numFoundInRaid) {
+      this.$ga.event('button', 'updateItemInInventoryButton', 'clicked', 7);
       const data = {
         foundInc: numFound,
         foundInRaidInc: numFoundInRaid,
@@ -275,6 +287,7 @@ export default {
       });
     },
     buildDropDownData() {
+      this.$ga.event('button', 'toggleItemDropDownList', 'clicked', 8);
       if (this.selectedTrackedModule) {
         const trackedModuleChildren = Array.from(graphService.getAllChildrenNodesAndEdges(this.getModuleIdByName(this.selectedTrackedModule)).nodes).map((nodeId) => this.getModuleNameById(nodeId));
         trackedModuleChildren.forEach((moduleName) => {
