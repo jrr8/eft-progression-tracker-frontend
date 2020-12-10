@@ -78,9 +78,11 @@ const options = {
 
 export default {
   // class
+  hoveredModuleId: '',
   selectedModule: '',
   selectedModuleId: '',
   prevModulesForCurrentModule: [],
+  network2: null,
   getVisData() {
     return visData;
   },
@@ -111,6 +113,10 @@ export default {
     const foundModule = graph.data.nodes.find((module) => module.id === id);
     return foundModule.label;
   },
+  getModuleIdByName(moduleName) {
+    const foundModule = graph.data.nodes.find((module) => module.label === moduleName);
+    return foundModule.id;
+  },
   setSelectOnClickHandler() {
     // TODO: Need to implement later
     // this.network.on('deselectNode', (params) => {
@@ -130,6 +136,14 @@ export default {
         this.selectedModuleId = '';
       }
     });
+  },
+  setSelectHoverHandler() {
+    network.on("hoverNode", (params) => {
+      this.hoveredModuleId = params.node;
+    })
+    network.on("blurNode", (params) => {
+      this.hoveredModuleId = '';
+    })
   },
   getAllChildrenNodesAndEdges(node) {
     const visited = {
@@ -187,7 +201,6 @@ export default {
     };
 
     network = new vis.Network(container, data, options);
-
     network.moveTo({
       position: {
         x: 650,
@@ -196,7 +209,11 @@ export default {
     });
 
     network.fit();
-
+    network.setOptions({interaction: {
+      hover: true
+    }})
+    
+    this.setSelectHoverHandler();
     this.setSelectOnClickHandler();
   },
   buildVisData() {
@@ -229,5 +246,13 @@ export default {
     });
     network.selectNodes(matchingModules, false);
   },
+  getNodeById(nodeId) {
+    // network.getPostion(nodeId); Doesnt work
+    return graph.data.nodes.find((node) => node.id === nodeId);
+
+  },
+  convertCanvasToDom(corr) {
+    return network.canvasToDOM(corr);
+  }
 
 };

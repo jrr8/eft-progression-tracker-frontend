@@ -14,6 +14,7 @@
         v-model="question" @input="graphService.searchModulesForMatch(question)" @focus="onInputFocused()" @blur="onInputBlurred()"
       ></v-text-field>
       <tracked-modules-dialog></tracked-modules-dialog>
+      <hideout-module-popup v-if="hoveredModuleId != ''" v-bind:hoveredModuleId="hoveredModuleId"></hideout-module-popup>
     </div>
     <div ref="vis" class="no-focus bkg-img" :style="graphStyle"></div>
   </div>
@@ -22,6 +23,7 @@
 
 <script>
 import trackedModulesDialog from '../components/TrackedModulesDialog.vue';
+import hideoutModulePopup from '../components/HideoutModulePopup.vue'
 import graphService from '../store/graphService';
 
 
@@ -29,6 +31,8 @@ export default {
   name: 'Home',
   components: {
     trackedModulesDialog,
+    hideoutModulePopup
+
   },
   data() {
     return {
@@ -37,10 +41,14 @@ export default {
       question: '',
       inputFocused: false,
       graphStyle: null,
-      graphService,
+      graphService
     };
   },
   computed: {
+    hoveredModuleId() {
+      console.log("hovered id: " + this.graphService.hoveredModuleId);
+      return this.graphService.hoveredModuleId;
+    },
     visData() {
       return this.$store.state.visData;
     },

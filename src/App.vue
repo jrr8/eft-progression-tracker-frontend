@@ -158,6 +158,7 @@ export default {
 };
 </script>
 
+<style src="..\node_modules\vis-network\dist\vis-network.min.css"></style>
 <style lang="less">
 @background-image: url(./assets/escape-from-tarkov-logo-for-background.jpg);
 
