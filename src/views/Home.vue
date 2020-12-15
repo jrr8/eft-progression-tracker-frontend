@@ -10,6 +10,14 @@
           </div>
         </div>
       </div>
+      <v-btn style="padding-left: 300px"
+                  color="black"
+                  small
+                  absolute
+                  @click="saveGraph()"
+                >
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
       <v-text-field color="#e3d6ac" hide-details class="search-input" label="Search Module"
         v-model="question" @input="graphService.searchModulesForMatch(question)" @focus="onInputFocused()" @blur="onInputBlurred()"
       ></v-text-field>
@@ -25,6 +33,7 @@
 import trackedModulesDialog from '../components/TrackedModulesDialog.vue';
 import hideoutModulePopup from '../components/HideoutModulePopup.vue'
 import graphService from '../store/graphService';
+import questGraph from '../assets/questGraph';
 
 
 export default {
@@ -91,7 +100,7 @@ export default {
     //   TODO: This works for now, need to investigate why app.vue is not loading user before this page is loaded when reloading this page. (Maybe navigation gaurd)
     //  TODO: Move to created
     this.$store.dispatch('fetchUser').then(() => {
-      graphService.initVis(this.$refs.vis);
+      graphService.generateGraph('quest', this.$refs.vis);
       this.network = graphService.getNetwork();
       graphService.highlightCompletedModulesOnInit(this.completedModules);
     });
@@ -132,9 +141,26 @@ export default {
       }
     },
     saveGraph() {
+      let newDataList = [];
+      let newPositions = this.network.getPositions();
+      Object.keys(newPositions).forEach((id) => {
+        newDataList.push({
+          label: this.graphService.getModuleNameById(id),
+          id: id,
+          x: newPositions[id].x,
+          y: newPositions[id].y
+        });
+      });
+
+      let updatedData = {data: {
+          nodes: newDataList,
+          edges: questGraph.data.edges
+        }
+      }
+
       this.download(
-        JSON.stringify(this.network.getPositions()),
-        'graph.json',
+        JSON.stringify(updatedData),
+        'updatedGraph.json',
         'application/json',
       );
     },
@@ -145,6 +171,7 @@ export default {
       a.download = fileName;
       a.click();
     },
+
   },
 };
 </script>

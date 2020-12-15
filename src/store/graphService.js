@@ -1,5 +1,6 @@
 import * as vis from 'vis-network';
 import graph from '../assets/graph';
+import questGraph from '../assets/questGraph'
 
 const defaultNodeBackgroundColor = '#631919';
 const defaultNodeHoveBrackgroundColor = '#1b262c';
@@ -68,6 +69,7 @@ const edgeOptions = {
 
 let network = null;
 let visData = null;
+let graphData = null;
 
 const edges = new Map();
 
@@ -78,6 +80,7 @@ const options = {
 
 export default {
   // class
+  selectedDragginNodeId: '',
   hoveredModuleId: '',
   selectedModule: '',
   selectedModuleId: '',
@@ -110,11 +113,12 @@ export default {
     });
   },
   getModuleNameById(id) {
-    const foundModule = graph.data.nodes.find((module) => module.id === id);
+    console.log(graphData);
+    const foundModule = graphData.data.nodes.find((module) => module.id === id);
     return foundModule.label;
   },
   getModuleIdByName(moduleName) {
-    const foundModule = graph.data.nodes.find((module) => module.label === moduleName);
+    const foundModule = graphData.data.nodes.find((module) => module.label === moduleName);
     return foundModule.id;
   },
   setSelectOnClickHandler() {
@@ -134,6 +138,39 @@ export default {
       } else {
         this.selectedModule = '';
         this.selectedModuleId = '';
+      }
+    });
+  },
+  setDragStartHandler() {
+    network.on('dragStart', (params) => {
+      if (params.nodes && params.nodes.length > 0 && params.events) {
+        console.log(params)
+
+        this.selectedDragginNodeId = params.nodes[0];
+
+        params.nodes.forEach((nodeId) => {
+          network.moveNode(nodeId, (nodePos.x%400), (nodePos.y%100));
+        });
+      }
+    });
+  },
+  setDragReleaseHandler() {
+    network.on('dragEnd', (params) => {
+      if (params.nodes && params.nodes.length > 0 && params.event) {
+        console.log(params)
+        const nodePos = params.event.center;
+
+        params.nodes.forEach((nodeId) => {
+          let newCanvasPos = this.convertDOMtoCanvas(nodePos);
+          let node = this.getNodeById(nodeId);
+          console.log(node.x + ' ' + node.y);
+          let x = this.convertDOMtoCanvas(node)
+          console.log(x.x + ' ' + x.y);
+
+          console.log(newCanvasPos.x +'     ' +  newCanvasPos.y)
+          console.log((newCanvasPos.x - newCanvasPos.x%400) + ' ' + (newCanvasPos.y - newCanvasPos.y%100));
+          network.moveNode(nodeId, (newCanvasPos.x - newCanvasPos.x%400), (newCanvasPos.y - newCanvasPos.y%100));
+        });
       }
     });
   },
@@ -181,7 +218,6 @@ export default {
     });
   },
   initVis(networkRef) {
-    this.buildVisData();
     const container = networkRef || document.createElement('div');
 
     const data = visData;
@@ -208,22 +244,41 @@ export default {
       },
     });
 
+    network.on()
+
     network.fit();
     network.setOptions({interaction: {
       hover: true
     }})
-    
-    this.setSelectHoverHandler();
-    this.setSelectOnClickHandler();
   },
-  buildVisData() {
-    const nodes = graph.data.nodes.map((node) => ({
+  generateGraph(graphType, networkRef) {
+    this.buildVisData(graphType);
+    this.initVis(networkRef);
+
+    this.setDragReleaseHandler();
+    this.setSelectOnClickHandler();
+    if(graphType === 'hideout') {
+      this.setSelectHoverHandler();
+
+    }
+  },
+  buildVisData(graphType) {
+    if(graphType === 'hideout') {
+      graphData = graph;
+    }
+
+    if (graphType === 'quest') {
+      graphData = questGraph
+    }
+
+
+    const nodes = graphData.data.nodes.map((node) => ({
       ...node,
       ...nodeOptions,
     }));
 
     const edges = [];
-    graph.data.edges.forEach((edge_, i) => {
+    graphData.data.edges.forEach((edge_, i) => {
       const id = `e_${String(i + 1).padStart(3, '0')}`;
       const edge = {
         id,
@@ -239,7 +294,7 @@ export default {
   },
   searchModulesForMatch(question) {
     const matchingModules = [];
-    graph.data.nodes.forEach((item) => {
+    graphData.data.nodes.forEach((item) => {
       if (question && item.label.toLowerCase().includes(question.toLowerCase())) {
         matchingModules.push(item.id);
       }
@@ -248,11 +303,13 @@ export default {
   },
   getNodeById(nodeId) {
     // network.getPostion(nodeId); Doesnt work
-    return graph.data.nodes.find((node) => node.id === nodeId);
+    return graphData.data.nodes.find((node) => node.id === nodeId);
 
   },
   convertCanvasToDom(corr) {
     return network.canvasToDOM(corr);
-  }
-
+  },
+  convertDOMtoCanvas(corr) {
+    return network.DOMtoCanvas(corr);
+  },
 };
