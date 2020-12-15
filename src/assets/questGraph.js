@@ -1198,8 +1198,8 @@ export default {
         {
           "label": "/Collector",
           "id": "/Collector",
-          "x": 3200,
-          "y": -400
+          "x": 0,
+          "y": 2900
         }
       ],
       "edges": [
@@ -2028,8 +2028,8 @@ export default {
           "to": "/Huntsman_path_-_Sadist"
         },
         {
-            "from": "/Chemical_-_Part_1",
-            "to": "/Polikhim_hobo"
+          "from": "/Chemical_-_Part_1",
+          "to": "/Polikhim_hobo"
         }
       ]
     }

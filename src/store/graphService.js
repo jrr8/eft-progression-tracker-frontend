@@ -1,6 +1,7 @@
 import * as vis from 'vis-network';
 import graph from '../assets/graph';
 import questGraph from '../assets/questGraph'
+import quests from '../assets/quests'
 
 const defaultNodeBackgroundColor = '#631919';
 const defaultNodeHoveBrackgroundColor = '#1b262c';
@@ -57,6 +58,14 @@ let completedNodeColor = {
     border: completedNodeBorderColor,
   },
 };
+let praporNodeColor = "#f7d76d";
+let thearapistNodeColor = "#b02bb5";
+let skierNodeColor = '#c7820c';
+let peacekeeperNodeColor = '#0e32e8';
+let ragmanNodeColor = '#009933';
+let mechanicNodeColor = '#cc003a';
+let jaegerNodeColor = '#00dbd0';
+
 const edgeOptions = {
   width: 3,
   shadow: true,
@@ -110,6 +119,53 @@ export default {
   highlightCompletedModulesOnInit(completedModules) {
     completedModules.forEach((module, moduleId, array) => {
       this.highlightCompletedModule(moduleId, true, completedModules);
+    });
+  },
+  fillNodeColorForTrader() {
+    graphData.data.nodes.forEach((item) => {
+      if (quests[item.id].trader === 'Prapor') {
+        const curNode = visData.nodes.get(item.id);
+        curNode.color.background = praporNodeColor;
+        curNode.font.color = '#000000';
+        visData.nodes.update(curNode);
+      }
+      if (quests[item.id].trader === 'Thearapist') {
+        const curNode = visData.nodes.get(item.id);
+        curNode.color.background = thearapistNodeColor;
+        curNode.font.color = '#ffffff';
+        visData.nodes.update(curNode);
+      }
+      if (quests[item.id].trader === 'Skier') {
+        const curNode = visData.nodes.get(item.id);
+        curNode.color.background = skierNodeColor;
+        curNode.font.color = '#ffffff';
+        visData.nodes.update(curNode);
+      }
+      if (quests[item.id].trader === 'Peacekeeper') {
+        const curNode = visData.nodes.get(item.id);
+        curNode.color.background = peacekeeperNodeColor;
+        curNode.font.color = '#ffffff';
+        visData.nodes.update(curNode);
+      }
+      if (quests[item.id].trader === 'Ragman') {
+        const curNode = visData.nodes.get(item.id);
+        curNode.color.background = ragmanNodeColor;
+        curNode.font.color = '#ffffff';
+        visData.nodes.update(curNode);
+      }
+      if (quests[item.id].trader === 'Mechanic') {
+        const curNode = visData.nodes.get(item.id);
+        curNode.color.background = mechanicNodeColor;
+        curNode.font.color = '#ffffff';
+        visData.nodes.update(curNode);
+      }
+      if (quests[item.id].trader === 'Jaeger') {
+        const curNode = visData.nodes.get(item.id);
+        curNode.color.background = jaegerNodeColor;
+        curNode.font.color = '#000000';
+        visData.nodes.update(curNode);
+      }
+      
     });
   },
   getModuleNameById(id) {
@@ -254,6 +310,7 @@ export default {
   generateGraph(graphType, networkRef) {
     this.buildVisData(graphType);
     this.initVis(networkRef);
+    this.fillNodeColorForTrader();
 
     this.setDragReleaseHandler();
     this.setSelectOnClickHandler();
